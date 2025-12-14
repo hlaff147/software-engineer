@@ -1,0 +1,226 @@
+{"type":"Metric","data":{"name":"http_reqs","type":"counter","contains":"default","thresholds":[],"submetrics":null},"metric":"http_reqs"}
+{"metric":"http_reqs","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":1,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_duration","type":"trend","contains":"time","thresholds":["p(95)<30000"],"submetrics":[{"name":"http_req_duration{expected_response:true}","suffix":"expected_response:true","tags":{"expected_response":"true"}}]},"metric":"http_req_duration"}
+{"metric":"http_req_duration","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":6.662,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_blocked","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_blocked"}
+{"metric":"http_req_blocked","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":1.566,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_connecting","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_connecting"}
+{"metric":"http_req_connecting","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":0.183,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_tls_handshaking","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_tls_handshaking"}
+{"metric":"http_req_tls_handshaking","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":0,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_sending","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_sending"}
+{"metric":"http_req_sending","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":0.66,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_waiting","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_waiting"}
+{"metric":"http_req_waiting","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":5.858,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_receiving","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_receiving"}
+{"metric":"http_req_receiving","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":0.144,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"http_req_failed","type":"rate","contains":"default","thresholds":["rate<0.3"],"submetrics":null},"metric":"http_req_failed"}
+{"metric":"http_req_failed","type":"Point","data":{"time":"2025-12-14T04:00:37.974314-03:00","value":0,"tags":{"expected_response":"true","group":"::setup","method":"POST","name":"http://localhost:8080/api/v1/good-producer/reset-counter","proto":"HTTP/1.1","status":"200","url":"http://localhost:8080/api/v1/good-producer/reset-counter"}}}
+{"type":"Metric","data":{"name":"data_sent","type":"counter","contains":"data","thresholds":[],"submetrics":null},"metric":"data_sent"}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:00:37.993029-03:00","value":124,"tags":{"group":"::setup"}}}
+{"type":"Metric","data":{"name":"data_received","type":"counter","contains":"data","thresholds":[],"submetrics":null},"metric":"data_received"}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:00:37.993029-03:00","value":151,"tags":{"group":"::setup"}}}
+{"type":"Metric","data":{"name":"vus","type":"gauge","contains":"default","thresholds":[],"submetrics":null},"metric":"vus"}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:38.959217-03:00","value":0,"tags":{}}}
+{"type":"Metric","data":{"name":"vus_max","type":"gauge","contains":"default","thresholds":[],"submetrics":null},"metric":"vus_max"}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:38.959217-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:39.959192-03:00","value":0,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:39.959192-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:40.9592-03:00","value":0,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:40.9592-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:41.95913-03:00","value":0,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:41.95913-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:42.959127-03:00","value":0,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:42.959127-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:43.95909-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:43.95909-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:44.959061-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:44.959061-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:45.959052-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:45.959052-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:46.95904-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:46.95904-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:47.959-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:47.959-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:48.959026-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:48.959026-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:49.958971-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:49.958971-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:50.959021-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:50.959021-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:51.958953-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:51.958953-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:52.958916-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:52.958916-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:53.9589-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:53.9589-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:54.958904-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:54.958904-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:55.958834-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:55.958834-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:56.958818-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:56.958818-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:57.958816-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:57.958816-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:58.95883-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:58.95883-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:00:59.958803-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:00:59.958803-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:00.958744-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:00.958744-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:01.958769-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:01.958769-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:02.958737-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:02.958737-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:03.958722-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:03.958722-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:04.958675-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:04.958675-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:05.958683-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:05.958683-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:06.958653-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:06.958653-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:07.960131-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:07.960131-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:08.958597-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:08.958597-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:09.95856-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:09.95856-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:10.958572-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:10.958572-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:11.958552-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:11.958552-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:12.958536-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:12.958536-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:13.95852-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:13.95852-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:14.958481-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:14.958481-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:15.958439-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:15.958439-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:16.958433-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:16.958433-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:17.958431-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:17.958431-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:18.958402-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:18.958402-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:19.958389-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:19.958389-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:20.958362-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:20.958362-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:21.973714-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:21.973714-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:22.95831-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:22.95831-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:23.958314-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:23.958314-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:24.958275-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:24.958275-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:26.009917-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:26.009917-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:26.958251-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:26.958251-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:27.958215-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:27.958215-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:28.958224-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:28.958224-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:29.958174-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:29.958174-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:30.958178-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:30.958178-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:31.958163-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:31.958163-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:32.958138-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:32.958138-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:33.958118-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:33.958118-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:34.958115-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:34.958115-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:35.958066-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:35.958066-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:36.958042-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:36.958042-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:37.958033-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:37.958033-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:38.958022-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:38.958022-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:39.958071-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:39.958071-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:40.957938-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:40.957938-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:41.957959-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:41.957959-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:42.957914-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:42.957914-03:00","value":5,"tags":{}}}
+{"metric":"http_reqs","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":1,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_duration","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":59998.796,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_blocked","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":0.469,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_connecting","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":0.333,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_tls_handshaking","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":0,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_sending","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":0.375,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_waiting","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":59998.421,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_receiving","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":0,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_failed","type":"Point","data":{"time":"2025-12-14T04:01:43.011112-03:00","value":1,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"type":"Metric","data":{"name":"response_time_ms","type":"trend","contains":"default","thresholds":[],"submetrics":null},"metric":"response_time_ms"}
+{"metric":"response_time_ms","type":"Point","data":{"time":"2025-12-14T04:01:43.011365-03:00","value":60001,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"type":"Metric","data":{"name":"checks","type":"rate","contains":"default","thresholds":[],"submetrics":null},"metric":"checks"}
+{"metric":"checks","type":"Point","data":{"time":"2025-12-14T04:01:43.011399-03:00","value":0,"tags":{"check":"status is 200","group":"","scenario":"good_producer_test"}}}
+{"metric":"checks","type":"Point","data":{"time":"2025-12-14T04:01:43.011399-03:00","value":0,"tags":{"check":"response confirms shared connection","group":"","scenario":"good_producer_test"}}}
+{"type":"Metric","data":{"name":"success_rate","type":"rate","contains":"default","thresholds":[],"submetrics":null},"metric":"success_rate"}
+{"metric":"success_rate","type":"Point","data":{"time":"2025-12-14T04:01:43.011424-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"type":"Metric","data":{"name":"connection_errors","type":"counter","contains":"default","thresholds":[],"submetrics":null},"metric":"connection_errors"}
+{"metric":"connection_errors","type":"Point","data":{"time":"2025-12-14T04:01:43.011426-03:00","value":1,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:43.294873-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:43.294873-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"type":"Metric","data":{"name":"iteration_duration","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"iteration_duration"}
+{"metric":"iteration_duration","type":"Point","data":{"time":"2025-12-14T04:01:43.294873-03:00","value":60286.817958,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"type":"Metric","data":{"name":"iterations","type":"counter","contains":"default","thresholds":[],"submetrics":null},"metric":"iterations"}
+{"metric":"iterations","type":"Point","data":{"time":"2025-12-14T04:01:43.294873-03:00","value":1,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:43.961524-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:43.961524-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:44.957872-03:00","value":5,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:44.957872-03:00","value":5,"tags":{}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:45.007952-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:45.007952-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:45.957914-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:45.957914-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:46.957845-03:00","value":4,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:46.957845-03:00","value":5,"tags":{}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:47.007863-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:47.007863-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:47.957834-03:00","value":3,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:47.957834-03:00","value":5,"tags":{}}}
+{"metric":"http_reqs","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":1,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_duration","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":59998.519,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_blocked","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":0.627,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_connecting","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":0.418,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_tls_handshaking","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":0,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_sending","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":0.12,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_waiting","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":59998.399,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_receiving","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":0,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"http_req_failed","type":"Point","data":{"time":"2025-12-14T04:01:48.008934-03:00","value":1,"tags":{"error":"request timeout","error_code":"1050","expected_response":"false","group":"","method":"POST","name":"http://localhost:8080/api/v1/good-producer","scenario":"good_producer_test","status":"0","url":"http://localhost:8080/api/v1/good-producer"}}}
+{"metric":"response_time_ms","type":"Point","data":{"time":"2025-12-14T04:01:48.009167-03:00","value":60000,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"checks","type":"Point","data":{"time":"2025-12-14T04:01:48.009202-03:00","value":0,"tags":{"check":"status is 200","group":"","scenario":"good_producer_test"}}}
+{"metric":"checks","type":"Point","data":{"time":"2025-12-14T04:01:48.009202-03:00","value":0,"tags":{"check":"response confirms shared connection","group":"","scenario":"good_producer_test"}}}
+{"metric":"success_rate","type":"Point","data":{"time":"2025-12-14T04:01:48.009235-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"connection_errors","type":"Point","data":{"time":"2025-12-14T04:01:48.009237-03:00","value":1,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:48.234151-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:48.234151-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"iteration_duration","type":"Point","data":{"time":"2025-12-14T04:01:48.234151-03:00","value":60226.43,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"iterations","type":"Point","data":{"time":"2025-12-14T04:01:48.234151-03:00","value":1,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:48.957836-03:00","value":2,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:48.957836-03:00","value":5,"tags":{}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:49.007717-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:49.007717-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:49.957791-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:49.957791-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:50.957825-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:50.957825-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:51.957759-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:51.957759-03:00","value":5,"tags":{}}}
+{"metric":"vus","type":"Point","data":{"time":"2025-12-14T04:01:52.957736-03:00","value":1,"tags":{}}}
+{"metric":"vus_max","type":"Point","data":{"time":"2025-12-14T04:01:52.957736-03:00","value":5,"tags":{}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:53.007838-03:00","value":216,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:53.007838-03:00","value":0,"tags":{"group":"","scenario":"good_producer_test"}}}
+{"metric":"data_sent","type":"Point","data":{"time":"2025-12-14T04:01:53.00932-03:00","value":0,"tags":{"group":"::teardown"}}}
+{"metric":"data_received","type":"Point","data":{"time":"2025-12-14T04:01:53.00932-03:00","value":0,"tags":{"group":"::teardown"}}}

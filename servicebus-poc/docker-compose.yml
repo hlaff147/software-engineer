@@ -1,0 +1,45 @@
+services:
+  # SQL Edge - Backend necessário para o Service Bus Emulator
+  sqledge:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    # Não usar platform: linux/amd64 aqui - SQL Edge tem imagem nativa ARM64
+    container_name: sqledge
+    hostname: sqledge
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Str0ngP@ssword!"
+    ports:
+      - "1433:1433"
+    networks:
+      - servicebus-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sf http://localhost:1433 || exit 0" ] # TCP check - curl will fail gracefully but confirm port is listening
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # Azure Service Bus Emulator
+  servicebus-emulator:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    platform: linux/amd64 # Necessário para Mac M1/M2/M3 - emulador só existe para amd64
+    container_name: servicebus-emulator
+    hostname: servicebus-emulator
+    depends_on:
+      sqledge:
+        condition: service_healthy
+    environment:
+      SQL_SERVER: sqledge
+      MSSQL_SA_PASSWORD: "Str0ngP@ssword!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5672:5672" # AMQP
+      - "5671:5671" # AMQPS (seguro)
+    volumes:
+      - ./Config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
+    networks:
+      - servicebus-network
+
+networks:
+  servicebus-network:
+    driver: bridge
