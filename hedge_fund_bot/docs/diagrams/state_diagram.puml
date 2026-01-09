@@ -1,0 +1,84 @@
+@startuml hedge_fund_state_diagram
+!theme plain
+skinparam stateFontSize 14
+
+title Autonomous Hedge Fund Bot - State Machine Diagram
+
+[*] --> Supervisor : Start Analysis
+
+state Supervisor {
+    state "Analyze State" as analyze
+    state "Decide Next" as decide
+    
+    analyze --> decide : LLM routing
+}
+
+Supervisor --> Researcher : next = "Researcher"
+Supervisor --> Chartist : next = "Chartist"  
+Supervisor --> Analyst : next = "Analyst"
+Supervisor --> [*] : next = "FINISH"
+
+state Researcher {
+    state "Search News" as news
+    state "Search Sentiment" as sentiment
+    state "Summarize" as summarize
+    
+    news --> sentiment
+    sentiment --> summarize
+}
+
+state Chartist {
+    state "Fetch Data" as fetch
+    state "Calculate Indicators" as calc
+    state "Analyze Trends" as trends
+    
+    fetch --> calc
+    calc --> trends
+}
+
+state Analyst {
+    state "Synthesize Reports" as synth
+    state "Generate Recommendation" as rec
+    
+    synth --> rec
+}
+
+Researcher --> Supervisor : Research Complete
+Chartist --> Supervisor : Analysis Complete
+Analyst --> Supervisor : Report Generated
+
+note right of Supervisor
+    **Routing Logic:**
+    1. If Researcher never ran → Researcher
+    2. If Researcher done → Chartist
+    3. If both done → Analyst
+    4. If report exists → FINISH
+end note
+
+note right of Researcher
+    **Tools:**
+    - DuckDuckGo Search
+    
+    **Output:**
+    - News summary
+    - Sentiment analysis
+end note
+
+note right of Chartist
+    **Tools:**
+    - yFinance
+    
+    **Indicators:**
+    - RSI (14)
+    - MACD (12,26,9)
+    - SMA (20)
+end note
+
+note right of Analyst
+    **Output:**
+    - Executive Summary
+    - BUY/SELL/HOLD
+    - Risk Level
+end note
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml hedge_fund_activity_diagram
+!theme plain
+skinparam activityFontSize 12
+
+title Autonomous Hedge Fund Bot - Activity Diagram
+
+start
+
+:User enters stock ticker;
+
+:Initialize AgentState;
+note right
+    messages: [HumanMessage]
+    next: "Supervisor"
+    current_ticker: ticker
+    current_stock_data: {}
+    iteration_count: 0
+end note
+
+:Create LangGraph workflow;
+
+repeat
+
+    :Supervisor analyzes current state;
+    
+    if (All agents completed?) then (yes)
+        :Set next = "FINISH";
+    else (no)
+        if (Researcher not run?) then (yes)
+            :Set next = "Researcher";
+        elseif (Chartist not run?) then (yes)
+            :Set next = "Chartist";
+        else (Analyst not run)
+            :Set next = "Analyst";
+        endif
+    endif
+    
+    if (next == "Researcher") then (yes)
+        partition "Researcher Agent" {
+            :Search financial news;
+            :Search market sentiment;
+            :Summarize with LLM;
+            :Append research to messages;
+        }
+    elseif (next == "Chartist") then (yes)
+        partition "Chartist Agent" {
+            :Fetch 3-month stock data;
+            :Calculate RSI (14);
+            :Calculate MACD (12,26,9);
+            :Calculate SMA (20);
+            :Identify support/resistance;
+            :Analyze with LLM;
+            :Append analysis to messages;
+        }
+    elseif (next == "Analyst") then (yes)
+        partition "Analyst Agent" {
+            :Review all previous messages;
+            :Synthesize research + technicals;
+            :Generate investment report;
+            :Append final report to messages;
+        }
+    endif
+
+repeat while (next != "FINISH")
+
+:Extract final report from messages;
+
+:Display report to user;
+
+stop
+
+@enduml

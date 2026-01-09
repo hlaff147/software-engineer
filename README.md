@@ -3,20 +3,21 @@
   <img src="https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java">
   <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" alt="LangChain">
   <img src="https://img.shields.io/badge/Apache%20Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white" alt="Kafka">
   <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
 </p>
 
-# 🛠️ Software Engineer
+# 🛠️ Software & AI Engineer
 
-> A curated collection of hands-on projects exploring software engineering concepts, patterns, and modern technologies.
+> A curated collection of hands-on projects exploring software engineering, AI/ML, and modern technologies.
 
 ---
 
 ## 🎯 About This Repository
 
-This repository serves as a **learning lab** and **reference** for software engineering topics. Each project is:
+This repository serves as a **learning lab** and **reference** for software and AI engineering topics. Each project is:
 
 - ✅ **Self-contained** — Independent setup and documentation
 - ✅ **Well-tested** — Comprehensive test suites
@@ -25,15 +26,49 @@ This repository serves as a **learning lab** and **reference** for software engi
 
 ---
 
+## 📚 Study Guides
+
+| Guide | Description |
+|-------|-------------|
+| [🤖 AI Engineer Study Guide](./AI_ENGINEER_STUDY_GUIDE.md) | Comprehensive documentation on AI agent patterns, architectures, and LLM applications |
+| [☕ Java Developer Guide](./java-developer) | Interview preparation guide for Java backend developers |
+| [💼 PicPay Interview Study](./pic_pay_estudo_entrevista) | SOLID, CAP/ACID, Design Patterns, Microservices |
+
+---
+
 ## 📂 Projects
+
+### 🤖 AI & Machine Learning
 
 | Project | Description | Tech Stack | Status |
 |---------|-------------|------------|--------|
-| [🔄 kafka-consumer-groups](./kafka-consumer-groups) | Demonstrates Kafka consumer group behavior — how consumers with different group IDs independently process and acknowledge messages | Python, FastAPI, Kafka | ✅ Complete |
-| [💳 api-versioning](./api-versioning) | URL-based API versioning using Strategy Pattern with Spring's Map injection for dynamic strategy resolution | Java 17, Spring Boot 3 | ✅ Complete |
-| [🗄️ mongodb-objectid-proof](./mongodb-objectid-proof) | Proves that MongoDB ObjectIds contain embedded timestamps for chronological ordering | Python, FastAPI, MongoDB | ✅ Complete |
-| [☁️ servicebus-poc](./servicebus-poc) | Demonstrates proper vs improper connection management with Azure Service Bus — memory leak prevention | Java 17, Spring Boot, Azure | ✅ Complete |
-| [📚 java-developer](./java-developer) | Comprehensive interview preparation guide for Java backend developers | Markdown | ✅ Complete |
+| [🤖 hedge-fund-bot](./hedge_fund_bot) | Multi-agent AI system for automated stock analysis with self-correcting verification | LangGraph, LangChain, Groq, Llama 3.3 | ✅ Complete |
+
+### 🔌 API & Backend Development
+
+| Project | Description | Tech Stack | Status |
+|---------|-------------|------------|--------|
+| [💳 api-versioning](./api-versioning) | URL-based API versioning using Strategy Pattern with Spring's Map injection | Java 17, Spring Boot 3 | ✅ Complete |
+| [🏦 open-finance-payments](./open-finance-payments) | Open Finance Brazil Payment Initiation API v5.0.0-beta.1 (Detentora) | Java 17, Spring Boot, MongoDB | ✅ Complete |
+
+### 🔄 Event Streaming & Messaging
+
+| Project | Description | Tech Stack | Status |
+|---------|-------------|------------|--------|
+| [🔄 kafka-consumer-groups](./kafka-consumer-groups) | Demonstrates Kafka consumer group behavior and message acknowledgment | Python, FastAPI, Kafka | ✅ Complete |
+| [☁️ servicebus-poc](./servicebus-poc) | Azure Service Bus connection management and memory leak prevention | Java 17, Spring Boot, Azure | ✅ Complete |
+
+### 🗄️ Database & Infrastructure
+
+| Project | Description | Tech Stack | Status |
+|---------|-------------|------------|--------|
+| [🗄️ mongodb-objectid-proof](./mongodb-objectid-proof) | Proves MongoDB ObjectIds contain embedded timestamps for chronological ordering | Python, FastAPI, MongoDB | ✅ Complete |
+
+### 🔒 Security & Analysis
+
+| Project | Description | Tech Stack | Status |
+|---------|-------------|------------|--------|
+| [🛡️ vuln-analyzer-agent](./vuln-analyzer-agent) | Python agent for vulnerability analysis in Java Spring projects (OWASP, NVD, Mend) | Python, OWASP, NVD | ✅ Complete |
 
 ---
 
@@ -71,6 +106,15 @@ cd <project-name>
 <tr>
 <td width="50%">
 
+### 🤖 AI & LLM Engineering
+- Multi-agent systems (LangGraph)
+- Tool Use, ReAct patterns
+- Meta-Controller routing
+- PEV (Plan, Execute, Verify)
+
+</td>
+<td width="50%">
+
 ### 🔄 Event Streaming & Messaging
 - Kafka consumer groups
 - Azure Service Bus
@@ -78,51 +122,42 @@ cd <project-name>
 - Event-driven architecture
 
 </td>
+</tr>
+<tr>
 <td width="50%">
 
 ### 🎨 Design Patterns
 - Strategy Pattern
 - Factory Pattern
-- Singleton (Spring Beans)
+- Hexagonal Architecture
 - Dependency Injection
 
 </td>
-</tr>
-<tr>
 <td width="50%">
 
 ### 🌐 API Development
 - FastAPI async patterns
 - Spring Boot REST APIs
-- URL-based API versioning
-- OpenAPI documentation
-
-</td>
-<td width="50%">
-
-### 🗄️ Databases
-- MongoDB ObjectId internals
-- Timestamp extraction from ObjectId
-- Connection pooling best practices
+- URL-based versioning
+- Open Finance Brazil
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🧪 Testing Strategies
-- Unit testing (pytest, JUnit)
-- Integration testing
-- Load testing (k6)
-- Mocking external services
+### 🗄️ Databases
+- MongoDB ObjectId internals
+- Connection pooling
+- Document databases
 
 </td>
 <td width="50%">
 
-### 🐳 DevOps & Infrastructure
+### 🔒 Security & DevOps
+- Vulnerability scanning
+- OWASP Dependency-Check
 - Docker containerization
-- Docker Compose orchestration
-- Azure Service Bus Emulator
 - Makefile automation
 
 </td>
@@ -135,14 +170,15 @@ cd <project-name>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        TECH STACK                                │
+│                        TECH STACK                               │
 ├─────────────────────────────────────────────────────────────────┤
 │  Languages      │  Python 3.11+, Java 17+                       │
+│  AI/ML          │  LangChain, LangGraph, Groq, Llama 3.3        │
 │  Frameworks     │  FastAPI, Spring Boot 3, pytest, JUnit        │
 │  Message Broker │  Apache Kafka, Azure Service Bus              │
 │  Databases      │  MongoDB                                      │
 │  Containers     │  Docker, Docker Compose                       │
-│  Testing        │  pytest, JUnit, k6 (load testing)             │
+│  Security       │  OWASP, NVD, Mend.io                          │
 │  Build Tools    │  Maven, pip, Conda                            │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -153,40 +189,31 @@ cd <project-name>
 
 ```
 software-engineer/
-├── 📂 api-versioning/            # Spring Boot API versioning with Strategy Pattern
-│   ├── 📂 src/main/java/         # Java source code
-│   ├── 🐳 pom.xml                # Maven configuration
-│   └── 📖 README.md              # Project documentation
 │
-├── 📂 kafka-consumer-groups/     # Kafka consumer groups demo
-│   ├── 📂 app/                   # FastAPI application
-│   ├── 📂 tests/                 # Test suite
-│   ├── 📂 notebooks/             # Jupyter notebooks
-│   ├── 🐳 docker-compose.yml     # Kafka infrastructure
-│   └── 📖 README.md              # Project documentation
+├── 📚 Study Guides
+│   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md    # AI agent patterns and architectures
+│   ├── 📂 java-developer/               # Java interview preparation
+│   └── 📂 pic_pay_estudo_entrevista/    # SOLID, CAP/ACID, patterns
 │
-├── � mongodb-objectid-proof/    # MongoDB ObjectId timestamp proof
-│   ├── 📂 app/                   # FastAPI application
-│   ├── 📂 notebooks/             # Analysis notebook
-│   ├── 🐳 docker-compose.yml     # MongoDB container
-│   └── 📖 README.md              # Project documentation
+├── 🤖 AI & Machine Learning
+│   └── 📂 hedge_fund_bot/               # Multi-agent stock analysis (LangGraph)
 │
-├── 📂 servicebus-poc/            # Azure Service Bus connection management
-│   ├── 📂 src/                   # Spring Boot source
-│   ├── 📂 k6/                    # Load test scripts
-│   ├── 📂 analysis/              # Jupyter analysis notebooks
-│   ├── 🐳 docker-compose.yml     # Azure emulator
-│   └── 📖 README.md              # Project documentation
+├── 🔌 API & Backend
+│   ├── 📂 api-versioning/               # Strategy Pattern versioning
+│   └── 📂 open-finance-payments/        # Open Finance Brazil API
 │
-├── 📂 java-developer/            # Java interview preparation guide
-│   ├── 📄 01-java-core.md        # Java fundamentals
-│   ├── 📄 02-spring-boot.md      # Spring Boot concepts
-│   ├── 📄 03-microservices.md    # Microservices patterns
-│   ├── 📄 04-coding-questions.md # Coding challenges
-│   └── 📄 05-others.md           # Kafka, K8s, Docker, SQL
+├── 🔄 Event Streaming
+│   ├── 📂 kafka-consumer-groups/        # Kafka consumer groups demo
+│   └── 📂 servicebus-poc/               # Azure Service Bus POC
 │
-├── 📄 .gitignore                 # Git ignore rules
-└── 📖 README.md                  # This file
+├── 🗄️ Database
+│   └── 📂 mongodb-objectid-proof/       # ObjectId timestamp proof
+│
+├── 🔒 Security
+│   └── 📂 vuln-analyzer-agent/          # Vulnerability analysis agent
+│
+├── 📄 .gitignore
+└── 📖 README.md
 ```
 
 ---

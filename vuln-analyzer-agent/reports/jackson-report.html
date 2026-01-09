@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerability Report - vulnerable-jackson</title>
+    <style>
+        :root {
+            --critical: #dc2626;
+            --high: #ea580c;
+            --medium: #ca8a04;
+            --low: #2563eb;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+            --border: #334155;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        
+        h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+        
+        .meta { color: #94a3b8; font-size: 0.875rem; }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-card.critical { border-left: 4px solid var(--critical); }
+        .stat-card.high { border-left: 4px solid var(--high); }
+        .stat-card.medium { border-left: 4px solid var(--medium); }
+        .stat-card.low { border-left: 4px solid var(--low); }
+        
+        .stat-value { font-size: 2.5rem; font-weight: bold; }
+        .stat-label { color: #94a3b8; font-size: 0.875rem; }
+        
+        .critical .stat-value { color: var(--critical); }
+        .high .stat-value { color: var(--high); }
+        .medium .stat-value { color: var(--medium); }
+        .low .stat-value { color: var(--low); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        th, td { padding: 1rem; text-align: left; }
+        th { background: rgba(0,0,0,0.3); font-weight: 600; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-critical { background: rgba(220, 38, 38, 0.2); color: var(--critical); }
+        .badge-high { background: rgba(234, 88, 12, 0.2); color: var(--high); }
+        .badge-medium { background: rgba(202, 138, 4, 0.2); color: var(--medium); }
+        .badge-low { background: rgba(37, 99, 235, 0.2); color: var(--low); }
+        
+        .cve-link { color: #60a5fa; text-decoration: none; }
+        .cve-link:hover { text-decoration: underline; }
+        
+        .fix { color: #22c55e; font-weight: 500; }
+        
+        .section-title { 
+            font-size: 1.25rem; 
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .no-vulns {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .no-vulns-icon { font-size: 3rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 Vulnerability Analysis Report</h1>
+            <div class="meta">
+                <strong>Project:</strong> test-projects/vulnerable-jackson<br>
+                <strong>Scan Duration:</strong> 1.70s<br>
+                <strong>Sources:</strong> Offline-DB<br>
+                <strong>Generated:</strong> 2026-01-09 15:20:34
+            </div>
+        </header>
+        
+        <div class="summary">
+            <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Dependencies</div>
+            </div>
+            <div class="stat-card critical">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Critical</div>
+            </div>
+            <div class="stat-card high">
+                <div class="stat-value">2</div>
+                <div class="stat-label">High</div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Medium</div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Low</div>
+            </div>
+        </div>
+        
+        
+        <h2 class="section-title">Vulnerabilities (5)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>CVE/ID</th>
+                    <th>Severity</th>
+                    <th>CVSS</th>
+                    <th>Dependency</th>
+                    <th>Source</th>
+                    <th>Fix Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-14540" 
+                           target="_blank" class="cve-link">CVE-2019-14540</a>
+                    </td>
+                    <td><span class="badge badge-critical">CRITICAL</span></td>
+                    <td>9.8</td>
+                    <td>com.fasterxml.jackson.core:jackson-databind:2.9.8</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">2.9.10</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-1471" 
+                           target="_blank" class="cve-link">CVE-2022-1471</a>
+                    </td>
+                    <td><span class="badge badge-critical">CRITICAL</span></td>
+                    <td>9.8</td>
+                    <td>org.yaml:snakeyaml:1.30</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">2.0</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2015-6420" 
+                           target="_blank" class="cve-link">CVE-2015-6420</a>
+                    </td>
+                    <td><span class="badge badge-high">HIGH</span></td>
+                    <td>7.5</td>
+                    <td>commons-collections:commons-collections:3.2.1</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">3.2.2</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-12384" 
+                           target="_blank" class="cve-link">CVE-2019-12384</a>
+                    </td>
+                    <td><span class="badge badge-high">HIGH</span></td>
+                    <td>7.5</td>
+                    <td>com.fasterxml.jackson.core:jackson-databind:2.9.8</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">2.9.10</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-25647" 
+                           target="_blank" class="cve-link">CVE-2022-25647</a>
+                    </td>
+                    <td><span class="badge badge-medium">MEDIUM</span></td>
+                    <td>6.5</td>
+                    <td>com.google.code.gson:gson:2.8.5</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">2.8.9</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+        
+        
+        
+        <h2 class="section-title">Recommended Fixes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dependency</th>
+                    <th>Current Version</th>
+                    <th>Recommended Version</th>
+                    <th>CVEs Fixed</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>com.fasterxml.jackson.core:jackson-databind</td>
+                    <td style="color: var(--critical);">2.9.8</td>
+                    <td class="fix">2.9.10</td>
+                    <td>CVE-2019-12384, CVE-2019-14540</td>
+                </tr>
+                
+                <tr>
+                    <td>commons-collections:commons-collections</td>
+                    <td style="color: var(--critical);">3.2.1</td>
+                    <td class="fix">3.2.2</td>
+                    <td>CVE-2015-6420</td>
+                </tr>
+                
+                <tr>
+                    <td>org.yaml:snakeyaml</td>
+                    <td style="color: var(--critical);">1.30</td>
+                    <td class="fix">2.0</td>
+                    <td>CVE-2022-1471</td>
+                </tr>
+                
+                <tr>
+                    <td>com.google.code.gson:gson</td>
+                    <td style="color: var(--critical);">2.8.5</td>
+                    <td class="fix">2.8.9</td>
+                    <td>CVE-2022-25647</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        
+    </div>
+</body>
+</html>

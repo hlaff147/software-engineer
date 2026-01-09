@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.test</groupId>
+    <artifactId>vulnerable-jackson</artifactId>
+    <version>1.0.0</version>
+    <name>Jackson Deserialization Vulnerability Test</name>
+    <description>Project with vulnerable Jackson and other common libs</description>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- Jackson 2.9.8 - HIGH: CVE-2019-12384, CVE-2019-14540, CVE-2019-16335, etc. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+
+        <!-- Apache Commons Collections 3.2.1 - HIGH: CVE-2015-6420 (Deserialization RCE) -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- Snakeyaml 1.30 - HIGH: CVE-2022-1471 (Code execution) CVSS 9.8 -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.30</version>
+        </dependency>
+
+        <!-- Gson 2.8.5 - MEDIUM: CVE-2022-25647 -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,94 @@
+@startuml hedge_fund_component_diagram
+!theme plain
+skinparam componentFontSize 12
+skinparam packageFontSize 14
+
+title Autonomous Hedge Fund Bot - Component Diagram
+
+package "hedge_fund_bot" {
+    
+    component "main.py" as main {
+        port "CLI Interface" as cli
+        port "Report Display" as report
+    }
+    
+    package "src" {
+        
+        component "graph.py" as graph {
+            port "create_graph()" as create
+            port "invoke()" as invoke
+        }
+        
+        component "state.py" as state {
+            port "AgentState" as agentstate
+        }
+        
+        package "agents" {
+            component "supervisor.py" as supervisor
+            component "researcher.py" as researcher  
+            component "chartist.py" as chartist
+            component "analyst.py" as analyst
+        }
+        
+        package "tools" {
+            component "search_tools.py" as search {
+                port "search_financial_news()" as sfn
+                port "search_market_sentiment()" as sms
+            }
+            
+            component "financial_tools.py" as financial {
+                port "fetch_stock_data()" as fsd
+                port "calculate_rsi()" as rsi
+                port "calculate_macd()" as macd
+                port "calculate_sma()" as sma
+            }
+        }
+    }
+    
+    package "notebooks" {
+        component "hedge_fund_analysis.ipynb" as notebook
+    }
+}
+
+cloud "External Services" {
+    component "Groq API" as groq {
+        port "Llama 3.1 70B" as llama
+    }
+    
+    component "Yahoo Finance" as yahoo {
+        port "yfinance" as yf
+    }
+    
+    component "DuckDuckGo" as ddg {
+        port "Search API" as ddgsearch
+    }
+}
+
+' Internal connections
+main --> graph : uses
+graph --> state : manages
+graph --> supervisor : orchestrates
+graph --> researcher : orchestrates
+graph --> chartist : orchestrates
+graph --> analyst : orchestrates
+
+supervisor --> state : reads/writes
+researcher --> state : reads/writes
+chartist --> state : reads/writes
+analyst --> state : reads/writes
+
+researcher --> search : uses
+chartist --> financial : uses
+
+notebook --> graph : imports
+
+' External connections
+supervisor --> groq : invokes
+researcher --> groq : invokes
+chartist --> groq : invokes
+analyst --> groq : invokes
+
+search --> ddg : calls
+financial --> yahoo : calls
+
+@enduml

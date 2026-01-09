@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerability Report - vulnerable-mixed</title>
+    <style>
+        :root {
+            --critical: #dc2626;
+            --high: #ea580c;
+            --medium: #ca8a04;
+            --low: #2563eb;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+            --border: #334155;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        
+        h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+        
+        .meta { color: #94a3b8; font-size: 0.875rem; }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-card.critical { border-left: 4px solid var(--critical); }
+        .stat-card.high { border-left: 4px solid var(--high); }
+        .stat-card.medium { border-left: 4px solid var(--medium); }
+        .stat-card.low { border-left: 4px solid var(--low); }
+        
+        .stat-value { font-size: 2.5rem; font-weight: bold; }
+        .stat-label { color: #94a3b8; font-size: 0.875rem; }
+        
+        .critical .stat-value { color: var(--critical); }
+        .high .stat-value { color: var(--high); }
+        .medium .stat-value { color: var(--medium); }
+        .low .stat-value { color: var(--low); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        th, td { padding: 1rem; text-align: left; }
+        th { background: rgba(0,0,0,0.3); font-weight: 600; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-critical { background: rgba(220, 38, 38, 0.2); color: var(--critical); }
+        .badge-high { background: rgba(234, 88, 12, 0.2); color: var(--high); }
+        .badge-medium { background: rgba(202, 138, 4, 0.2); color: var(--medium); }
+        .badge-low { background: rgba(37, 99, 235, 0.2); color: var(--low); }
+        
+        .cve-link { color: #60a5fa; text-decoration: none; }
+        .cve-link:hover { text-decoration: underline; }
+        
+        .fix { color: #22c55e; font-weight: 500; }
+        
+        .section-title { 
+            font-size: 1.25rem; 
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .no-vulns {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .no-vulns-icon { font-size: 3rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 Vulnerability Analysis Report</h1>
+            <div class="meta">
+                <strong>Project:</strong> test-projects/vulnerable-mixed<br>
+                <strong>Scan Duration:</strong> 2.42s<br>
+                <strong>Sources:</strong> Offline-DB<br>
+                <strong>Generated:</strong> 2026-01-09 15:20:37
+            </div>
+        </header>
+        
+        <div class="summary">
+            <div class="stat-card">
+                <div class="stat-value">7</div>
+                <div class="stat-label">Dependencies</div>
+            </div>
+            <div class="stat-card critical">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Critical</div>
+            </div>
+            <div class="stat-card high">
+                <div class="stat-value">2</div>
+                <div class="stat-label">High</div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Medium</div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Low</div>
+            </div>
+        </div>
+        
+        
+        <h2 class="section-title">Vulnerabilities (6)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>CVE/ID</th>
+                    <th>Severity</th>
+                    <th>CVSS</th>
+                    <th>Dependency</th>
+                    <th>Source</th>
+                    <th>Fix Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-21724" 
+                           target="_blank" class="cve-link">CVE-2022-21724</a>
+                    </td>
+                    <td><span class="badge badge-critical">CRITICAL</span></td>
+                    <td>9.8</td>
+                    <td>org.postgresql:postgresql:42.2.5</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">42.3.3</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-26520" 
+                           target="_blank" class="cve-link">CVE-2022-26520</a>
+                    </td>
+                    <td><span class="badge badge-critical">CRITICAL</span></td>
+                    <td>9.8</td>
+                    <td>org.postgresql:postgresql:42.2.5</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">42.3.3</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-28052" 
+                           target="_blank" class="cve-link">CVE-2020-28052</a>
+                    </td>
+                    <td><span class="badge badge-high">HIGH</span></td>
+                    <td>8.1</td>
+                    <td>org.bouncycastle:bcprov-jdk15on:1.60</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">1.67</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-29425" 
+                           target="_blank" class="cve-link">CVE-2021-29425</a>
+                    </td>
+                    <td><span class="badge badge-high">HIGH</span></td>
+                    <td>7.5</td>
+                    <td>commons-io:commons-io:2.6</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">2.7</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-13956" 
+                           target="_blank" class="cve-link">CVE-2020-13956</a>
+                    </td>
+                    <td><span class="badge badge-medium">MEDIUM</span></td>
+                    <td>5.3</td>
+                    <td>org.apache.httpcomponents:httpclient:4.5.12</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">4.5.13</span></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-8908" 
+                           target="_blank" class="cve-link">CVE-2020-8908</a>
+                    </td>
+                    <td><span class="badge badge-low">LOW</span></td>
+                    <td>3.3</td>
+                    <td>com.google.guava:guava:29.0-jre</td>
+                    <td>Offline-DB</td>
+                    <td><span class="fix">30.0-jre</span></td>
+                </tr>
+                
+            </tbody>
+        </table>
+        
+        
+        
+        <h2 class="section-title">Recommended Fixes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dependency</th>
+                    <th>Current Version</th>
+                    <th>Recommended Version</th>
+                    <th>CVEs Fixed</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>org.apache.httpcomponents:httpclient</td>
+                    <td style="color: var(--critical);">4.5.12</td>
+                    <td class="fix">4.5.13</td>
+                    <td>CVE-2020-13956</td>
+                </tr>
+                
+                <tr>
+                    <td>com.google.guava:guava</td>
+                    <td style="color: var(--critical);">29.0-jre</td>
+                    <td class="fix">30.0-jre</td>
+                    <td>CVE-2020-8908</td>
+                </tr>
+                
+                <tr>
+                    <td>commons-io:commons-io</td>
+                    <td style="color: var(--critical);">2.6</td>
+                    <td class="fix">2.7</td>
+                    <td>CVE-2021-29425</td>
+                </tr>
+                
+                <tr>
+                    <td>org.bouncycastle:bcprov-jdk15on</td>
+                    <td style="color: var(--critical);">1.60</td>
+                    <td class="fix">1.67</td>
+                    <td>CVE-2020-28052</td>
+                </tr>
+                
+                <tr>
+                    <td>org.postgresql:postgresql</td>
+                    <td style="color: var(--critical);">42.2.5</td>
+                    <td class="fix">42.3.3</td>
+                    <td>CVE-2022-26520, CVE-2022-21724</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        
+    </div>
+</body>
+</html>

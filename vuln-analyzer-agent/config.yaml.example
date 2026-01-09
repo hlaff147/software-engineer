@@ -1,0 +1,25 @@
+# Mend.io credentials (optional - agent works without these)
+mend:
+  api_key: ""
+  user_key: ""
+  org_token: ""
+  url: "https://saas.mend.io"
+
+# NVD API Key (recommended to avoid rate limiting)
+# Get your key at: https://nvd.nist.gov/developers/request-an-api-key
+nvd:
+  api_key: ""
+
+# OWASP Dependency-Check configuration
+owasp:
+  path: ""  # Leave empty to auto-download
+  nvd_api_key: ""  # Same as nvd.api_key if not specified
+  
+# Analysis thresholds
+thresholds:
+  fail_on_cvss: 7.0  # Build fails if any vulnerability has CVSS >= this value
+  
+# Suppress specific vulnerabilities (false positives, etc.)
+suppressions: []
+  # - CVE-2023-12345
+  # - CVE-2024-67890
