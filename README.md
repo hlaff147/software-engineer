@@ -21,6 +21,7 @@
 |----------|----------|------------------|
 | **🤖 AI/ML** | 1 project | LangGraph, LangChain, Groq, Llama 3.3 |
 | **🔌 Backend APIs** | 2 projects | Spring Boot, Hexagonal Architecture, Strategy Pattern |
+| **🏦 Open Finance** | 3 microservices | Spring Boot, Feign Client, MongoDB, Microservices |
 | **📨 Event Streaming** | 2 projects | Kafka, Azure Service Bus |
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
 | **🔒 Security** | 1 project | OWASP, NVD, Vulnerability Analysis |
@@ -141,61 +142,59 @@ Map<String, PaymentStrategy> strategies;
 
 ---
 
-### [Open Finance Payments API](./open-finance-payments)
+### [Open Finance Microservices](./open-finance)
 
-Implementation of **Open Finance Brazil Payment Initiation API v5.0.0-beta.1** as Account Holder (Detentora).
+Implementation of **Open Finance Brazil Payment Initiation API v5.0.0-beta.1** as Account Holder (Detentora). Refactored from monolith to **microservices architecture**.
 
 <table>
 <tr>
 <td width="50%">
 
-**🏗️ Hexagonal Architecture**
+**🏗️ Microservices Architecture**
 ```
 ┌─────────────────────────────────────────┐
-│             Adapter Layer               │
-│  ┌─────────────┐    ┌────────────────┐  │
-│  │ REST Input  │    │ MongoDB Output │  │
-│  │ Controllers │    │  Repositories  │  │
-│  └──────┬──────┘    └───────▲────────┘  │
-└─────────┼───────────────────┼───────────┘
-          │                   │
-┌─────────▼───────────────────▼───────────┐
-│           Application Layer             │
-│  ┌──────────────────────────────────┐   │
-│  │      Use Cases / Services        │   │
-│  └──────────────────────────────────┘   │
-└─────────────────────────────────────────┘
-          │
-┌─────────▼───────────────────────────────┐
-│             Domain Layer                │
-│  ┌──────────┐  ┌────────┐  ┌────────┐   │
-│  │ Consent  │  │ Payment│  │ Rules  │   │
-│  └──────────┘  └────────┘  └────────┘   │
-└─────────────────────────────────────────┘
+│           open-finance-common           │
+│  (Shared DTOs, Enums, Exceptions)       │
+└─────────────────┬───────────────────────┘
+                  │
+      ┌───────────┴───────────┐
+      ▼                       ▼
+┌─────────────────┐   ┌─────────────────┐
+│ open-finance-   │   │ open-finance-   │
+│    consent      │   │    payment      │
+│  (Port 8081)    │   │  (Port 8082)    │
+└─────────────────┘   └─────────────────┘
+      ▲                       │
+      │       Feign Client    │
+      └───────────────────────┘
 ```
 
 </td>
 <td width="50%">
 
+**📦 Microservices**
+| Service | Description |
+|---------|-------------|
+| **common** | Shared library (DTOs, enums) |
+| **consent** | Consent management API |
+| **payment** | Payment initiation API |
+
 **📡 API Endpoints**
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/consents` | Create consent |
-| GET | `/consents/{id}` | Get consent |
-| POST | `/pix/payments` | Create Pix |
-| GET | `/pix/payments/{id}` | Get payment |
-| PATCH | `/pix/payments/{id}` | Cancel |
+| Service | Endpoints |
+|---------|----------|
+| Consent | `POST/GET /consents` |
+| Payment | `POST/GET/PATCH /pix/payments` |
 
 **🎨 Patterns**
 - Hexagonal Architecture
 - Strategy + Factory (versioning)
-- Mocked external services (DICT, SPI)
+- Inter-service communication (Feign)
 
 </td>
 </tr>
 </table>
 
-**Tech Stack:** `Java 17` `Spring Boot 3` `MongoDB` `Docker` `Swagger/OpenAPI`
+**Tech Stack:** `Java 17` `Spring Boot 3` `Feign Client` `MongoDB` `Docker` `Swagger/OpenAPI`
 
 ---
 
@@ -414,7 +413,8 @@ vuln-analyzer fix /path --dry-run
 |---------|---------|-------------|
 | **Strategy** | api-versioning, open-finance | Encapsulate varying behavior |
 | **Factory** | api-versioning, open-finance | Dynamic object creation |
-| **Hexagonal** | open-finance-payments | Ports & Adapters architecture |
+| **Hexagonal** | open-finance | Ports & Adapters architecture |
+| **Microservices** | open-finance | Service decomposition |
 | **Multi-Agent** | hedge_fund_bot | Specialized collaborating agents |
 | **PEV** | hedge_fund_bot | Plan, Execute, Verify with retry |
 | **Meta-Controller** | hedge_fund_bot | Intelligent routing |
@@ -495,10 +495,14 @@ software-engineer/
 │       └── docs/                        # Architecture diagrams
 │
 ├── 🔌 API & Backend
-│   ├── 📂 api-versioning/               # Strategy + Factory pattern
-│   │   └── src/.../strategy/            # PaymentStrategy implementations
-│   └── 📂 open-finance-payments/        # Open Finance Brazil API
-│       └── src/.../                     # Hexagonal architecture
+│   └── 📂 api-versioning/               # Strategy + Factory pattern
+│       └── src/.../strategy/            # PaymentStrategy implementations
+│
+├── 🏦 Open Finance Microservices
+│   └── 📂 open-finance/                 # Open Finance Brazil API
+│       ├── 📂 open-finance-common/      # Shared library (DTOs, enums)
+│       ├── 📂 open-finance-consent/     # Consent microservice
+│       └── 📂 open-finance-payment/     # Payment microservice
 │
 ├── 📨 Event Streaming
 │   ├── 📂 kafka-consumer-groups/        # Consumer group isolation proof
