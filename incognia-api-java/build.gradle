@@ -1,0 +1,140 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'com.diffplug.spotless' version '6.11.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+    id 'io.github.goooler.shadow' version '8.1.7' apply false
+}
+
+group = "com.incognia"
+version = "3.10.0"
+
+task createProjectVersionFile {
+    def projectVersionDir = "$projectDir/src/main/java/com/incognia/api"
+    doLast {
+        new File(projectVersionDir, "ProjectVersion.java").text =
+"""package com.incognia.api;
+
+public class ProjectVersion {
+  public static final String PROJECT_VERSION = "$project.version";
+}
+"""
+    }
+}
+compileJava.dependsOn createProjectVersionFile
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    testCompileOnly.extendsFrom compileOnly
+    testAnnotationProcessor.extendsFrom annotationProcessor
+}
+
+ext {
+    lombokVersion = '1.18.32'
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    implementation platform("com.squareup.okhttp3:okhttp-bom:4.12.0")
+    implementation "com.squareup.okhttp3:okhttp"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.17.1"
+
+    testImplementation 'com.auth0:java-jwt:4.4.0'
+    testImplementation 'commons-io:commons-io:2.16.1'
+    testImplementation 'org.assertj:assertj-core:3.26.0'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-inline:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+    testImplementation "com.squareup.okhttp3:mockwebserver"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.2"
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+compileJava {
+    sourceCompatibility '1.8'
+    targetCompatibility '1.8'
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
+
+def isShadow = project.findProperty("shadow") == "true"
+if (isShadow) {
+    apply plugin: 'io.github.goooler.shadow'
+    shadowJar {
+        archiveClassifier.set('')
+        relocate 'okhttp3', 'incognia.shadow.okhttp3'
+        relocate 'com.fasterxml', 'incognia.shadow.com.fasterxml'
+        relocate 'com.auth0', 'incognia.shadow.com.auth0'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) { publication ->
+            if (isShadow) {
+                publication.artifactId = 'incognia-api-client-shaded'
+                artifact shadowJar
+            } else {
+                from components.java
+                publication.artifactId = 'incognia-api-client'
+            }
+            pom {
+                name = 'Incognia API Client'
+                description = "Java client library for Incognia's API"
+                url = 'https://github.com/inloco/incognia-api-java'
+                developers {
+                    developer {
+                        id = 'racevedoo'
+                        name = 'Rafael Acevedo'
+                        email = 'rafael.acevedo@incognia.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/inloco/incognia-api-java.git'
+                    developerConnection = 'scm:git:ssh://github.com/inloco/incognia-api-java.git'
+                    url = 'https://github.com/inloco/incognia-api-java'
+                }
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url 's3://repo.incognia.com/java'
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
+    }
+}
+
+tasks.withType(PublishToMavenLocal) {
+    dependsOn jar
+}

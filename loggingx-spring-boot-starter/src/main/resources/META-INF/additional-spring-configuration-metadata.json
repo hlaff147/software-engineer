@@ -1,0 +1,75 @@
+{
+  "properties": [
+    {
+      "name": "loggingx.service",
+      "type": "java.lang.String",
+      "description": "Nome do microserviço para identificação nos logs. É obrigatório configurar este campo.",
+      "defaultValue": "unknown"
+    },
+    {
+      "name": "loggingx.env",
+      "type": "java.lang.String", 
+      "description": "Ambiente de execução (dev, qa, prod) para identificação nos logs.",
+      "defaultValue": "dev"
+    },
+    {
+      "name": "loggingx.version",
+      "type": "java.lang.String",
+      "description": "Versão da aplicação para identificação nos logs.",
+      "defaultValue": "local"
+    },
+    {
+      "name": "loggingx.redact-keys",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Lista de chaves que devem ser mascaradas nos logs para proteger dados sensíveis.",
+      "defaultValue": ["password", "token", "cpf", "email", "secret", "key", "authorization"]
+    },
+    {
+      "name": "loggingx.max-payload-length",
+      "type": "java.lang.Integer",
+      "description": "Tamanho máximo do payload antes do truncamento (em caracteres).",
+      "defaultValue": 4096
+    },
+    {
+      "name": "loggingx.http.server.log-body",
+      "type": "java.lang.Boolean",
+      "description": "Se deve logar corpo das requisições/respostas HTTP do servidor. Atenção ao volume de logs e dados sensíveis.",
+      "defaultValue": false
+    },
+    {
+      "name": "loggingx.http.client.log-body", 
+      "type": "java.lang.Boolean",
+      "description": "Se deve logar corpo das requisições/respostas HTTP do cliente. Atenção ao volume de logs e dados sensíveis.",
+      "defaultValue": false
+    },
+    {
+      "name": "loggingx.kafka.log-payload",
+      "type": "java.lang.Boolean", 
+      "description": "Se deve logar payload das mensagens Kafka. Atenção ao volume de logs e dados sensíveis.",
+      "defaultValue": false
+    },
+    {
+      "name": "loggingx.mongo.slow-queries-only",
+      "type": "java.lang.Boolean",
+      "description": "Se deve logar apenas queries MongoDB que excedem o threshold de tempo.",
+      "defaultValue": false
+    },
+    {
+      "name": "loggingx.mongo.slow-threshold-ms",
+      "type": "java.lang.Long",
+      "description": "Threshold em milissegundos para considerar uma query MongoDB como lenta.",
+      "defaultValue": 1000
+    }
+  ],
+  "hints": [
+    {
+      "name": "loggingx.env",
+      "values": [
+        {"value": "dev", "description": "Ambiente de desenvolvimento"},
+        {"value": "qa", "description": "Ambiente de quality assurance"},
+        {"value": "staging", "description": "Ambiente de staging"},
+        {"value": "prod", "description": "Ambiente de produção"}
+      ]
+    }
+  ]
+}

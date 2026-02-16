@@ -1,0 +1,271 @@
+@startuml Wallet API Architecture
+
+' Permite a mistura de diferentes elementos UML, como classes e componentes de nuvem.
+allowmixing
+
+skinparam backgroundColor #FEFEFE
+skinparam class {
+    BackgroundColor #E8F4FD
+    BorderColor #1976D2
+    ArrowColor #1976D2
+}
+skinparam package {
+    BackgroundColor #F3E5F5
+    BorderColor #7B1FA2
+}
+skinparam cloud {
+    BackgroundColor #FFF9C4
+    BorderColor #FBC02D
+}
+skinparam database {
+    BackgroundColor #E0F2F1
+    BorderColor #00796B
+}
+skinparam artifact {
+    BackgroundColor #FFFFFF
+    BorderColor #424242
+}
+
+title Wallet API - Arquitetura em Camadas
+
+package "Controllers" {
+    class WalletController {
+        +createWallet()
+        +getWallet()
+        +getBalance()
+        +deposit()
+        +withdraw()
+    }
+    
+    class TransferController {
+        +transfer()
+    }
+    
+    class LedgerController {
+        +getLedgerEntries()
+        +getBalanceHistory()
+    }
+}
+
+package "DTOs" {
+    class CreateWalletRequest {
+        +userId: String
+        +currency: Currency
+    }
+    
+    class WalletResponse {
+        +id: String
+        +userId: String
+        +currency: Currency
+        +balance: Long
+        +status: WalletStatus
+        +createdAt: Instant
+        +updatedAt: Instant
+    }
+    
+    class AmountRequest {
+        +amount: Long
+    }
+    
+    class TransferRequest {
+        +fromWalletId: String
+        +toWalletId: String
+        +amount: Long
+    }
+    
+    class BalanceResponse {
+        +id: String
+        +balance: Long
+        +currency: Currency
+        +asOf: Instant
+    }
+    
+    class LedgerEntryResponse {
+        +id: String
+        +walletId: String
+        +transferId: String
+        +operation: OperationType
+        +amount: Long
+        +occurredAt: Instant
+        +resultingBalance: Long
+        +metadata: Map
+    }
+}
+
+package "Services" {
+    interface WalletService {
+        +createWallet()
+        +getWallet()
+        +deposit()
+        +withdraw()
+        +transfer()
+        +getLedgerEntries()
+        +getBalanceHistory()
+    }
+    
+    class WalletServiceImpl {
+        +createWallet()
+        +getWallet()
+        +deposit()
+        +withdraw()
+        +transfer()
+        +getLedgerEntries()
+        +getBalanceHistory()
+    }
+}
+
+package "Mappers" {
+    class WalletMapper {
+        +toModel()
+        +toResponse()
+    }
+    
+    class LedgerEntryMapper {
+        +toResponse()
+    }
+    
+    class BalanceMapper {
+        +toCurrentBalance()
+    }
+}
+
+package "Models" {
+    class Wallet {
+        +id: String
+        +userId: String
+        +currency: Currency
+        +balance: Long
+        +status: WalletStatus
+        +createdAt: Instant
+        +updatedAt: Instant
+    }
+    
+    class LedgerEntry {
+        +id: String
+        +walletId: String
+        +transferId: String
+        +operation: OperationType
+        +amount: Long
+        +occurredAt: Instant
+        +resultingBalance: Long
+        +metadata: Map
+    }
+}
+
+package "Repositories" {
+    interface WalletRepository {
+        +findByUserIdAndCurrency()
+        +save()
+        +findById()
+    }
+    
+    interface LedgerEntryRepository {
+        +findByWalletIdAndOccurredAtBetween()
+        +findByWalletIdAndOccurredAtLessThanEqual()
+        +save()
+    }
+}
+
+package "Enums" {
+    enum Currency {
+        BRL
+        USD
+        EUR
+    }
+    
+    enum WalletStatus {
+        ACTIVE
+        INACTIVE
+        BLOCKED
+    }
+    
+    enum OperationType {
+        DEPOSIT
+        WITHDRAW
+        TRANSFER_DEBIT
+        TRANSFER_CREDIT
+    }
+}
+
+package "Exceptions" {
+    class BusinessException
+    class NotFoundException
+    class InsufficientFundsException
+    class GlobalExceptionHandler
+}
+
+package "Utils" {
+    class MoneyUtil {
+        +formatCents()
+        +parseToCents()
+    }
+    
+    class CorrelationId {
+        +generate()
+        +get()
+        +set()
+    }
+    
+    class DateUtil {
+        +formatInstant()
+        +parseInstant()
+    }
+}
+
+' Representação do banco de dados corrigida usando 'artifact' e um alias 'as DB'.
+cloud "MongoDB" {
+    database "wallet_db" as DB {
+        artifact "wallets"
+        artifact "ledger_entries"
+    }
+}
+
+' Relationships
+WalletController --> WalletService
+TransferController --> WalletService
+LedgerController --> WalletService
+
+WalletService <|.. WalletServiceImpl
+
+WalletServiceImpl --> WalletRepository
+WalletServiceImpl --> LedgerEntryRepository
+WalletServiceImpl --> WalletMapper
+WalletServiceImpl --> LedgerEntryMapper
+WalletServiceImpl --> BalanceMapper
+
+WalletRepository --> Wallet
+LedgerEntryRepository --> LedgerEntry
+
+' Relações com o banco de dados corrigidas usando o alias.
+WalletRepository --> DB
+LedgerEntryRepository --> DB
+
+Wallet --> Currency
+Wallet --> WalletStatus
+LedgerEntry --> OperationType
+
+WalletServiceImpl --> MoneyUtil
+WalletServiceImpl --> CorrelationId
+WalletServiceImpl --> DateUtil
+
+GlobalExceptionHandler --> BusinessException
+GlobalExceptionHandler --> NotFoundException
+GlobalExceptionHandler --> InsufficientFundsException
+
+note right of WalletServiceImpl
+  Regras de Negócio:
+  - Validação de saldo
+  - Controle de transferências
+  - Auditoria via LedgerEntry
+  - Geração de correlation IDs
+end note
+
+note right of LedgerEntry
+  Auditoria completa:
+  - Todas operações registradas
+  - Saldo resultante
+  - Metadata flexível
+  - Timestamp preciso
+end note
+
+@enduml

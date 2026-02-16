@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.5</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.hlaff</groupId>
+	<artifactId>loggingx-spring-boot-starter</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>LoggingX Spring Boot Starter</name>
+	<description>Biblioteca genérica de logging estruturado (técnico e de negócio) com AOP e correlação para Spring (Java 17).</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<!-- Núcleo do starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- AOP para @Aspect funcionar -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<!-- Lombok para reduzir boilerplate -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Processor para @ConfigurationProperties (gera metadata para IDE) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- JSON processing -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- (Opcional) Web / Servlet APIs para filtro de correlação e interceptors HTTP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- (Opcional) Kafka interceptors -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>3.8.0</version>
+			<optional>true</optional>
+		</dependency>
+
+                <!-- (Opcional) Mongo command listener -->
+                <dependency>
+                        <groupId>org.mongodb</groupId>
+                        <artifactId>mongodb-driver-core</artifactId>
+                        <version>5.5.1</version>
+                        <optional>true</optional>
+                </dependency>
+                <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                        <optional>true</optional>
+                </dependency>
+
+                <!-- (Opcional) Azure Service Bus -->
+                <dependency>
+                        <groupId>com.azure</groupId>
+                        <artifactId>azure-messaging-servicebus</artifactId>
+                        <version>7.15.0</version>
+                        <optional>true</optional>
+                </dependency>
+
+                <!-- (Opcional) JDBC DataSource proxy -->
+                <dependency>
+                        <groupId>net.ttddyy</groupId>
+                        <artifactId>datasource-proxy</artifactId>
+                        <version>1.9</version>
+                        <optional>true</optional>
+                </dependency>
+
+		<!-- (Opcional) Encoder JSON logback -->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>8.0</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Testes -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Evita reempacotar como app executável (starters geralmente não são apps) -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

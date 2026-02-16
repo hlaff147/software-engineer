@@ -1,0 +1,369 @@
+# 🚫 Wallet API - GitIgnore
+# Arquivo de exclusões para controle de versão Git
+
+######################
+# 📦 BUILD ARTIFACTS #
+######################
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Gradle (caso migre no futuro)
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# JAR/WAR/EAR files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Spring Boot artifacts
+*.jar.original
+
+####################
+# 🔧 IDEs & EDITORS #
+####################
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+### Eclipse / STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Visual Studio Code ###
+.vscode/
+*.code-workspace
+
+### Vim ###
+*.swp
+*.swo
+*~
+
+### Emacs ###
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+########################
+# 🖥️ OPERATING SYSTEMS #
+########################
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+
+### Linux ###
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+###################
+# ☕ JAVA SPECIFIC #
+###################
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+spring.log*
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# JVM Crash dumps
+*.hprof
+
+#########################
+# 🌱 SPRING BOOT SPECIFIC #
+#########################
+
+# Spring Boot DevTools
+.factorypath
+
+# Spring Boot properties (se contém dados sensíveis)
+# application-local.yml
+# application-dev.yml
+# application-prod.yml
+
+# H2 Database files (se usado)
+*.db
+
+########################
+# 🗄️ DATABASE & CONFIG #
+########################
+
+# H2 Database
+*.h2.db
+*.mv.db
+*.trace.db
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Database dumps
+*.sql
+*.dump
+
+###################
+# 🐳 DOCKER FILES #
+###################
+
+# Docker volumes
+docker-data/
+volumes/
+
+# Docker override files (desenvolvimento local)
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Docker build context exclusions já estão no .dockerignore
+
+####################
+# 📝 DOCUMENTATION #
+####################
+
+# Generated documentation
+/docs/generated/
+/docs/build/
+
+# PlantUML generated images
+*.png
+*.svg
+docs/*.png
+docs/*.svg
+
+# Temporary documentation files
+*.tmp.md
+
+##################
+# 🧪 TESTING     #
+##################
+
+# Test results
+/test-results/
+/coverage/
+*.lcov
+
+# JaCoCo test coverage
+jacoco.exec
+target/site/jacoco/
+
+# Surefire reports
+target/surefire-reports/
+
+# Failsafe reports
+target/failsafe-reports/
+
+# TestContainers
+.testcontainers/
+
+####################
+# 🔐 SECURITY FILES #
+####################
+
+# SSH keys
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+*.keystore
+*.truststore
+
+# API keys e secrets
+secrets/
+.secrets/
+*-secrets.yml
+*-secrets.yaml
+*-secrets.properties
+
+# JWT keys
+jwt-*.key
+*.jwt
+
+##################
+# 🛠️ TOOLS & TEMP #
+##################
+
+# Maven wrapper (manter o script, não o JAR)
+.mvn/wrapper/maven-wrapper.jar
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+
+# Caches
+.cache/
+*.cache
+
+# Node.js (se usar ferramentas front-end)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Package lock files (se não usar)
+package-lock.json
+yarn.lock
+
+####################
+# 📊 MONITORING    #
+####################
+
+# Application logs
+application.log*
+application-*.log
+
+# Metrics and monitoring data
+metrics/
+monitoring/
+
+# Micrometer/Prometheus data
+*.prom
+
+##################
+# 🔄 CI/CD       #
+##################
+
+# CI/CD temporary files
+.ci/
+.github/workflows/local/
+.gitlab-ci-local/
+
+# Deployment artifacts
+deploy/
+deployment/
+
+# Helm charts values (se contém dados sensíveis)
+# helm/values-local.yaml
+# helm/values-dev.yaml
+
+###################
+# 📱 MOBILE/WEB   #
+###################
+
+# React/Angular builds (se adicionar frontend)
+/frontend/build/
+/frontend/dist/
+/frontend/node_modules/
+
+###################
+# 🎯 PROJECT SPECIFIC #
+###################
+
+# Wallet API specific temporary files
+wallet-data/
+backup/
+backups/
+
+# Local configuration overrides
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# Development scripts output
+dev-output/
+
+# Local database exports
+wallet-export-*
+
+# Performance test results
+performance/
+load-test-results/
+
+####################
+# 📋 HELP & README #
+####################
+
+# Spring Boot auto-generated help
+HELP.md
+
+##################
+# 🔚 END OF FILE #
+##################
+
+# Linhas em branco no final do arquivo são intencionais para compatibilidade

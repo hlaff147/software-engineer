@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/users_db
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+server:
+  port: 8080
