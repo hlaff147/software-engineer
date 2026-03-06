@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java">
+  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" alt="LangGraph">
@@ -20,12 +21,13 @@
 | Category | Projects | Key Technologies |
 |----------|----------|------------------|
 | **🤖 AI/ML** | 1 project | LangGraph, LangChain, Groq, Llama 3.3 |
-| **🔌 Backend APIs** | 2 projects | Spring Boot, Hexagonal Architecture, Strategy Pattern |
+| **🔌 Backend APIs** | 5 projects | Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern |
 | **🏦 Open Finance** | 3 microservices | Spring Boot, Feign Client, MongoDB, Microservices |
 | **📨 Event Streaming** | 2 projects | Kafka, Azure Service Bus |
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
-| **🔒 Security** | 1 project | OWASP, NVD, Vulnerability Analysis |
-| **📚 Study Guides** | 3 guides | AI Patterns, Java Core, Interview Prep |
+| **🔒 Security** | 2 projects | OWASP, NVD, Incognia, Vulnerability Analysis |
+| **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
+| **📚 Study Guides** | 4 guides | AI Patterns, Java Core, System Design, Interview Prep |
 
 ---
 
@@ -35,7 +37,8 @@
 |-------|-------------|--------|
 | [🤖 AI Engineer Study Guide](./AI_ENGINEER_STUDY_GUIDE.md) | Comprehensive AI agent patterns and architectures | 17 patterns: Reflection, ReAct, Multi-Agent, PEV, Meta-Controller |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation | Java Core, Spring Boot, Microservices, Kafka, K8s |
-| [💼 PicPay Interview Study](./pic_pay_estudo_entrevista) | Quick reference for interviews | SOLID, CAP/ACID, Design Patterns, LeetCode |
+| [💼 PicPay Interview Study](./study_interview_system_design) | Quick reference for interviews | SOLID, CAP/ACID, Design Patterns, LeetCode |
+| [🏛️ System Design Diagrams](./system-design) | Visual system design references | Payment systems, Saga patterns, CAP theorem |
 
 ---
 
@@ -139,6 +142,135 @@ Map<String, PaymentStrategy> strategies;
 </table>
 
 **Tech Stack:** `Java 17` `Spring Boot 3` `Maven`
+
+---
+
+### [Wallet API](./wallet-api)
+
+Production-ready REST service for managing **digital wallets** with full audit trail and ledger-based balance tracking.
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Architecture**
+```
+HTTP → Controller → Service → Mapper → Repository → MongoDB
+            ↕            ↕
+          DTOs          Domain
+                         │
+                    Ledger Entries
+              (immutable audit trail)
+```
+
+</td>
+<td width="50%">
+
+**✨ Features**
+| Feature | Description |
+|---------|-------------|
+| **Multi-Currency** | BRL, USD, EUR support |
+| **Audit Trail** | Immutable ledger entries |
+| **Full CRUD** | Create, deposit, withdraw, transfer |
+| **Swagger** | Interactive API documentation |
+
+**📡 Operations**
+- 💰 Create wallet
+- ➕ Deposit funds
+- ➖ Withdraw funds
+- 🔄 Transfer between users
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Java 17` `Spring Boot 3` `MongoDB` `Docker` `Swagger/OpenAPI` `Maven`
+
+---
+
+### [CoraBank API](./corabank-api)
+
+Technical challenge: a **bank account creation API** with referral code support and bug fixing exercise.
+
+<table>
+<tr>
+<td width="50%">
+
+**📡 API Endpoint**
+```
+POST /corabank
+{
+  "name": "User Name",
+  "cpf": "12345678901",
+  "referralCode": "CORA10"
+}
+```
+
+**💡 Referral Logic**
+- Valid code → account starts with **R$10.00**
+- No code → account starts with **R$0.00**
+- All accounts default to **active** status
+
+</td>
+<td width="50%">
+
+**🎯 Challenge Objectives**
+| Goal | Description |
+|------|-------------|
+| **Bug Fixing** | Identify and fix AI-generated bugs |
+| **Refactoring** | Eliminate code smells |
+| **Implementation** | Complete missing features |
+| **Testing** | Add automated tests (bonus) |
+
+**🗄️ Database:** H2 in-memory
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Java` `Spring Boot` `H2 Database` `Gradle`
+
+---
+
+### [User API](./userApi)
+
+RESTful CRUD API for user management built with **Kotlin** and **Spring Boot**, using MongoDB and BCrypt password hashing.
+
+<table>
+<tr>
+<td width="50%">
+
+**📂 Project Structure**
+```
+src/main/kotlin/user/userApi/
+├── UserApiApplication.kt
+├── domain/         # Domain entities
+├── dto/            # Request/Response DTOs
+├── repository/     # MongoRepository
+├── service/        # Business logic
+├── controller/     # REST endpoints
+└── config/         # Extra configs
+```
+
+</td>
+<td width="50%">
+
+**📡 API Endpoints**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/users` | Create user |
+| GET | `/api/users` | List (paginated) |
+| GET | `/api/users/{id}` | Get by ID |
+| PATCH | `/api/users/{id}` | Update user |
+| DELETE | `/api/users/{id}` | Delete user |
+
+**🛡️ Validations:** Name (2-120 chars), Email (unique), Password (6+ chars, BCrypt hashed)
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Kotlin` `Spring Boot` `Spring Data MongoDB` `BCrypt` `Maven` `Docker`
 
 ---
 
@@ -405,6 +537,100 @@ vuln-analyzer fix /path --dry-run
 
 ---
 
+### [Incognia API Java Client](./incognia-api-java)
+
+Java lightweight client library for **Incognia location identity APIs** — risk assessment for signups, logins and payments.
+
+<table>
+<tr>
+<td width="50%">
+
+**🔐 API Operations**
+| Operation | Description |
+|-----------|-------------|
+| `registerSignup` | Risk assessment for signups |
+| `registerLogin` | Risk assessment for logins |
+| `registerPayment` | Risk assessment for payments |
+| `registerFeedback` | Report fraud events |
+| `registerWebSignup` | Web-based signup assessment |
+| `registerWebLogin` | Web-based login assessment |
+
+</td>
+<td width="50%">
+
+**🎨 Design Patterns**
+| Pattern | Implementation |
+|---------|----------------|
+| **Multiton** | One instance per (clientId, clientSecret) |
+| **Builder** | Fluent API for all requests |
+| **Token Management** | Transparent auth renewal |
+
+**⚙️ Customization**
+```java
+CustomOptions.builder()
+  .timeoutMillis(2000L)
+  .keepAliveSeconds(3000)
+  .maxConnections(5)
+  .build();
+```
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Java 8+` `OkHttp` `Gradle` `JUnit` `MIT License`
+
+---
+
+## 📐 Observability & Libraries
+
+### [LoggingX Spring Boot Starter](./loggingx-spring-boot-starter)
+
+Plug-and-play library to **standardize technical and business logs** across Java Spring microservices with end-to-end correlation.
+
+<table>
+<tr>
+<td width="50%">
+
+**🚀 Key Features**
+| Feature | Description |
+|---------|-------------|
+| **Structured JSON** | All logs in JSON format |
+| **Correlation** | Auto-propagation of correlationId |
+| **AOP Logging** | `@Loggable` and `@BusinessEvent` annotations |
+| **PII Redaction** | Automatic masking of sensitive data |
+| **Performance** | <2% CPU overhead with smart sampling |
+
+</td>
+<td width="50%">
+
+**🔌 Connectors**
+| Connector | Auto-Enabled |
+|-----------|------|
+| HTTP Server | ✅ |
+| HTTP Client | ✅ |
+| Kafka | ✅ |
+| MongoDB | ✅ |
+| JDBC | ⚠️ Manual |
+| Azure Service Bus | ✅ |
+
+**Usage:**
+```java
+@Loggable
+@Service
+public class PaymentService {
+    // Logs entry/exit automatically
+}
+```
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Java 17` `Spring Boot 3.5+` `Logback` `AOP` `Maven`
+
+---
+
 ## 🏛️ Architecture & Design Patterns Summary
 
 ### Patterns Demonstrated Across Projects
@@ -415,9 +641,13 @@ vuln-analyzer fix /path --dry-run
 | **Factory** | api-versioning, open-finance | Dynamic object creation |
 | **Hexagonal** | open-finance | Ports & Adapters architecture |
 | **Microservices** | open-finance | Service decomposition |
+| **Layered** | wallet-api, userApi | Controller → Service → Repository |
 | **Multi-Agent** | hedge_fund_bot | Specialized collaborating agents |
 | **PEV** | hedge_fund_bot | Plan, Execute, Verify with retry |
 | **Meta-Controller** | hedge_fund_bot | Intelligent routing |
+| **Multiton** | incognia-api-java | One instance per credential pair |
+| **Builder** | incognia-api-java | Fluent API construction |
+| **AOP** | loggingx-spring-boot-starter | Cross-cutting logging concerns |
 | **Singleton** | servicebus-poc | Connection reuse |
 | **Observer** | kafka-consumer-groups | Event-driven messaging |
 
@@ -442,6 +672,11 @@ vuln-analyzer fix /path --dry-run
 │  ├─ Singleton vs per-request           │  ├─ Dependency scanning       │
 │  ├─ Memory leak prevention             │  ├─ CVE detection             │
 │  └─ Resource pooling                   │  └─ Auto-remediation          │
+│                                         │                                │
+│  💰 Digital Wallets                     │  📐 Observability              │
+│  ├─ Ledger-based auditing              │  ├─ Structured JSON logging   │
+│  ├─ Multi-currency support             │  ├─ End-to-end correlation    │
+│  └─ Immutable transaction history      │  └─ PII redaction             │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -455,7 +690,7 @@ vuln-analyzer fix /path --dry-run
 │                           COMPLETE TECH STACK                            │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  Languages        │  Python 3.11+, Java 17+                              │
+│  Languages        │  Python 3.11+, Java 17+, Kotlin                      │
 │                   │                                                      │
 │  AI/ML            │  LangGraph, LangChain, Groq, Llama 3.3 70B          │
 │                   │                                                      │
@@ -463,9 +698,11 @@ vuln-analyzer fix /path --dry-run
 │                   │                                                      │
 │  Message Brokers  │  Apache Kafka, Azure Service Bus                     │
 │                   │                                                      │
-│  Databases        │  MongoDB                                             │
+│  Databases        │  MongoDB, H2                                         │
 │                   │                                                      │
-│  Security         │  OWASP Dependency-Check, NVD, Mend.io               │
+│  Security         │  OWASP Dependency-Check, NVD, Mend.io, Incognia     │
+│                   │                                                      │
+│  Observability    │  LoggingX, Logback, Structured JSON, AOP            │
 │                   │                                                      │
 │  Testing          │  pytest, JUnit, k6 (load testing)                   │
 │                   │                                                      │
@@ -486,7 +723,8 @@ software-engineer/
 ├── 📚 Study Guides
 │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md    # 17 AI agent patterns
 │   ├── 📂 java-developer/               # Java interview prep (5 modules)
-│   └── 📂 pic_pay_estudo_entrevista/    # SOLID, CAP/ACID, patterns
+│   ├── 📂 study_interview_system_design/ # SOLID, CAP/ACID, patterns
+│   └── 📂 system-design/                # System design diagrams
 │
 ├── 🤖 AI & Machine Learning
 │   └── 📂 hedge_fund_bot/               # LangGraph multi-agent system
@@ -495,8 +733,10 @@ software-engineer/
 │       └── docs/                        # Architecture diagrams
 │
 ├── 🔌 API & Backend
-│   └── 📂 api-versioning/               # Strategy + Factory pattern
-│       └── src/.../strategy/            # PaymentStrategy implementations
+│   ├── 📂 api-versioning/               # Strategy + Factory pattern
+│   ├── 📂 wallet-api/                   # Digital wallet with ledger
+│   ├── 📂 corabank-api/                 # Bank account creation challenge
+│   └── 📂 userApi/                      # Kotlin CRUD API
 │
 ├── 🏦 Open Finance Microservices
 │   └── 📂 open-finance/                 # Open Finance Brazil API
@@ -506,21 +746,17 @@ software-engineer/
 │
 ├── 📨 Event Streaming
 │   ├── 📂 kafka-consumer-groups/        # Consumer group isolation proof
-│   │   ├── app/                         # FastAPI application
-│   │   └── tests/                       # Isolation tests
 │   └── 📂 servicebus-poc/               # Connection management PoC
-│       ├── src/.../controller/          # Good vs Bad producers
-│       └── k6/                          # Load test scripts
 │
 ├── 🗄️ Database
 │   └── 📂 mongodb-objectid-proof/       # ObjectId timestamp extraction
-│       ├── app/                         # FastAPI + PyMongo
-│       └── notebooks/                   # Analysis notebook
 │
 ├── 🔒 Security
-│   └── 📂 vuln-analyzer-agent/          # Vulnerability scanner
-│       ├── src/vuln_analyzer/           # Analyzers, fixers, reporters
-│       └── test-projects/               # Vulnerable test projects
+│   ├── 📂 vuln-analyzer-agent/          # Vulnerability scanner
+│   └── 📂 incognia-api-java/            # Location identity API client
+│
+├── 📐 Observability
+│   └── 📂 loggingx-spring-boot-starter/ # Structured logging library
 │
 ├── 📄 .gitignore
 └── 📖 README.md                         # You are here!
