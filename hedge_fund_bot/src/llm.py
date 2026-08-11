@@ -1,57 +1,50 @@
 """
-Centralized LLM Factory
+Centralized LLM Factory with Native Structured Output Support
 
-This module provides a single source of truth for LLM configuration.
-All agents should import from here instead of creating their own LLM instances.
+This module provides a single source of truth for LLM configuration across agents.
 
 Patterns applied:
 - Factory Pattern: Centralized object creation
-- DRY: Single configuration point
-- Separation of Concerns: LLM config separate from business logic
+- Profile Optimization: Temperature & token tuning per agent role
+- Native Structured Output: Support for Pydantic schema extraction
 """
 
 from enum import Enum
-from typing import Dict, Any
+from typing import Dict, Any, Type, TypeVar
+from pydantic import BaseModel
 from langchain_groq import ChatGroq
+from src.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
+
+T = TypeVar("T", bound=BaseModel)
 
 
 class LLMProfile(Enum):
     """
     Predefined LLM configurations for different use cases.
-    
-    Each profile has optimized settings for its specific purpose:
-    - ROUTING: Low creativity for deterministic routing decisions
-    - ANALYSIS: Balanced for research and analysis tasks
-    - SYNTHESIS: Higher creativity for report generation
-    - STRICT: Zero creativity for validation and verification
     """
     ROUTING = {
-        "temperature": 0,
+        "temperature": 0.0,
         "max_tokens": 256,
         "description": "For supervisor routing decisions - deterministic"
     }
     ANALYSIS = {
-        "temperature": 0.3,
+        "temperature": 0.2,
         "max_tokens": 1500,
         "description": "For researcher analysis - balanced creativity"
     }
     SYNTHESIS = {
-        "temperature": 0.4,
+        "temperature": 0.3,
         "max_tokens": 1500,
-        "description": "For analyst report generation - more creative"
+        "description": "For analyst report generation - structured synthesis"
     }
     STRICT = {
-        "temperature": 0,
+        "temperature": 0.0,
         "max_tokens": 1500,
         "description": "For chartist and verifier - zero creativity"
     }
-
-
-# Default model - can be overridden via environment variable in config.py
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
 
 def get_llm(
@@ -61,35 +54,30 @@ def get_llm(
 ) -> ChatGroq:
     """
     Centralized LLM factory.
-    
-    Args:
-        profile: Predefined configuration profile (LLMProfile enum)
-        model: Override the default model (optional)
-        **kwargs: Additional arguments to pass to ChatGroq
-    
-    Returns:
-        Configured ChatGroq instance
-    
-    Example:
-        >>> from src.llm import get_llm, LLMProfile
-        >>> llm = get_llm(LLMProfile.ROUTING)
-        >>> llm = get_llm(LLMProfile.ANALYSIS, temperature=0.5)  # Override
     """
-    # Get profile settings (excluding description)
     profile_settings = {
         k: v for k, v in profile.value.items() 
         if k != "description"
     }
     
-    # Merge with any overrides
-    settings = {**profile_settings, **kwargs}
+    merged_settings = {**profile_settings, **kwargs}
+    model_name = model or settings.MODEL_NAME
     
-    # Use provided model or default
-    model_name = model or DEFAULT_MODEL
-    
-    logger.debug(f"Creating LLM with profile={profile.name}, model={model_name}")
-    
-    return ChatGroq(model=model_name, **settings)
+    logger.debug(f"Creating LLM instance: profile={profile.name}, model={model_name}")
+    return ChatGroq(model=model_name, **merged_settings)
+
+
+def get_structured_llm(
+    schema: Type[T],
+    profile: LLMProfile = LLMProfile.STRICT,
+    model: str = None,
+    **kwargs
+):
+    """
+    Get an LLM instance configured with native Pydantic structured output.
+    """
+    llm = get_llm(profile=profile, model=model, **kwargs)
+    return llm.with_structured_output(schema)
 
 
 # Convenience functions for common use cases

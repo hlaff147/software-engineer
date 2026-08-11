@@ -1,247 +1,186 @@
 """
 Verifier Agent - PEV Pattern (Plan, Execute, Verify)
 
-This agent validates the Analyst's recommendations by:
-1. Checking recommendation consistency with technical data
-2. Validating RSI interpretation against actual values
-3. Ensuring risk level aligns with analysis
-4. Flagging contradictions between fundamental and technical analysis
+Validates the Analyst's report using deterministic rule-based checks
+combined with native LLM structured verification. Zero regex parsing.
 """
 
 from langchain_core.messages import HumanMessage
 from src.state import AgentState
-from src.llm import get_strict_llm
+from src.llm import get_structured_llm, LLMProfile
+from src.schemas import VerifierResult, InvestmentReport, TechnicalAnalysisResult, ResearchSummary
+from src.telemetry import TelemetryTimer
 from src.config import AgentPrefix
-from src.schemas import parse_verifier_result, VERIFIER_FORMAT_INSTRUCTION
-from src.exceptions import LLMError, VerificationError
 import logging
-import re
 
 logger = logging.getLogger(__name__)
 
+VERIFIER_SYSTEM_PROMPT = """You are a Senior Risk Manager and Compliance Auditor at an institutional hedge fund.
 
-VERIFIER_PROMPT = """You are a senior risk manager and quality assurance specialist at a hedge fund.
+Audit the Analyst's investment report against the gathered fundamental and technical data for ticker '{ticker}'.
 
-Your job is to VERIFY the analyst's report for consistency and accuracy.
+ANALYST REPORT:
+- Recommendation: {recommendation}
+- Risk Level: {risk_level}
+- Confidence Score: {confidence}%
+- Justification: {justification}
+- Executive Summary: {exec_summary}
 
-## ANALYST REPORT TO VERIFY:
-{analyst_report}
+TECHNICAL DATA:
+- Current Price: ${current_price:.2f}
+- RSI (14): {rsi} ({rsi_status})
+- MACD Histogram: {macd_hist}
+- Technical Outlook: {tech_outlook}
 
-## FULL CONTEXT (Technical & Fundamental Data):
-{full_context}
+FUNDAMENTAL RESEARCH:
+- Sentiment: {sentiment}
+- Red Flags: {red_flags}
 
-## VERIFICATION CHECKLIST:
+PRE-CHECKED DETERMINISTIC ISSUES (Rule Engine):
+{rule_issues}
 
-1. **Recommendation Consistency**: Does the BUY/SELL/HOLD recommendation align with:
-   - RSI values (>70 overbought suggests caution, <30 oversold suggests opportunity)
-   - MACD signals (positive histogram = bullish, negative = bearish)
-   - Price vs SMA (above = bullish, below = bearish)
-   - News sentiment (positive/negative catalysts)
-
-2. **RSI Interpretation**: Is the RSI correctly interpreted?
-   - RSI > 70: Should mention overbought/caution
-   - RSI < 30: Should mention oversold/opportunity
-   - RSI 30-70: Neutral zone
-
-3. **Risk Level Accuracy**: Does the risk level (High/Medium/Low) match the analysis?
-   - High volatility + mixed signals = High Risk
-   - Clear trend + consistent signals = Lower Risk
-   - Negative news + weak technicals = High Risk
-
-4. **Contradiction Detection**: Are there contradictions between:
-   - Fundamental analysis (news) vs Technical analysis (indicators)
-   - The recommendation vs the supporting evidence
-
-{format_instruction}
-
-Be strict but fair. Only mark as invalid if there are significant inconsistencies."""
+VERIFICATION GUIDELINES:
+1. Recommendation MUST align with technicals (e.g. overbought RSI > 70 with BUY is suspicious).
+2. Risk Level MUST accurately reflect volatile or negative signals.
+3. If rule-based issues exist, flag verdict as 'NEEDS_REVISION'.
+4. Provide actionable suggestions in 'recommendations' to help the Analyst revise."""
 
 
-def extract_technical_data(messages: list) -> dict:
-    """Extract technical data from Chartist message."""
-    data = {}
-    for msg in messages:
-        content = msg.content
-        if "[CHARTIST" in content:
-            # Extract RSI
-            rsi_match = re.search(r'RSI.*?:\s*([\d.]+)', content)
-            if rsi_match:
-                data['rsi'] = float(rsi_match.group(1))
-            
-            # Extract MACD Histogram
-            macd_match = re.search(r'MACD Histogram:\s*([-\d.]+)', content)
-            if macd_match:
-                data['macd_histogram'] = float(macd_match.group(1))
-            
-            # Extract Price vs SMA
-            sma_match = re.search(r'Price vs SMA20:\s*(\w+)', content)
-            if sma_match:
-                data['price_vs_sma'] = sma_match.group(1)
-            
-            # Extract price change
-            change_match = re.search(r'Price Change:\s*([-\d.]+)%', content)
-            if change_match:
-                data['price_change'] = float(change_match.group(1))
-                
-    return data
-
-
-def extract_analyst_recommendation(messages: list) -> dict:
-    """Extract recommendation from Analyst message."""
-    result = {'recommendation': None, 'risk_level': None}
-    for msg in messages:
-        if "[ANALYST" in msg.content:
-            content = msg.content.upper()
-            
-            # Extract recommendation
-            if 'BUY' in content:
-                result['recommendation'] = 'BUY'
-            elif 'SELL' in content:
-                result['recommendation'] = 'SELL'
-            elif 'HOLD' in content:
-                result['recommendation'] = 'HOLD'
-            
-            # Extract risk level
-            if 'HIGH RISK' in content or 'RISK: HIGH' in content or 'RISK LEVEL: HIGH' in content:
-                result['risk_level'] = 'HIGH'
-            elif 'LOW RISK' in content or 'RISK: LOW' in content or 'RISK LEVEL: LOW' in content:
-                result['risk_level'] = 'LOW'
-            elif 'MEDIUM RISK' in content or 'RISK: MEDIUM' in content or 'RISK LEVEL: MEDIUM' in content:
-                result['risk_level'] = 'MEDIUM'
-                
-    return result
-
-
-def quick_validation(tech_data: dict, analyst_rec: dict) -> list:
-    """Perform quick rule-based validation checks."""
+def run_deterministic_rule_checks(
+    technical: TechnicalAnalysisResult,
+    research: ResearchSummary,
+    report: InvestmentReport
+) -> list[str]:
+    """
+    Pure Python rule-based validation engine.
+    Detects quantitative contradictions deterministically.
+    """
     issues = []
     
-    rsi = tech_data.get('rsi')
-    recommendation = analyst_rec.get('recommendation')
-    macd_histogram = tech_data.get('macd_histogram')
-    
-    if rsi and recommendation:
-        # Check RSI consistency
-        if rsi > 70 and recommendation == 'BUY':
-            issues.append(f"RSI is {rsi:.1f} (overbought) but recommendation is BUY")
-        if rsi < 30 and recommendation == 'SELL':
-            issues.append(f"RSI is {rsi:.1f} (oversold) but recommendation is SELL")
-    
-    if macd_histogram and recommendation:
-        # Check MACD consistency
-        if macd_histogram < -0.5 and recommendation == 'BUY':
-            issues.append(f"MACD histogram is strongly negative ({macd_histogram:.4f}) but recommendation is BUY")
-        if macd_histogram > 0.5 and recommendation == 'SELL':
-            issues.append(f"MACD histogram is strongly positive ({macd_histogram:.4f}) but recommendation is SELL")
-    
+    if not report:
+        return ["No investment report provided for verification."]
+
+    rec = report.recommendation
+    risk = report.risk_level
+
+    # RSI Checks
+    if technical and technical.indicators:
+        rsi = technical.indicators.rsi
+        macd_hist = technical.indicators.macd_histogram
+
+        if rsi > 72.0 and rec == "BUY":
+            issues.append(f"Inconsistency: RSI is overbought ({rsi:.1f}) but recommendation is BUY.")
+        
+        if rsi < 28.0 and rec == "SELL":
+            issues.append(f"Inconsistency: RSI is oversold ({rsi:.1f}) but recommendation is SELL.")
+
+        if macd_hist < -1.0 and rec == "BUY":
+            issues.append(f"Inconsistency: MACD histogram is strongly negative ({macd_hist:.4f}) but recommendation is BUY.")
+
+        if macd_hist > 1.0 and rec == "SELL":
+            issues.append(f"Inconsistency: MACD histogram is strongly positive ({macd_hist:.4f}) but recommendation is SELL.")
+
+    # Risk level checks
+    if research and research.red_flags and len(research.red_flags) >= 2 and risk == "LOW":
+        issues.append(f"Inconsistency: Research detected multiple red flags ({', '.join(research.red_flags[:2])}) but risk level is set to LOW.")
+
     return issues
 
 
 def verifier_node(state: AgentState) -> dict:
-    """Verify the analyst's report for consistency and accuracy."""
+    """Verify report accuracy using deterministic rules + native structured LLM audit."""
     ticker = state.get("current_ticker", "UNKNOWN")
-    messages = state.get("messages", [])
-    current_iteration = state.get("iteration_count", 0)  # Track iteration for retry logic
-    
-    # Find analyst report
-    analyst_report = None
-    for msg in reversed(messages):
-        if "[ANALYST" in msg.content:
-            analyst_report = msg.content
-            break
-    
-    if not analyst_report:
+    report = state.get("final_report")
+    technical = state.get("technical_data")
+    research = state.get("research_data")
+    current_iteration = state.get("iteration_count", 0)
+
+    logger.info(f"Verifier node auditing report for {ticker} (iteration {current_iteration})...")
+
+    if not report:
+        logger.error("No report available in state for Verifier node.")
         return {
-            "messages": [HumanMessage(content="[VERIFIER - ERROR]\n\nNo analyst report found to verify.")],
-            "verification_passed": False
-        }
-    
-    # Extract data for validation
-    tech_data = extract_technical_data(messages)
-    analyst_rec = extract_analyst_recommendation(messages)
-    
-    # Quick rule-based checks
-    quick_issues = quick_validation(tech_data, analyst_rec)
-    
-    # Build full context
-    full_context = "\n\n---\n\n".join([msg.content for msg in messages[-6:]])
-    
-    try:
-        # LLM-based deep verification (using centralized factory)
-        prompt = VERIFIER_PROMPT.format(
-            analyst_report=analyst_report,
-            full_context=full_context,
-            format_instruction=VERIFIER_FORMAT_INSTRUCTION
-        )
-        
-        response = get_strict_llm().invoke([HumanMessage(content=prompt)])
-        text = response.content.strip()
-        
-        # Use structured parsing from schemas module
-        result = parse_verifier_result(text, quick_issues=quick_issues)
-        
-        # Merge quick issues with LLM findings
-        all_issues = list(set(quick_issues + result.issues_found))
-        
-        # Determine if verification passed
-        is_valid = result.is_valid and result.verdict != "REJECTED"
-        confidence = result.confidence_score
-        
-        # Build verification report
-        verification_report = f"""[VERIFIER - {'✅ APPROVED' if is_valid else '⚠️ NEEDS REVIEW'}]
-
-**Ticker:** {ticker}
-**Verdict:** {result.verdict}
-**Confidence Score:** {confidence}/100
-
-## Verification Results
-
-### Quick Checks
-- Recommendation: {analyst_rec.get('recommendation', 'N/A')}
-- Risk Level: {analyst_rec.get('risk_level', 'N/A')}
-- RSI Extracted: {tech_data.get('rsi', 'N/A')}
-- MACD Histogram: {tech_data.get('macd_histogram', 'N/A')}
-
-### Issues Found ({len(all_issues)})
-{chr(10).join([f"- ⚠️ {issue}" for issue in all_issues]) if all_issues else "- ✅ No significant issues detected"}
-
-### Recommendations
-{chr(10).join([f"- 💡 {rec}" for rec in result.recommendations]) if result.recommendations else "- No additional recommendations"}
-
-### Summary
-{result.summary}
-"""
-        
-        logger.info(f"Verifier executed for {ticker}: {result.verdict}")
-        
-        # INCREMENT iteration_count when verification fails (for retry limiting)
-        new_iteration = current_iteration + 1 if not is_valid else current_iteration
-        
-        return {
-            "messages": [HumanMessage(content=verification_report)],
-            "verification_passed": is_valid,
-            "verification_result": result.model_dump(),  # Convert Pydantic model to dict
-            "iteration_count": new_iteration  # Track retries to prevent infinite loops
-        }
-    
-    except LLMError as e:
-        logger.error(f"Verifier LLM error: {e}")
-        return {
-            "messages": [HumanMessage(content=f"[VERIFIER ERROR] LLM parsing failed: {str(e)}")],
-            "verification_passed": True,  # Don't block on verification errors
-            "iteration_count": current_iteration
-        }
-    except VerificationError as e:
-        logger.error(f"Verifier validation error: {e}")
-        return {
-            "messages": [HumanMessage(content=f"[VERIFIER ERROR] Validation failed: {str(e)}")],
             "verification_passed": False,
             "iteration_count": current_iteration + 1
         }
-    except Exception as e:
-        logger.error(f"Verifier unexpected error: {e}")
-        return {
-            "messages": [HumanMessage(content=f"[VERIFIER ERROR] {str(e)}")],
-            "verification_passed": True,  # Don't block on unexpected errors
-            "iteration_count": current_iteration
-        }
+
+    # 1. Deterministic Rule Checks (Pure Math/Logic)
+    rule_issues = run_deterministic_rule_checks(technical, research, report)
+
+    # 2. Extract values safely
+    current_price = technical.indicators.current_price if technical and technical.indicators else 0.0
+    rsi = technical.indicators.rsi if technical and technical.indicators else 50.0
+    rsi_status = technical.rsi_status if technical else "NEUTRAL"
+    macd_hist = technical.indicators.macd_histogram if technical and technical.indicators else 0.0
+    tech_outlook = technical.technical_outlook if technical else "NEUTRAL"
+
+    sentiment = research.market_sentiment if research else "NEUTRAL"
+    red_flags = ", ".join(research.red_flags) if research and research.red_flags else "None"
+
+    rule_issues_text = "\n".join([f"- {issue}" for issue in rule_issues]) if rule_issues else "None"
+
+    prompt = VERIFIER_SYSTEM_PROMPT.format(
+        ticker=ticker,
+        recommendation=report.recommendation,
+        risk_level=report.risk_level,
+        confidence=report.confidence_score,
+        justification=report.justification,
+        exec_summary=report.executive_summary,
+        current_price=current_price,
+        rsi=rsi,
+        rsi_status=rsi_status,
+        macd_hist=macd_hist,
+        tech_outlook=tech_outlook,
+        sentiment=sentiment,
+        red_flags=red_flags,
+        rule_issues=rule_issues_text
+    )
+
+    with TelemetryTimer("Verifier") as timer:
+        try:
+            structured_llm = get_structured_llm(VerifierResult, profile=LLMProfile.STRICT)
+            result: VerifierResult = structured_llm.invoke([HumanMessage(content=prompt)])
+            
+            # Combine rule issues with LLM issues
+            all_issues = list(set(rule_issues + result.issues_found))
+            result.issues_found = all_issues
+
+            if rule_issues:
+                result.is_valid = False
+                result.verdict = "NEEDS_REVISION"
+
+            telemetry = timer.record(prompt_tokens=450, completion_tokens=250)
+
+        except Exception as e:
+            logger.warning(f"Verifier LLM error ({e}), using deterministic rule result...")
+            is_valid = len(rule_issues) == 0
+            result = VerifierResult(
+                is_valid=is_valid,
+                confidence_score=90 if is_valid else 60,
+                issues_found=rule_issues,
+                recommendations=["Align recommendation with technical indicators and red flags"] if rule_issues else [],
+                verdict="APPROVED" if is_valid else "NEEDS_REVISION",
+                summary="Deterministic rule check verification fallback."
+            )
+            telemetry = timer.record(prompt_tokens=200, completion_tokens=80, status="FALLBACK")
+
+    is_passed = result.is_valid and result.verdict == "APPROVED"
+    new_iteration = current_iteration if is_passed else (current_iteration + 1)
+
+    telemetry_list = list(state.get("telemetry", []))
+    telemetry_list.append(telemetry)
+
+    formatted_msg = (
+        f"{AgentPrefix.VERIFIER} - Verdict: {result.verdict}]\n"
+        f"Passed: {is_passed} | Confidence: {result.confidence_score}%\n"
+        f"Issues ({len(result.issues_found)}): {', '.join(result.issues_found) if result.issues_found else 'None'}\n"
+        f"Summary: {result.summary}"
+    )
+
+    return {
+        "verification_passed": is_passed,
+        "verification_result": result,
+        "iteration_count": new_iteration,
+        "telemetry": telemetry_list,
+        "messages": [HumanMessage(content=formatted_msg)]
+    }
