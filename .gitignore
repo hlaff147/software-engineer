@@ -181,3 +181,8 @@ zookeeper-data/
 # Local configuration
 .env.local
 .env.*.local
+
+# Mutmut mutation testing cache
+.mutmut-cache/
+mutation-testing/mutants/
+
