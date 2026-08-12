@@ -1,0 +1,15 @@
+{
+  "spec_title": "Agente de Transferência Financeira de Alta Fidelidade",
+  "version": "2.0.0-agentic",
+  "explicit_intent": "Implementar uma função em Python `process_transfer(source_account, target_account, amount)` que transfira fundos entre duas contas mantendo integridade transacional e total conservação monetária.",
+  "input_constraints": {
+    "amount": "Decimal maior que 0.00 com no máximo 2 casas decimais",
+    "accounts": "Identificadores de string com no mínimo 3 caracteres, distintos entre si"
+  },
+  "verifiable_invariants": [
+    "CONSERVATION_OF_MONEY: sum(balances_after) == sum(balances_before)",
+    "NO_NEGATIVE_BALANCE: all(balance >= 0 for balance in accounts)",
+    "ATOMICITY: If transfer fails, no balance is modified"
+  ],
+  "required_signature": "def process_transfer(source_balance: Decimal, target_balance: Decimal, amount: Decimal) -> tuple[bool, Decimal, Decimal]:"
+}
