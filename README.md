@@ -40,6 +40,7 @@
 | [💼 PicPay Interview Study](./study_interview_system_design) | Quick reference for interviews | SOLID, CAP/ACID, Design Patterns, LeetCode |
 | [🏛️ System Design Diagrams](./system-design) | Visual system design references | Payment systems, Saga patterns, CAP theorem |
 | [🧮 Floating Point Precision (IEEE 754)](./floating-point-precision) | Floating point drift theory and multi-language benchmarks | IEEE 754, Binary Fractions, Turing vs Lambda, Decimal, Fraction |
+| [⚡ Java 25 & 21 LTS Features](./java25-lts-features) | Clean mini-project showcasing ScopedValue, Virtual Threads, & JEPs | ScopedValue, Virtual Threads, Pattern Matching, SequencedCollections |
 
 ---
 
