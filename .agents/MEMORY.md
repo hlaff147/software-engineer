@@ -9,7 +9,7 @@
 
 | Directory | Category | Primary Tech Stack | Status / Completeness | Local README | Description |
 |:---|:---|:---|:---|:---:|:---|
-| [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), study guide, and CV/portfolio experience summary. |
+| [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), MCP/RAG/Agents architecture guide, study guide, and CV/portfolio experience summary. |
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
 | [`corabank-api/`](../corabank-api) | 🔌 Backend APIs | Java 17, Spring Boot 3, H2, Gradle | ✅ Complete | ✅ Yes | Bank account creation challenge with referral bonus code and bug-fixing exercise. |
 | [`floating-point-precision/`](../floating-point-precision) | 📚 Study Guide | Python 3, JS/Node.js, Java | ✅ Complete | ✅ Yes | Theoretical and empirical analysis of IEEE 754 floating point drift and mitigation across languages. |

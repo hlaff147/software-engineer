@@ -35,7 +35,7 @@
 
 | Guide | Description | Topics |
 |-------|-------------|--------|
-| [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, study guide & CV portfolio | 17 patterns: Reflection, ReAct, Multi-Agent, PEV, Meta-Controller |
+| [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
 | [💼 Interview Study & System Design](./study_interview_system_design) | Quick reference & comprehensive SDE-2 interview prep | Idempotência vs Deduplicação, Mastercard SDE-2, SOLID, CAP/ACID, LeetCode |
 | [🏛️ System Design Diagrams](./system-design) | Visual system design references | Payment systems, Saga patterns, CAP theorem |
@@ -834,7 +834,8 @@ software-engineer/
 ├── 📚 Study Guides & Architecture
 │   ├── 📂 ai-engineer/                  # AI agent patterns, study guide & CV portfolio
 │   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
-│   │   └── 📖 AI_ENGINEER_CV_EXPERIENCE.md
+│   │   ├── 📖 AI_ENGINEER_CV_EXPERIENCE.md
+│   │   └── 📖 MCP_RAG_AGENTS_ARCHITECTURE.md
 │   ├── 📂 java-developer/               # Java interview prep & JVM under-the-hood
 │   │   └── 📖 JAVA_SPRING_UNDER_THE_HOOD.md
 │   ├── 📂 study_interview_system_design/ # SOLID, CAP/ACID, patterns & Mastercard SDE-2

@@ -9,6 +9,7 @@ Este módulo centraliza a documentação de estudo, padrões arquiteturais e exp
 | Documento | Descrição | Tópicos Principais |
 | :--- | :--- | :--- |
 | [🎓 AI Engineer Study Guide](./AI_ENGINEER_STUDY_GUIDE.md) | Guia completo e aprofundado sobre arquiteturas agentic e padrões de IA | 17 padrões agentic (Reflection, ReAct, PEV, Meta-Controller, Multi-Agent), princípios de design, engenharia de prompts e tooling |
+| [🌐 MCP, RAG & AI Agents](./MCP_RAG_AGENTS_ARCHITECTURE.md) | Guia arquitetural conectando IA ao mundo real com foco em sistemas distribuídos | Protocolo MCP (Host/Client/Server), Pipeline RAG (Indexação/Retrieval) e Agentes Autônomos (Goal-Plan-Act-Result-Observe) |
 | [📌 Experiências para CV](./AI_ENGINEER_CV_EXPERIENCE.md) | Resumo de competências e conquistas práticas extraídas dos projetos deste repositório | LangGraph, LangChain, Llama 3.3, Groq, Pydantic, Auto-fix CLI, Hedge Fund Bot, Vulnerability Scanner |
 
 ---
