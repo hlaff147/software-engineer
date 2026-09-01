@@ -30,6 +30,11 @@ Permite executar validações, logs e pré-processamentos de argumentos **antes*
 
 ---
 
+### 4. 🧵 Estudo Aprofundado: Concorrência Estruturada (Java vs. Kotlin)
+- [📖 Concorrência Estruturada na Prática: Eliminando Threads Fantasmas (Java vs. Kotlin)](./docs/STRUCTURED_CONCURRENCY_JAVA_VS_KOTLIN.md) — Análise aprofundada de alta volumetria comparando Java 21+ (`StructuredTaskScope`) e Kotlin (`coroutineScope`), tratamento de falhas rápidas (*fail-fast*) e benchmark de eficiência de recursos.
+
+---
+
 ## 🚀 Como Compilar e Executar
 
 ### Pré-requisitos

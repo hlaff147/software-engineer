@@ -58,4 +58,5 @@ Run the full test suite with:
 Planned enhancements include transactional support in MongoDB, idempotency, balance snapshots and Redis caching.
 
 ## 📝 License
-Released under the [MIT License](LICENSE).
+Released under the MIT License.
+

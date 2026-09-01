@@ -20,14 +20,14 @@
 
 | Category | Projects | Key Technologies |
 |----------|----------|------------------|
-| **🤖 AI/ML** | 1 project | LangGraph, LangChain, Groq, Llama 3.3 |
-| **🔌 Backend APIs** | 5 projects | Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern |
+| **🤖 AI/ML & Agents** | 3 projects | LangGraph, LangChain, Groq, Llama 3.3, Pydantic v2, Hypothesis |
+| **🔌 Backend APIs** | 5 projects | Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern, Incognia SDK |
 | **🏦 Open Finance** | 3 microservices | Spring Boot, Feign Client, MongoDB, Microservices |
 | **📨 Event Streaming** | 2 projects | Kafka, Azure Service Bus |
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
-| **🔒 Security** | 2 projects | OWASP, NVD, Incognia, Vulnerability Analysis |
+| **🧪 Testing & Quality** | 1 project | Mutation Testing, AST, mutmut, Hypothesis |
 | **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
-| **📚 Study Guides** | 4 guides | AI Patterns, Java Core, System Design, Interview Prep |
+| **📚 Study Guides & Architecture** | 6 modules | AI Patterns, Java Core, System Design, Floating Point, Java 21/25, SDE-2 Prep |
 
 ---
 
@@ -35,12 +35,12 @@
 
 | Guide | Description | Topics |
 |-------|-------------|--------|
-| [🤖 AI Engineer Study Guide](./AI_ENGINEER_STUDY_GUIDE.md) | Comprehensive AI agent patterns and architectures | 17 patterns: Reflection, ReAct, Multi-Agent, PEV, Meta-Controller |
-| [☕ Java Developer Guide](./java-developer) | Backend interview preparation | Java Core, Spring Boot, Microservices, Kafka, K8s |
-| [💼 PicPay Interview Study](./study_interview_system_design) | Quick reference for interviews | SOLID, CAP/ACID, Design Patterns, LeetCode |
+| [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, study guide & CV portfolio | 17 patterns: Reflection, ReAct, Multi-Agent, PEV, Meta-Controller |
+| [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
+| [💼 Interview Study & System Design](./study_interview_system_design) | Quick reference & comprehensive SDE-2 interview prep | Idempotência vs Deduplicação, Mastercard SDE-2, SOLID, CAP/ACID, LeetCode |
 | [🏛️ System Design Diagrams](./system-design) | Visual system design references | Payment systems, Saga patterns, CAP theorem |
 | [🧮 Floating Point Precision (IEEE 754)](./floating-point-precision) | Floating point drift theory and multi-language benchmarks | IEEE 754, Binary Fractions, Turing vs Lambda, Decimal, Fraction |
-| [⚡ Java 25 & 21 LTS Features](./java25-lts-features) | Clean mini-project showcasing ScopedValue, Virtual Threads, & JEPs | ScopedValue, Virtual Threads, Pattern Matching, SequencedCollections |
+| [⚡ Java 25 & 21 LTS Features](./java25-lts-features) | Mini-project showcasing ScopedValue, Virtual Threads & Loom | ScopedValue, Virtual Threads, Structured Concurrency (Java vs Kotlin) |
 
 ---
 
@@ -88,6 +88,100 @@ User → Supervisor → Researcher → Chartist
 - 📊 **Technical Analysis** — RSI, MACD, SMA indicators (calculated, not hallucinated)
 - 📰 **Sentiment Analysis** — Real-time news and market sentiment via DuckDuckGo
 - ✅ **Self-Correction** — Verifier catches contradictions and triggers retries
+
+---
+
+### [Spec-Driven Development (SDD) in the Agentic Era](./spec-driven-development-agentic)
+
+Explores the transformation of Software Design Documents from static text into **executable specifications and autonomous evaluation harnesses** with AI self-healing feedback loops.
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Continuous Evaluation Loop**
+```
+Intent & Invariants (Pydantic / Contracts)
+                │
+                ▼
+┌───────────────────────────────┐
+│ Continuous Evaluation Harness │ ◄──┐
+└───────────────┬───────────────┘    │
+                ▼                    │
+    AI Agent Generates Code          │ (Retry loop)
+                ▼                    │
+      Invariant Checks Pass? ────────┘
+          │ (YES)
+          ▼
+   Production Code Verified
+```
+
+</td>
+<td width="50%">
+
+**🔬 3 Paradigms Demonstrated**
+| Approach | Mechanism |
+|----------|-----------|
+| **Classic SDD** | Static Markdown specifications |
+| **Executable SDD** | Pydantic contracts + Hypothesis Property-Based Testing |
+| **Agentic SDD** | Continuous Evaluation Harness + Automated Agent Correction Loop |
+
+**Key Invariants:**
+- Financial conservation of money
+- Non-negative ledger balance guarantees
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Python 3.11+` `Pydantic v2` `Hypothesis` `pytest` `Rich CLI`
+
+---
+
+### [Vulnerability Analyzer Agent](./vuln-analyzer-agent)
+
+Intelligent Python CLI agent for **automated vulnerability analysis in Java/Spring projects** with OWASP, NVD API integration, and automated `pom.xml` auto-remediation.
+
+<table>
+<tr>
+<td width="50%">
+
+**🔍 Data Sources & Integrations**
+| Source | Type |
+|--------|------|
+| OWASP Dependency-Check | Offline vulnerability analysis |
+| NVD (National Vulnerability DB) | Real-time CVE queries via API |
+| Mend.io (Optional) | Proprietary "WS-" vulnerabilities |
+
+**📊 Output Formats:**
+- Rich terminal console output
+- Standalone HTML reports
+- Structured JSON for CI/CD pipelines
+
+</td>
+<td width="50%">
+
+**⚡ Key Agent Capabilities**
+```bash
+# Scan project dependencies
+vuln-analyzer scan /path/to/project
+
+# Scan with live NVD CVE enrichment
+vuln-analyzer scan /path --nvd-api-key $KEY
+
+# Preview automated security upgrades
+vuln-analyzer fix /path --dry-run
+
+# Apply auto-remediation to pom.xml
+vuln-analyzer fix /path --apply
+```
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Python 3.11+` `Click CLI` `OWASP` `NVD API` `Jinja2` `BeautifulSoup4`
+
 
 ---
 
@@ -491,53 +585,7 @@ timestamp = oid.generation_time
 
 ---
 
-## 🔒 Security & Analysis Projects
-
-### [Vulnerability Analyzer Agent](./vuln-analyzer-agent)
-
-Python CLI agent for **vulnerability analysis in Java Spring projects** with auto-fix capabilities.
-
-<table>
-<tr>
-<td width="50%">
-
-**🔍 Data Sources**
-| Source | Type |
-|--------|------|
-| OWASP Dependency-Check | Offline analysis |
-| NVD (National Vulnerability Database) | Direct API queries |
-| Mend.io (optional) | Proprietary "WS-" vulns |
-
-**📊 Output Formats**
-- Console (colored terminal)
-- HTML report
-- JSON (machine-readable)
-
-</td>
-<td width="50%">
-
-**⚡ Commands**
-```bash
-# Scan project
-vuln-analyzer scan /path/to/project
-
-# With Mend integration
-vuln-analyzer scan /path --mend
-
-# Auto-fix vulnerabilities
-vuln-analyzer fix /path --apply
-
-# Dry-run (preview fixes)
-vuln-analyzer fix /path --dry-run
-```
-
-</td>
-</tr>
-</table>
-
-**Tech Stack:** `Python 3.11+` `Click CLI` `OWASP` `NVD API` `Mend.io`
-
----
+## 🔒 Security & Client SDKs
 
 ### [Incognia API Java Client](./incognia-api-java)
 
@@ -581,6 +629,57 @@ CustomOptions.builder()
 </table>
 
 **Tech Stack:** `Java 8+` `OkHttp` `Gradle` `JUnit` `MIT License`
+
+---
+
+## 🧪 Testing & Code Quality Projects
+
+### [Mutation Testing in Python](./mutation-testing)
+
+Demonstrates why **100% line coverage does not guarantee test quality**, contrasting a weak test suite (100% line coverage, 0% mutation score) with a strong test suite that catches all injected AST mutations.
+
+<table>
+<tr>
+<td width="50%">
+
+**🔀 The Coverage Illusion**
+```
+Original Code ──┬──> Weak Suite   ──> Line Coverage: 100%
+                │                     Mutation Score: 0% ❌
+                │
+                └───> Strong Suite ──> Line Coverage: 100%
+                                      Mutation Score: 100% ✅
+```
+
+**🧬 Mutation Operators Tested:**
+- Relational Operator Replacement (ROR: `<` vs `<=`)
+- Arithmetic Operator Replacement (AOR: `+` vs `-`)
+- Logical Connector Replacement (LCR: `and` vs `or`)
+- Constant Replacement (CR)
+
+</td>
+<td width="50%">
+
+**⚡ Key Capabilities & CLI**
+```bash
+# Run interactive comparison CLI
+python walkthrough_mutation.py
+
+# Run weak suite (100% line coverage)
+pytest tests/test_weak.py --cov=src
+
+# Run strong suite (100% mutation killed)
+pytest tests/test_strong.py --cov=src
+
+# Run automated mutmut engine
+mutmut run
+```
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Python 3.11+` `pytest` `pytest-cov` `mutmut` `Python AST`
 
 ---
 
@@ -639,19 +738,22 @@ public class PaymentService {
 
 | Pattern | Project | Description |
 |---------|---------|-------------|
-| **Strategy** | api-versioning, open-finance | Encapsulate varying behavior |
-| **Factory** | api-versioning, open-finance | Dynamic object creation |
+| **Strategy** | api-versioning, open-finance | Encapsulate version-specific behavior |
+| **Factory** | api-versioning, open-finance | Dynamic strategy and client resolution |
 | **Hexagonal** | open-finance | Ports & Adapters architecture |
-| **Microservices** | open-finance | Service decomposition |
-| **Layered** | wallet-api, userApi | Controller → Service → Repository |
-| **Multi-Agent** | hedge_fund_bot | Specialized collaborating agents |
-| **PEV** | hedge_fund_bot | Plan, Execute, Verify with retry |
-| **Meta-Controller** | hedge_fund_bot | Intelligent routing |
+| **Microservices** | open-finance | Autonomous service decomposition (consent, payment) |
+| **Layered** | wallet-api, userApi | Controller → Service → Repository pattern |
+| **Multi-Agent** | hedge_fund_bot | 5 collaborating agents with state graph |
+| **PEV** | hedge_fund_bot | Plan, Execute, Verify with automated retry |
+| **Meta-Controller** | hedge_fund_bot | Intelligent supervisor routing |
+| **Continuous Evaluation Harness** | spec-driven-development-agentic | Invariant testing in the agent loop |
+| **Property-Based Testing** | spec-driven-development-agentic | Fuzzing business contracts with Hypothesis |
+| **Mutation Testing** | mutation-testing | AST-level fault injection and suite scoring |
 | **Multiton** | incognia-api-java | One instance per credential pair |
 | **Builder** | incognia-api-java | Fluent API construction |
 | **AOP** | loggingx-spring-boot-starter | Cross-cutting logging concerns |
-| **Singleton** | servicebus-poc | Connection reuse |
-| **Observer** | kafka-consumer-groups | Event-driven messaging |
+| **Singleton** | servicebus-poc | Connection reuse and pool management |
+| **Observer** | kafka-consumer-groups | Event-driven consumer group messaging |
 
 ### System Design Concepts
 
@@ -706,7 +808,7 @@ public class PaymentService {
 │                   │                                                      │
 │  Observability    │  LoggingX, Logback, Structured JSON, AOP            │
 │                   │                                                      │
-│  Testing          │  pytest, JUnit, k6 (load testing)                   │
+│  Testing          │  pytest, mutmut (mutation testing), Hypothesis, JUnit, k6  │
 │                   │                                                      │
 │  DevOps           │  Docker, Docker Compose, Makefile                   │
 │                   │                                                      │
@@ -722,17 +824,35 @@ public class PaymentService {
 ```
 software-engineer/
 │
-├── 📚 Study Guides
-│   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md    # 17 AI agent patterns
-│   ├── 📂 java-developer/               # Java interview prep (5 modules)
-│   ├── 📂 study_interview_system_design/ # SOLID, CAP/ACID, patterns
-│   └── 📂 system-design/                # System design diagrams
+├── 🧠 Agent Rules & Memory Bank
+│   ├── 📂 .agents/                      # Autonomous agent skills, rules & memory bank
+│   │   ├── 📖 MEMORY.md                 # Source of truth project catalog
+│   │   ├── 📂 skills/                   # doc-sync, memory-bank skills
+│   │   └── 📂 rules/                    # documentation standards
+│   └── 🤖 GEMINI.md                     # Root agent operating rules & project invariants
+│
+├── 📚 Study Guides & Architecture
+│   ├── 📂 ai-engineer/                  # AI agent patterns, study guide & CV portfolio
+│   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
+│   │   └── 📖 AI_ENGINEER_CV_EXPERIENCE.md
+│   ├── 📂 java-developer/               # Java interview prep & JVM under-the-hood
+│   │   └── 📖 JAVA_SPRING_UNDER_THE_HOOD.md
+│   ├── 📂 study_interview_system_design/ # SOLID, CAP/ACID, patterns & Mastercard SDE-2
+│   │   ├── 📖 idempotency-vs-deduplication.md
+│   │   └── 📖 MASTERCARD_SDE2_INTERVIEW_PREP.md
+│   ├── 📂 system-design/                # System design diagrams
+│   ├── 📂 floating-point-precision/     # IEEE 754 precision analysis & benchmarks
+│   └── 📂 java25-lts-features/          # Modern Java features & Structured Concurrency
+│       └── docs/
+│           └── 📖 STRUCTURED_CONCURRENCY_JAVA_VS_KOTLIN.md
 │
 ├── 🤖 AI & Machine Learning
-│   └── 📂 hedge_fund_bot/               # LangGraph multi-agent system
-│       ├── src/agents/                  # 5 specialized agents
-│       ├── src/tools/                   # yfinance, search tools
-│       └── docs/                        # Architecture diagrams
+│   ├── 📂 hedge_fund_bot/               # LangGraph multi-agent system
+│   │   ├── src/agents/                  # 5 specialized agents
+│   │   ├── src/tools/                   # yfinance, search tools
+│   │   └── docs/                        # Architecture diagrams
+│   ├── 📂 vuln-analyzer-agent/          # Vulnerability scanner CLI & auto-fix
+│   └── 📂 spec-driven-development-agentic/ # Spec-driven development with agents
 │
 ├── 🔌 API & Backend
 │   ├── 📂 api-versioning/               # Strategy + Factory pattern
@@ -753,12 +873,12 @@ software-engineer/
 ├── 🗄️ Database
 │   └── 📂 mongodb-objectid-proof/       # ObjectId timestamp extraction
 │
-├── 🔒 Security
-│   ├── 📂 vuln-analyzer-agent/          # Vulnerability scanner
+├── 🔒 Security & Client SDKs
 │   └── 📂 incognia-api-java/            # Location identity API client
 │
-├── 📐 Observability
-│   └── 📂 loggingx-spring-boot-starter/ # Structured logging library
+├── 📐 Observability & Testing
+│   ├── 📂 loggingx-spring-boot-starter/ # Structured logging library
+│   └── 📂 mutation-testing/             # Mutation testing demo
 │
 ├── 📄 .gitignore
 └── 📖 README.md                         # You are here!

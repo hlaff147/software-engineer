@@ -9,3 +9,5 @@ A comprehensive guide covering Java, Spring Boot, Microservices, and related tec
 3. [Microservices](./03-microservices.md)
 4. [Coding Questions](./04-coding-questions.md)
 5. [Others (Kafka, Kubernetes, Docker, SQL)](./05-others.md)
+6. [☕ Java & Spring Under the Hood (Perguntas Aprofundadas)](./JAVA_SPRING_UNDER_THE_HOOD.md)
+
