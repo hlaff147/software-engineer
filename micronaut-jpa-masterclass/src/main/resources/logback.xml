@@ -1,0 +1,21 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- JPA & Hibernate SQL logging for educational visibility -->
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE" />
+    <logger name="org.hibernate.stat" level="DEBUG" />
+    <logger name="org.hibernate.event.internal" level="DEBUG" />
+    <logger name="org.hibernate.cache" level="DEBUG" />
+    <logger name="org.hibernate.engine.transaction.internal" level="DEBUG" />
+    <logger name="com.portfolio.fleet" level="DEBUG" />
+    <logger name="com.portfolio.fleet.service.JpaDiagnosticService" level="INFO" />
+</configuration>

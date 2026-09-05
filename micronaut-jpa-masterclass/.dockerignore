@@ -1,0 +1,10 @@
+.gradle/
+build/
+!build/libs/*.jar
+.idea/
+*.iml
+.git/
+.gitignore
+*.md
+docs/
+scratch/

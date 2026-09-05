@@ -21,7 +21,7 @@
 | Category | Projects | Key Technologies |
 |----------|----------|------------------|
 | **🤖 AI/ML & Agents** | 3 projects | LangGraph, LangChain, Groq, Llama 3.3, Pydantic v2, Hypothesis |
-| **🔌 Backend APIs** | 5 projects | Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern, Incognia SDK |
+| **🔌 Backend APIs** | 6 projects | Micronaut Data JPA, Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern, Incognia SDK |
 | **🏦 Open Finance** | 3 microservices | Spring Boot, Feign Client, MongoDB, Microservices |
 | **📨 Event Streaming** | 2 projects | Kafka, Azure Service Bus |
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
@@ -186,6 +186,80 @@ vuln-analyzer fix /path --apply
 ---
 
 ## 🔌 API & Backend Projects
+
+### [Micronaut Data JPA Masterclass — Global Fleet & Asset Management](./micronaut-jpa-masterclass)
+
+Comprehensive enterprise backend mastering **all 6 pillars of Jakarta Persistence (JPA 3.2) & Hibernate** on **Java 25** and **Micronaut Data JPA**.
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Persistence Architecture & Inheritance**
+```
+              ┌───────────────────────────┐
+              │      AuditableEntity      │
+              │  (@PrePersist, @PreUpdate)│
+              └─────────────┬─────────────┘
+                            │ extends
+              ┌─────────────▼─────────────┐
+              │           Asset           │
+              │    (JOINED Table Strategy)│
+              │    - version (@Version)   │
+              │    - location (@Embedded) │
+              └───┬───────────────────┬───┘
+                  │                   │
+    ┌─────────────▼─────────┐   ┌─────▼─────────────────┐
+    │        Vehicle        │   │       IoTSensor       │
+    │  - license_plate (UQ) │   │  - mac_address (UQ)   │
+    │  - mileage, fuel_type │   │  - firmware, battery  │
+    └─────────────┬─────────┘   └───────────────────────┘
+                  │
+                  ▼ @OneToMany (BatchSize = 25)
+    ┌───────────────────────────────────────────────────┐
+    │     MaintenanceSchedule  →  MaintenanceLogs       │
+    └───────────────────────────────────────────────────┘
+```
+
+</td>
+<td width="50%">
+
+**⚡ The 6 JPA Pillars Mastered**
+| Pillar | Pattern / Feature |
+|:---|:---|
+| **1. Mappings** | Joined Table, Single Table, `@Embeddable`, `@ElementCollection` |
+| **2. Fetching** | First-Level Cache hit, Dirty Checking, N+1 fix via `@BatchSize(25)` |
+| **3. Querying** | Constructor DTO Projections (`SELECT new ...`), Criteria API |
+| **4. Locking** | Optimistic (`@Version`) + Retry, Pessimistic (`PESSIMISTIC_WRITE`) |
+| **5. Auditing** | JPA Callbacks (`@PrePersist`), Async Audit Events (Virtual Threads) |
+| **6. Enterprise**| JDBC Batching (`batch_size=30`), L2 Cache (Ehcache), `flush`/`clear` |
+
+**💡 Key JPA Insight:**
+```java
+// Inside @Transactional:
+Vehicle v1 = repo.findById(id).orElseThrow(); // SQL SELECT hits DB
+Vehicle v2 = repo.findById(id).orElseThrow(); // L1 Cache hit (NO SQL!)
+v1.setMileage(150000L); // Dirty Checking auto-updates on commit!
+```
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Java 25` `Micronaut 4` `Micronaut Data JPA` `Hibernate 6/7` `PostgreSQL 16` `Docker Compose` `Makefile` `JCache / Ehcache` `Gradle`
+
+**Features:**
+- ⚡ **First-Level Cache & Dirty Checking** — Proven object identity guarantee (`v1 == v2`) without explicit `.save()` calls
+- 🐳 **Containerized Orchestration** — Multi-stage Dockerfile + Docker Compose with PostgreSQL 16 Alpine and healthchecks
+- 🔧 **Developer Automation** — GNU Makefile with 13 targets: `make up`, `make down`, `make verify-jpa`, `make bench`, `make logs`
+- 🔬 **Automated JPA Diagnostics** — Live test suite and REST endpoints verifying L1 cache, dirty checking, detach/merge, and `@Version` conflicts
+- 🏛️ **Polymorphic Inheritance** — Joined Table (`Vehicle`, `IoTSensor`) and Single Table (`HeavyEquipment`, `LightEquipment`)
+- 🔍 **Type-Safe Dynamic Queries** — Custom repository using `CriteriaBuilder`, `CriteriaQuery`, and `Root` with dynamic pagination
+- 🔒 **Dual Locking Strategies** — Optimistic `@Version` with exponential retry & Pessimistic `FOR UPDATE` for financial transactions
+- 🚀 **High-Throughput Batching** — JDBC batch operations combined with periodic `flush()` and `clear()` to prevent heap exhaustion
+- 📚 **In-Depth Study Guides** — 6 pillar guides + [JPA Behind the Scenes Architecture Guide](./micronaut-jpa-masterclass/docs/jpa-behind-the-scenes.md)
+
+---
 
 ### [API Versioning with Strategy Pattern](./api-versioning)
 
@@ -754,6 +828,9 @@ public class PaymentService {
 | **AOP** | loggingx-spring-boot-starter | Cross-cutting logging concerns |
 | **Singleton** | servicebus-poc | Connection reuse and pool management |
 | **Observer** | kafka-consumer-groups | Event-driven consumer group messaging |
+| **First-Level Cache / Identity Map** | micronaut-jpa-masterclass | Guarantees reference equality & prevents duplicate SQL SELECT queries within transactions |
+| **Optimistic / Pessimistic Locking** | micronaut-jpa-masterclass | Concurrency control via @Version stale detection and SELECT FOR UPDATE exclusivity |
+| **Polymorphic Entity Inheritance** | micronaut-jpa-masterclass | Joined Table and Single Table relational inheritance mapping strategies |
 
 ### System Design Concepts
 
@@ -794,15 +871,17 @@ public class PaymentService {
 │                           COMPLETE TECH STACK                            │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  Languages        │  Python 3.11+, Java 17+, Kotlin                      │
+│  Languages        │  Python 3.11+, Java 17/25, Kotlin                      │
 │                   │                                                      │
 │  AI/ML            │  LangGraph, LangChain, Groq, Llama 3.3 70B          │
 │                   │                                                      │
-│  Backend          │  Spring Boot 3, FastAPI                              │
+│  Backend          │  Micronaut 4, Spring Boot 3, FastAPI                 │
+│                   │                                                      │
+│  Persistence/ORM  │  Micronaut Data JPA, Hibernate 6/7, JPA 3.2          │
 │                   │                                                      │
 │  Message Brokers  │  Apache Kafka, Azure Service Bus                     │
 │                   │                                                      │
-│  Databases        │  MongoDB, H2                                         │
+│  Databases        │  MongoDB, H2, PostgreSQL                             │
 │                   │                                                      │
 │  Security         │  OWASP Dependency-Check, NVD, Mend.io, Incognia     │
 │                   │                                                      │
@@ -856,6 +935,7 @@ software-engineer/
 │   └── 📂 spec-driven-development-agentic/ # Spec-driven development with agents
 │
 ├── 🔌 API & Backend
+│   ├── 📂 micronaut-jpa-masterclass/    # Java 25 & Micronaut Data JPA 6-pillar masterclass
 │   ├── 📂 api-versioning/               # Strategy + Factory pattern
 │   ├── 📂 wallet-api/                   # Digital wallet with ledger
 │   ├── 📂 corabank-api/                 # Bank account creation challenge

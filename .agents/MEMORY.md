@@ -19,6 +19,7 @@
 | [`java25-lts-features/`](../java25-lts-features) | 📚 Study Guide / Code | Java 21/25, Maven, Loom | ✅ Complete | ✅ Yes | Modern Java mini-project with ScopedValue, Virtual Threads, and Structured Concurrency comparison. |
 | [`kafka-consumer-groups/`](../kafka-consumer-groups) | 📨 Event Streaming | Python 3.11+, FastAPI, aiokafka, Docker | ✅ Complete | ✅ Yes | Demonstration of Kafka consumer group isolation and independent offset tracking. |
 | [`loggingx-spring-boot-starter/`](../loggingx-spring-boot-starter) | 📐 Observability | Java 17, Spring Boot 3, Logback, AOP | ✅ Production-grade | ✅ Yes | Starter library for standardized structured JSON logging, correlation ID, and PII redaction. |
+| [`micronaut-jpa-masterclass/`](../micronaut-jpa-masterclass) | 🔌 Backend APIs | Java 25, Micronaut 4, Micronaut Data JPA, Hibernate, PostgreSQL 16, Docker, Makefile | ✅ Production-grade | ✅ Yes | Fleet management backend & workshop mastering the 6 pillars of JPA: First-level cache, inheritance, Criteria API, locking, batching, Docker Compose, and automated diagnostics. |
 | [`mongodb-objectid-proof/`](../mongodb-objectid-proof) | 🗄️ Database | Python 3.11+, FastAPI, PyMongo, Docker | ✅ Complete | ✅ Yes | Proof demonstrating that MongoDB 12-byte ObjectIds embed timestamps for chronological sorting. |
 | [`mutation-testing/`](../mutation-testing) | 🧪 Testing & Quality | Python 3, pytest, mutmut, AST | ✅ Complete | ✅ Yes | Mutation testing demo contrasting 100% line coverage vs true fault-detection mutation score. |
 | [`open-finance/`](../open-finance) | 🏦 Open Finance | Java 17, Spring Boot 3, Feign, MongoDB | ✅ Complete | ✅ Yes | Open Finance Brasil Payment Initiation API v5.0.0-beta.1 microservices (common, consent, payment). |
@@ -35,7 +36,7 @@
 ## 🏷️ Category Summary & Project Counts
 
 - **🤖 AI & Machine Learning:** 3 projects (`hedge_fund_bot`, `vuln-analyzer-agent`, `spec-driven-development-agentic`)
-- **🔌 Backend APIs:** 5 projects (`api-versioning`, `wallet-api`, `corabank-api`, `userApi`, `incognia-api-java`)
+- **🔌 Backend APIs:** 6 projects (`api-versioning`, `wallet-api`, `corabank-api`, `userApi`, `incognia-api-java`, `micronaut-jpa-masterclass`)
 - **🏦 Open Finance:** 3 microservices (`open-finance-common`, `open-finance-consent`, `open-finance-payment`)
 - **📨 Event Streaming:** 2 projects (`kafka-consumer-groups`, `servicebus-poc`)
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)

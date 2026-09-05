@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fleet-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: fleet_management
+      POSTGRES_USER: fleet_admin
+      POSTGRES_PASSWORD: fleet_secret
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleet_admin -d fleet_management"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - fleet-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fleet-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      MICRONAUT_ENVIRONMENTS: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: fleet_management
+      DB_USER: fleet_admin
+      DB_PASSWORD: fleet_secret
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - fleet-network
+
+networks:
+  fleet-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local

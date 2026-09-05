@@ -1,0 +1,95 @@
+micronaut:
+  application:
+    name: fleet-management
+  server:
+    port: 8080
+
+datasources:
+  default:
+    url: jdbc:h2:mem:fleetdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+    schema-generate: CREATE_DROP
+    dialect: H2
+    maximum-pool-size: 10
+    minimum-idle: 2
+
+jpa:
+  default:
+    packages-to-scan:
+      - "com.portfolio.fleet.domain"
+      - "com.portfolio.fleet.audit"
+    properties:
+      hibernate:
+        # ── Pillar 6: JDBC Batch Operations ──
+        # JPA TIP: Batching combines multiple INSERT/UPDATE statements into single roundtrips.
+        jdbc:
+          batch_size: 30
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+
+        # ── Learning & Observability: SQL Output ──
+        # JPA TIP: Formatted SQL and comments help visualize exactly when queries are issued vs cached.
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        generate_statistics: true
+
+        # ── Pillar 6: Second-Level (L2) & Query Caching ──
+        # JPA TIP: L2 cache survives beyond the persistence context across transactions.
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+        javax:
+          cache:
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            missing_cache_strategy: create
+
+        # ── Schema Generation ──
+        hbm2ddl:
+          auto: create-drop
+
+# ── PostgreSQL Production Profile (Alternative) ──
+# To activate: MICRONAUT_ENVIRONMENTS=prod
+---
+micronaut:
+  environments: prod
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/fleet_management
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    dialect: POSTGRES
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: validate
+
+# ── Docker Container Profile ──
+# Activated via: MICRONAUT_ENVIRONMENTS=docker
+---
+micronaut:
+  environments: docker
+datasources:
+  default:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:fleet_management}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:fleet_admin}
+    password: ${DB_PASSWORD:fleet_secret}
+    dialect: POSTGRES
+    maximum-pool-size: 15
+    minimum-idle: 3
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+
