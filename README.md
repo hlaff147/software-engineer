@@ -27,7 +27,7 @@
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
 | **🧪 Testing & Quality** | 1 project | Mutation Testing, AST, mutmut, Hypothesis |
 | **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
-| **📚 Study Guides & Architecture** | 7 modules | AI Patterns, Token Optimization & Routing, Java Core, System Design, Floating Point, Java 21/25, SDE-2 Prep |
+| **📚 Study Guides & Architecture** | 8 modules | AI Patterns, Token Optimization & Routing, Java Core, Collectors/Gatherers, System Design, Floating Point, Java 21/25, SDE-2 Prep |
 
 ---
 
@@ -38,6 +38,7 @@
 | [⚡ Agentic Token Optimization](./agentic-token-optimization) | Model Routing, Pre-Tool Hooks & delegação de I/O (redução de 90% em tokens) | Model Routing, Token Optimization, PreToolUse Hooks, Bulk Reader, Code Writer |
 | [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
+| [🧩 Java Collectors & Gatherers](./java-collectors-gatherers) | Custom Collectors, Gatherers (Java 24+) & functional Streams | Collector API, Gatherer API, groupingBy, collectingAndThen, sealed interfaces |
 | [💼 Interview Study & System Design](./study_interview_system_design) | Quick reference & comprehensive SDE-2 interview prep | Idempotência vs Deduplicação, Mastercard SDE-2, SOLID, CAP/ACID, LeetCode |
 | [🏛️ System Design Diagrams](./system-design) | Visual system design references | Payment systems, Saga patterns, CAP theorem |
 | [🧮 Floating Point Precision (IEEE 754)](./floating-point-precision) | Floating point drift theory and multi-language benchmarks | IEEE 754, Binary Fractions, Turing vs Lambda, Decimal, Fraction |
@@ -981,6 +982,14 @@ software-engineer/
 │   │   └── 📖 MCP_RAG_AGENTS_ARCHITECTURE.md
 │   ├── 📂 java-developer/               # Java interview prep & JVM under-the-hood
 │   │   └── 📖 JAVA_SPRING_UNDER_THE_HOOD.md
+│   ├── 📂 java-collectors-gatherers/     # Custom Collectors, Gatherers (Java 24+) & Streams
+│   │   ├── 📖 01-collector-api-anatomy.md
+│   │   ├── 📖 02-composing-collectors.md
+│   │   ├── 📖 03-custom-collector-from-scratch.md
+│   │   ├── 📖 04-gatherer-api-anatomy.md
+│   │   ├── 📖 05-ineditos-repetidos.md
+│   │   ├── 📖 06-streams-from-scratch.md
+│   │   └── 📖 07-exercises.md
 │   ├── 📂 study_interview_system_design/ # SOLID, CAP/ACID, patterns & Mastercard SDE-2
 │   │   ├── 📖 idempotency-vs-deduplication.md
 │   │   └── 📖 MASTERCARD_SDE2_INTERVIEW_PREP.md

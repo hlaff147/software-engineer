@@ -17,6 +17,7 @@
 | [`hedge_fund_bot/`](../hedge_fund_bot) | 🤖 AI & Machine Learning | Python 3.11+, LangGraph, Groq, Llama 3.3 | ✅ Active | ✅ Yes | Autonomous multi-agent stock market analysis system with PEV self-correction retry loop. |
 | [`incognia-api-java/`](../incognia-api-java) | 🔒 Security & Client SDKs | Java 8+, OkHttp, Gradle, JUnit 5 | ✅ Production-grade | ✅ Yes | Client SDK library for Incognia location identity and fraud risk assessment APIs. |
 | [`java-developer/`](../java-developer) | 📚 Study Guide | Java, Spring Boot, Microservices, SQL | ✅ Complete | ✅ Yes | Comprehensive backend interview preparation and JVM/Spring Under the Hood deep dive. |
+| [`java-collectors-gatherers/`](../java-collectors-gatherers) | 📚 Study Guide | Java 24+, Streams, Collectors, Gatherers | ✅ Active | ✅ Yes | Deep-dive on custom Collectors, Gatherers (Java 24+), and functional Streams covering design patterns and deduplication. |
 | [`java25-lts-features/`](../java25-lts-features) | 📚 Study Guide / Code | Java 21/25, Maven, Loom | ✅ Complete | ✅ Yes | Modern Java mini-project with ScopedValue, Virtual Threads, and Structured Concurrency comparison. |
 | [`kafka-consumer-groups/`](../kafka-consumer-groups) | 📨 Event Streaming | Python 3.11+, FastAPI, aiokafka, Docker | ✅ Complete | ✅ Yes | Demonstration of Kafka consumer group isolation and independent offset tracking. |
 | [`loggingx-spring-boot-starter/`](../loggingx-spring-boot-starter) | 📐 Observability | Java 17, Spring Boot 3, Logback, AOP | ✅ Production-grade | ✅ Yes | Starter library for standardized structured JSON logging, correlation ID, and PII redaction. |
@@ -43,7 +44,7 @@
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)
 - **🧪 Testing & Quality:** 1 project (`mutation-testing`)
 - **📐 Observability:** 1 library (`loggingx-spring-boot-starter`)
-- **📚 Study Guides & Architecture:** 7 modules (`agentic-token-optimization`, `ai-engineer`, `java-developer`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
+- **📚 Study Guides & Architecture:** 8 modules (`agentic-token-optimization`, `ai-engineer`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
 
 ---
 
