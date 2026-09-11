@@ -27,7 +27,7 @@
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
 | **🧪 Testing & Quality** | 1 project | Mutation Testing, AST, mutmut, Hypothesis |
 | **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
-| **📚 Study Guides & Architecture** | 6 modules | AI Patterns, Java Core, System Design, Floating Point, Java 21/25, SDE-2 Prep |
+| **📚 Study Guides & Architecture** | 7 modules | AI Patterns, Token Optimization & Routing, Java Core, System Design, Floating Point, Java 21/25, SDE-2 Prep |
 
 ---
 
@@ -35,6 +35,7 @@
 
 | Guide | Description | Topics |
 |-------|-------------|--------|
+| [⚡ Agentic Token Optimization](./agentic-token-optimization) | Model Routing, Pre-Tool Hooks & delegação de I/O (redução de 90% em tokens) | Model Routing, Token Optimization, PreToolUse Hooks, Bulk Reader, Code Writer |
 | [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
 | [💼 Interview Study & System Design](./study_interview_system_design) | Quick reference & comprehensive SDE-2 interview prep | Idempotência vs Deduplicação, Mastercard SDE-2, SOLID, CAP/ACID, LeetCode |
@@ -182,6 +183,57 @@ vuln-analyzer fix /path --apply
 
 **Tech Stack:** `Python 3.11+` `Click CLI` `OWASP` `NVD API` `Jinja2` `BeautifulSoup4`
 
+---
+
+### [Agentic Token Optimization & Model Routing](./agentic-token-optimization)
+
+Arquitetura de **roteamento de modelos (*Model Routing*)** e interceptação determinística via *Pre-Tool Hooks*, reduzindo em até **90% o consumo de tokens** ao delegar I/O pesado e *boilerplate* para *workers* leves.
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Arquitetura em 3 Camadas**
+```
+[ Agente Principal ]
+        │
+        ▼ (Leitura de arquivo grande)
+┌─────────────────────────────────────────┐
+│ Camada 1: Pre-Tool Interception Hook    │ (Linhas >= 350 -> Bloqueio)
+└───────────────────┬─────────────────────┘
+        │ Redirecionamento
+        ▼
+┌─────────────────────────────────────────┐
+│ Camada 3: Agent Skills / Tool Registry  │ (Guia de invocação CLI)
+└───────────────────┬─────────────────────┘
+        │ Invoca Script
+        ▼
+┌─────────────────────────────────────────┐
+│ Camada 2: Execution Scripts & Workers   │ (Bulk-Reader / Code-Writer)
+└─────────────────────────────────────────┘
+```
+
+</td>
+<td width="50%">
+
+**⚡ Destaques & Técnicas**
+| Técnica | Aplicação |
+|---------|-----------|
+| **Model Routing** | Desacopla raciocínio analítico de I/O pesado |
+| **Pre-Tool Hooks** | Bloqueio determinístico por threshold (>350 linhas) |
+| **Bulk Reader Mode** | Síntese densa em bullets sem preâmbulos |
+| **Code Writer Mode** | Geração direta em disco ("output only code") |
+| **Targeted Reads Pass** | Leituras pontuais com offset/limit liberadas |
+
+**Economia Comprovada:**
+- ~90% de redução de tokens em operações de leitura em monorepos
+- Preservação da janela de contexto para decisões de alta complexidade
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Python 3.9+` `Standalone Package` `Unified CLI` `Pre-Tool Hooks` `Cursor Skills` `Make` `unittest`
 
 ---
 
@@ -831,6 +883,9 @@ public class PaymentService {
 | **First-Level Cache / Identity Map** | micronaut-jpa-masterclass | Guarantees reference equality & prevents duplicate SQL SELECT queries within transactions |
 | **Optimistic / Pessimistic Locking** | micronaut-jpa-masterclass | Concurrency control via @Version stale detection and SELECT FOR UPDATE exclusivity |
 | **Polymorphic Entity Inheritance** | micronaut-jpa-masterclass | Joined Table and Single Table relational inheritance mapping strategies |
+| **Model Routing** | agentic-token-optimization | Decouple high-level reasoning from heavy I/O and boilerplate code generation |
+| **Pre-Tool Interception Hook** | agentic-token-optimization | Deterministic enforcement to block expensive tool calls via threshold |
+| **Ephemeral Worker Delegation** | agentic-token-optimization | Stateless one-shot worker execution with direct disk write |
 
 ### System Design Concepts
 
@@ -847,17 +902,18 @@ public class PaymentService {
 │  🔌 API Versioning                      │  🤖 AI Agent Architectures    │
 │  ├─ URL-based versioning               │  ├─ Multi-agent systems       │
 │  ├─ Strategy pattern routing           │  ├─ Tool use patterns         │
-│  └─ Backward compatibility             │  └─ Self-correcting loops     │
-│                                         │                                │
-│  💾 Connection Management               │  🔒 Security Analysis         │
-│  ├─ Singleton vs per-request           │  ├─ Dependency scanning       │
-│  ├─ Memory leak prevention             │  ├─ CVE detection             │
-│  └─ Resource pooling                   │  └─ Auto-remediation          │
-│                                         │                                │
-│  💰 Digital Wallets                     │  📐 Observability              │
-│  ├─ Ledger-based auditing              │  ├─ Structured JSON logging   │
-│  ├─ Multi-currency support             │  ├─ End-to-end correlation    │
-│  └─ Immutable transaction history      │  └─ PII redaction             │
+│  └─ Backward compatibility             │  ├─ Self-correcting loops     │
+│                                         │  └─ Model routing & I/O hooks │
+│  💾 Connection Management               │                                │
+│  ├─ Singleton vs per-request           │  🔒 Security Analysis         │
+│  ├─ Memory leak prevention             │  ├─ Dependency scanning       │
+│  └─ Resource pooling                   │  ├─ CVE detection             │
+│                                         │  └─ Auto-remediation          │
+│  💰 Digital Wallets                     │                                │
+│  ├─ Ledger-based auditing              │  📐 Observability              │
+│  ├─ Multi-currency support             │  ├─ Structured JSON logging   │
+│  └─ Immutable transaction history      │  ├─ End-to-end correlation    │
+│                                         │  └─ PII redaction             │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -911,6 +967,14 @@ software-engineer/
 │   └── 🤖 GEMINI.md                     # Root agent operating rules & project invariants
 │
 ├── 📚 Study Guides & Architecture
+│   ├── 📂 agentic-token-optimization/   # Standalone Model Routing & Token Optimization Engine
+│   │   ├── 📖 README.md
+│   │   ├── 📂 src/token_router/         # Core analyzer, routing decision engine & workers
+│   │   ├── 📂 bin/                      # CLI wrapper (token-router) & universal pre-tool hook
+│   │   ├── 📂 tests/                    # Automated unit tests (unittest)
+│   │   ├── 📂 examples/                 # Playground (433-line service & run_demo.sh)
+│   │   ├── 📂 agent/                    # Cursor agent skills (bulk-reader, code-writer)
+│   │   └── 📂 scripts/                  # Legacy compatibility scripts
 │   ├── 📂 ai-engineer/                  # AI agent patterns, study guide & CV portfolio
 │   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
 │   │   ├── 📖 AI_ENGINEER_CV_EXPERIENCE.md

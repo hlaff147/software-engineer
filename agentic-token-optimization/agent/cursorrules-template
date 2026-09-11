@@ -1,0 +1,22 @@
+# ==============================================================================
+# Token Router Policy for Cursor Agent (.cursorrules)
+# Copie este conteúdo para o arquivo .cursorrules na raiz do seu projeto
+# ==============================================================================
+
+# 1. Política de Interceptação de Arquivos Grandes
+- Quando precisar responder a dúvidas conceituais, fluxos de arquitetura ou mapeamento
+  de classes em arquivos com mais de 350 linhas de código, NUNCA leia o arquivo inteiro
+  usando a ferramenta nativa de leitura.
+- Em vez disso, invoque o leitor de contexto em massa:
+  python3 bin/token-router read --paths <arquivo> --question "<sua duvida>"
+
+# 2. Política de Geração de Boilerplate e Testes
+- Ao gerar arquivos de teste unitário, DTOs ou stubs repetitivos, utilize o worker
+  especializado fornecendo um arquivo de referência de estilo:
+  python3 bin/token-router write --spec "<requisitos>" --reference <arquivo_referencia> --target <caminho_novo_arquivo>
+- Não exiba centenas de linhas de código gerado na janela de resposta se puder gravá-lo
+  diretamente no disco.
+
+# 3. Leituras Direcionadas (Targeted Reads)
+- Leituras completas com ferramentas nativas são reservadas estritamente para trechos
+  que serão editados cirurgicamente (usando StartLine e EndLine cobrindo menos de 350 linhas).

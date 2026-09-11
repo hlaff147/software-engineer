@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "token-router"
+version = "0.1.0"
+description = "Otimizador e roteador de tokens para agentes de código autônomos (Model Routing & I/O Delegation)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Humberto Filho" }
+]
+keywords = [
+    "ai",
+    "agentic-ai",
+    "model-routing",
+    "token-optimization",
+    "cursor",
+    "claude-code",
+    "llm",
+    "developer-tools"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0",
+]
+providers = [
+    "openai>=1.0.0",
+    "google-genai>=0.1.0",
+    "anthropic>=0.18.0",
+]
+
+[project.scripts]
+token-router = "token_router.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

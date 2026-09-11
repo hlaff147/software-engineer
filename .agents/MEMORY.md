@@ -1,7 +1,7 @@
 # 🧠 Repository Memory Bank
 
 > **Source of Truth for Repository Structure, Modules, and Documentation.**
-> Auto-maintained by AI coding agents. Last synchronized: 2026-09-01.
+> Auto-maintained by AI coding agents. Last synchronized: 2026-09-10.
 
 ---
 
@@ -9,6 +9,7 @@
 
 | Directory | Category | Primary Tech Stack | Status / Completeness | Local README | Description |
 |:---|:---|:---|:---|:---:|:---|
+| [`agentic-token-optimization/`](../agentic-token-optimization) | 📚 Study Guide / AI Architecture | Python 3, Standalone Package, CLI, Cursor Skills | ✅ Production-ready | ✅ Yes | Roteamento de modelos e otimização de tokens para agentes autônomos. Estrutura autônoma com pacote Python modular (`src/`), CLI unificada (`bin/`), Pre-Tool Hooks, testes unitários e skills para Cursor. |
 | [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), MCP/RAG/Agents architecture guide, study guide, and CV/portfolio experience summary. |
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
 | [`corabank-api/`](../corabank-api) | 🔌 Backend APIs | Java 17, Spring Boot 3, H2, Gradle | ✅ Complete | ✅ Yes | Bank account creation challenge with referral bonus code and bug-fixing exercise. |
@@ -42,7 +43,7 @@
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)
 - **🧪 Testing & Quality:** 1 project (`mutation-testing`)
 - **📐 Observability:** 1 library (`loggingx-spring-boot-starter`)
-- **📚 Study Guides & Architecture:** 6 modules (`ai-engineer`, `java-developer`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
+- **📚 Study Guides & Architecture:** 7 modules (`agentic-token-optimization`, `ai-engineer`, `java-developer`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
 
 ---
 
