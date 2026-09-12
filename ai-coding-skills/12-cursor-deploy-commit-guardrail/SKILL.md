@@ -1,32 +1,32 @@
 ---
 name: cursor-deploy-commit-guardrail
 description: >-
-  Intercepts git commit operations in Cursor to ask the user if the commit should trigger a deploy.
-  Appends mandatory '#deployuat #auto' hashtags to the commit message when the user confirms.
-  Activate when preparing, formatting, or executing git commits.
+  Intercepts git commits in Cursor to ask if a deploy is required, appending '#deployuat #auto' upon confirmation.
+  Also creates and pushes empty trigger commits ("commit no content") with exact message 'ci: #deployuat #auto' on demand.
+  Activate when preparing, formatting, or executing git commits or when asked to trigger a UAT deployment.
 ---
 
-# 🚀 Cursor Deploy Commit Guardrail
+# 🚀 Cursor Deploy Commit Guardrail & Trigger
 
-Intercepts git commit actions by the Cursor agent. Forces an interactive confirmation step asking the user whether this commit should trigger an automated UAT deployment pipeline.
+Intercepts git commit actions by the Cursor agent. Enforces an interactive confirmation step asking the user whether standard commits should trigger a UAT deployment, and provides a direct command for empty trigger commits ("commit no content") that immediately trigger CI/CD pipelines.
 
 ---
 
 ## 🚫 Critical Negative Constraints (Anti-Patterns)
 
-- **NEVER execute `git commit` without asking**: The agent must NEVER run `git commit` automatically without asking the deploy confirmation question first.
-- **NEVER append `#deployuat #auto` without explicit confirmation**: If the user answers "não", "no", or gives no response, do NOT include the deployment tags.
-- **NEVER alter tag spelling or casing**: The deployment tags MUST be exactly `#deployuat #auto` (lowercase, space-separated). Any typo (`#deployUAT`, `#deploy-uat`) will fail CI/CD regex triggers.
-- **NEVER inline tags on the subject line**: The tags MUST be placed on a separate footer line separated by a blank line from the commit body.
+- **NEVER execute a standard `git commit` without asking**: The agent must NEVER commit working tree changes without asking the deploy confirmation question first.
+- **NEVER alter tag spelling or casing**: The deployment tags MUST be strictly `#deployuat #auto` (lowercase, space-separated). Any typo (`#deployUAT`, `#deploy_uat`) will fail CI/CD regex triggers.
+- **NEVER alter the empty trigger commit message**: For no-content commits, the message MUST be exactly `"ci: #deployuat #auto"`.
+- **NEVER push to the wrong branch**: Always inspect the current active branch using `git branch --show-current` before running `git push origin <branch>`.
 
 ---
 
-## 📋 1. The Interactive Commit Protocol
+## 📋 Mode 1: Interactive Standard Commit Protocol
 
-Whenever you (the AI agent) have finished coding and are ready to stage and commit changes, you **MUST execute this exact sequence**:
+Whenever you have finished code changes and are ready to stage and commit:
 
 ### Step 1: Draft the Commit Message & Stop
-Draft a clean Conventional Commit message (`<type>(<scope>): <description>`). **DO NOT** execute the `git commit` command yet.
+Draft a clean Conventional Commit message (`<type>(<scope>): <description>`). **DO NOT** execute `git commit` yet.
 
 ### Step 2: Ask the Deploy Question
 Prompt the user explicitly in chat:
@@ -34,10 +34,10 @@ Prompt the user explicitly in chat:
 > 🚢 **Confirmação de Deploy:**
 > Deseja acionar o deploy (UAT) com este commit? (**Sim / Não**)
 
-### Step 3: Format Based on User Response
+### Step 3: Format & Execute Based on Response
 
-#### Option A — User responds "Sim" / "Yes":
-Append a blank line and the mandatory `#deployuat #auto` tags at the end of the commit message.
+#### If User responds "Sim" / "Yes" / "Deploy":
+Append a blank line and the mandatory `#deployuat #auto` tags at the end of the commit message:
 
 ```bash
 git commit -m "$(cat << 'EOF'
@@ -50,7 +50,7 @@ EOF
 )"
 ```
 
-#### Option B — User responds "Não" / "No":
+#### If User responds "Não" / "No":
 Commit with standard formatting, omitting the deployment tags entirely:
 
 ```bash
@@ -64,20 +64,49 @@ EOF
 
 ---
 
-## 📐 2. Exact Tag Specification
+## ⚡ Mode 2: Empty Trigger Commit Protocol ("Commit No Content")
 
-| Requirement | Value | Notes |
-|---|---|---|
-| **Mandatory Tags** | `#deployuat #auto` | Both tags are required by the CI/CD pipeline |
-| **Casing** | Lowercase only | Strict regex match |
-| **Placement** | Commit message footer | Preceded by an empty line |
-| **Format** | Multi-line string / heredoc | Preserves formatting in git history |
+When the user requests to trigger a deployment without code changes (e.g., *"cria um commit no content com ci: #deployuat #auto"*, *"trigger deploy"*, *"dispara o deploy em uat"*, *"commit vazio de deploy"*):
+
+### Automated Execution Sequence:
+
+1. **Detect Current Branch**:
+   ```bash
+   BRANCH=$(git branch --show-current)
+   ```
+
+2. **Execute Empty Commit**:
+   Create a commit without staged files using `--allow-empty` and the exact message:
+   ```bash
+   git commit --allow-empty -m "ci: #deployuat #auto"
+   ```
+
+3. **Push to Remote**:
+   ```bash
+   git push origin "$BRANCH"
+   ```
+
+4. **Confirm to User in Chat**:
+   ```text
+   🚢 Commit vazio de deploy criado com sucesso!
+   - Branch: <branch>
+   - Mensagem: ci: #deployuat #auto
+   - Commit Hash: <short-hash>
+   🚀 Push enviado para origin/<branch>. Pipeline UAT disparada!
+   ```
 
 ---
 
-## 🧪 3. Verification Script
+## 📐 Exact Tag Specification
 
-To verify that a commit message contains the required deployment tags when intended:
-```bash
-./scripts/check-deploy-tags.sh /path/to/COMMIT_EDITMSG
-```
+| Context | Exact Format | CI/CD Regex Match |
+|---|---|---|
+| **Standard Commit with Deploy** | `<Conventional Message>\n\n#deployuat #auto` | Matches `#deployuat` and `#auto` in body |
+| **No-Content Empty Trigger Commit** | `ci: #deployuat #auto` | Exact match for pipeline manual trigger |
+
+---
+
+## 🧪 Helper Scripts
+
+- **Validate message tags**: [`scripts/check-deploy-tags.sh <file>`](./scripts/check-deploy-tags.sh)
+- **One-command empty trigger**: [`scripts/trigger-deploy.sh`](./scripts/trigger-deploy.sh)

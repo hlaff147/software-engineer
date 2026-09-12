@@ -1,20 +1,19 @@
 ---
-description: Intercepts git commit actions to ask the user if this commit should trigger a deploy, appending '#deployuat #auto' upon confirmation.
+description: Intercepts standard git commits to ask user if a deploy is required (appending '#deployuat #auto'), and creates empty trigger commits ('ci: #deployuat #auto') with push on demand.
 globs: ["**/*"]
 alwaysApply: true
 ---
 
-# Cursor Deploy Commit Guardrail (.cursorrules)
+# Cursor Deploy Commit Guardrail & Trigger (.cursorrules)
 
-## 🛑 Golden Rule: Never Commit Blindly
-Whenever preparing to execute a `git commit` in the terminal or suggesting a commit message:
-
+## 🛑 Rule 1: Standard Commits (Always Ask)
+Whenever preparing to execute a `git commit` for modified files:
 1. **PAUSE AND ASK**: You must explicitly ask the user:
    > 🚢 **Confirmação de Deploy:**
    > Deseja acionar o deploy (UAT) com este commit? (**Sim / Não**)
 
 2. **IF USER SAYS YES ("sim", "yes", "s", "deploy"):**
-   You MUST format the commit message with `#deployuat #auto` on a new line at the end:
+   Format the commit message with `#deployuat #auto` on a new line at the end:
    ```
    <type>(<scope>): <resumo imperativo>
 
@@ -31,7 +30,22 @@ Whenever preparing to execute a `git commit` in the terminal or suggesting a com
    <descrição detalhada se houver>
    ```
 
+---
+
+## ⚡ Rule 2: Empty Trigger Commits ("Commit No Content")
+Whenever the user asks to trigger a deployment without changes (e.g. *"commit no content"*, *"dispara deploy"*, *"commit vazio"*, *"ci: #deployuat #auto"*):
+1. Immediately run:
+   ```bash
+   BRANCH=$(git branch --show-current)
+   git commit --allow-empty -m "ci: #deployuat #auto"
+   git push origin "$BRANCH"
+   ```
+2. Report the commit hash, branch, and confirmation that the UAT pipeline was triggered.
+
+---
+
 ## 🚫 Negative Constraints
-- NEVER run `git commit` without asking the deploy question first.
+- NEVER run a standard `git commit` without asking the deploy question first.
 - NEVER alter the hashtags: they must be strictly `#deployuat #auto` in lowercase.
-- NEVER attach the hashtags directly to the first line (subject). Always leave a blank line before them.
+- For empty trigger commits, NEVER change the message: it must be exactly `"ci: #deployuat #auto"`.
+- NEVER leave out the `git push` when the user requests an empty deploy trigger commit.
