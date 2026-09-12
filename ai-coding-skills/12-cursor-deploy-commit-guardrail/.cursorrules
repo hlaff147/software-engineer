@@ -1,0 +1,37 @@
+---
+description: Intercepts git commit actions to ask the user if this commit should trigger a deploy, appending '#deployuat #auto' upon confirmation.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Cursor Deploy Commit Guardrail (.cursorrules)
+
+## 🛑 Golden Rule: Never Commit Blindly
+Whenever preparing to execute a `git commit` in the terminal or suggesting a commit message:
+
+1. **PAUSE AND ASK**: You must explicitly ask the user:
+   > 🚢 **Confirmação de Deploy:**
+   > Deseja acionar o deploy (UAT) com este commit? (**Sim / Não**)
+
+2. **IF USER SAYS YES ("sim", "yes", "s", "deploy"):**
+   You MUST format the commit message with `#deployuat #auto` on a new line at the end:
+   ```
+   <type>(<scope>): <resumo imperativo>
+
+   <descrição detalhada se houver>
+
+   #deployuat #auto
+   ```
+
+3. **IF USER SAYS NO ("não", "no", "n"):**
+   Commit normally WITHOUT the deploy tags:
+   ```
+   <type>(<scope>): <resumo imperativo>
+
+   <descrição detalhada se houver>
+   ```
+
+## 🚫 Negative Constraints
+- NEVER run `git commit` without asking the deploy question first.
+- NEVER alter the hashtags: they must be strictly `#deployuat #auto` in lowercase.
+- NEVER attach the hashtags directly to the first line (subject). Always leave a blank line before them.

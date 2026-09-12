@@ -1,9 +1,8 @@
-# 🧠 AI Coding Skills — 11 Production-Ready Skills for AI-Powered IDEs
+# 🧠 AI Coding Skills — 12 Production-Ready Skills for AI-Powered IDEs
 
-> **A curated collection of 11 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
+> **A curated collection of 12 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
 
 ## 📖 What Are AI Coding Skills?
-
 
 AI Coding Skills (also called "rules", "instructions", or "custom instructions") are structured instruction files that **teach AI coding agents how to behave** within your project. They transform a generic AI assistant into a **specialized pair programmer** that enforces your team's coding standards, catches anti-patterns, and follows your architectural decisions.
 
@@ -31,7 +30,7 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 
 ---
 
-## 🎯 The 11 Skills
+## 🎯 The 12 Skills
 
 | # | Skill | Category | Problem It Solves | IDE Formats |
 |---|-------|----------|-------------------|-------------|
@@ -46,6 +45,7 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 | 9 | [**REST API Contract-First**](./09-rest-api-contract-first/) | 🔵 Architecture | Inconsistent URLs, non-standard errors, ad-hoc pagination | 4 formats |
 | 10 | [**Token Router Optimizer**](./10-token-router-optimizer/) | 🟣 Meta-Agent | 90% token waste reading large files | 4 formats |
 | 11 | [**Java Micronaut 4+ Standards**](./11-java-micronaut-standards/) | 🟢 Language | Spring habits in Micronaut, field injection, N+1 queries, reflection breaking GraalVM | 4 formats |
+| 12 | [**Cursor Deploy Commit Guardrail**](./12-cursor-deploy-commit-guardrail/) | 🟡 Workflow | Inadvertent or missing CI/CD deploys from Cursor commits; enforces `#deployuat #auto` prompt | 4 formats |
 
 ---
 
@@ -267,5 +267,6 @@ ai-coding-skills/
 ├── 08-anti-hallucination-verifier/        # Read-before-write guardrail
 ├── 09-rest-api-contract-first/            # REST API design standards
 ├── 10-token-router-optimizer/             # Token consumption optimization
-└── 11-java-micronaut-standards/           # Java 21+ & Micronaut 4 AOT
+├── 11-java-micronaut-standards/           # Java 21+ & Micronaut 4 AOT
+└── 12-cursor-deploy-commit-guardrail/     # Interactive deploy commit guardrail
 ```
