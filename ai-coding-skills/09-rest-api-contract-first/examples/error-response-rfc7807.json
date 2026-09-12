@@ -1,0 +1,13 @@
+{
+  "type": "https://api.example.com/problems/validation-error",
+  "title": "Validation Error",
+  "status": 422,
+  "detail": "The 'email' field is not a valid email address.",
+  "instance": "/api/v1/users/123",
+  "invalid_params": [
+    {
+      "name": "email",
+      "reason": "must be a valid RFC 5322 email address"
+    }
+  ]
+}

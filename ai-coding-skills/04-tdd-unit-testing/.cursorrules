@@ -1,0 +1,24 @@
+---
+description: Enforces rigorous test-driven development with AAA pattern, edge case coverage, and proper mocking boundaries. Activate when writing, reviewing, or generating tests.
+globs: ["**/*Test.java", "**/*test*.py", "**/*.test.ts", "**/*.spec.ts", "**/test_*.py", "tests/**"]
+alwaysApply: false
+---
+<🎯 Title>
+TDD & Unit Testing Instructions
+
+## Rules
+- ALWAYS use strict Arrange-Act-Assert (AAA) layout — visually separated with blank lines.
+- ALWAYS follow test naming conventions: `should_ExpectedBehavior_When_Condition` (Java), `test_expected_when_condition` (Python), or `it('should ... when ...')` (JS/TS).
+- MANDATORY negative tests for every public method: null inputs, empty collections, boundary values, unauthorized access, timeouts.
+- NEVER mock the class/unit under test — only mock external I/O boundaries (DB, HTTP, filesystem).
+- NEVER use `@SuppressWarnings` or `@Ignore`/`@Disabled` without an expiration date and ticket.
+- ALWAYS have one assertion concept per test (multiple assertions OK if testing the same logical concept).
+- ALWAYS use test data builders or factory methods — NEVER hardcode magic strings/numbers without constants.
+- ALWAYS include Given-When-Then comments for BDD-style tests.
+- ALWAYS test error messages, not just exception types.
+- PREFER `assertThat()` (AssertJ/Hamcrest) over `assertEquals()` for readability.
+- ALWAYS aim for test coverage targets: > 80% line coverage AND > 60% mutation score.
+- NEVER write tests that pass without the implementation (avoid tautological tests).
+
+## Verification
+- Run `mvn test`, `pytest --tb=short`, `npm test -- --coverage` to verify your code.

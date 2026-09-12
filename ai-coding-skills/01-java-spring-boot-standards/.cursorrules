@@ -1,0 +1,30 @@
+---
+description: Enforces modern Java 21+ and Spring Boot 3 idiomatic standards.
+globs: ["**/*.java", "**/pom.xml", "**/application*.yml"]
+alwaysApply: false
+---
+# 🎯 Java Spring Boot 3 Standards
+
+Enforce modern Java 21+ and Spring Boot 3 idiomatic standards.
+
+## Rules
+- ALWAYS use Records for immutable DTOs (not POJOs with getters/setters).
+- ALWAYS use Pattern Matching for `switch` and `instanceof` (Java 21+).
+- ALWAYS use Constructor injection via `@RequiredArgsConstructor` or explicit constructors.
+- NEVER use `@Autowired` on private fields.
+- ALWAYS use `jakarta.*` namespace exclusively (ban `javax.*`).
+- ALWAYS use RFC 7807 Problem Details for REST error handling via `@ControllerAdvice` + `ProblemDetail.forStatusAndDetail()`.
+- ALWAYS use Virtual Threads for I/O-bound tasks (`Executors.newVirtualThreadPerTaskExecutor()`).
+- ALWAYS use Sealed interfaces for domain hierarchies.
+- ALWAYS use `Optional` return types for nullable queries.
+- NEVER return null from service methods.
+- ALWAYS use `@Transactional(readOnly = true)` for read-only operations.
+- ALWAYS use `List.of()`, `Map.of()`, `Set.of()` for immutable collections.
+- ALWAYS use Text blocks (`"""`) for multi-line strings.
+- NEVER catch generic `Exception` — catch specific exceptions.
+- NEVER use `@SuppressWarnings` without justification comment.
+
+## Verification
+- Run `mvn test-compile` to ensure compilation.
+- Run `mvn test` to ensure tests pass.
+- Check for any `javax.*` imports.

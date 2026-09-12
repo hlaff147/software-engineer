@@ -10,6 +10,7 @@
 | Directory | Category | Primary Tech Stack | Status / Completeness | Local README | Description |
 |:---|:---|:---|:---|:---:|:---|
 | [`agentic-token-optimization/`](../agentic-token-optimization) | 📚 Study Guide / AI Architecture | Python 3, Standalone Package, CLI, Cursor Skills | ✅ Production-ready | ✅ Yes | Roteamento de modelos e otimização de tokens para agentes autônomos. Estrutura autônoma com pacote Python modular (`src/`), CLI unificada (`bin/`), Pre-Tool Hooks, testes unitários e skills para Cursor. |
+| [`ai-coding-skills/`](../ai-coding-skills) | 📚 Study Guide / AI Skills | Markdown, YAML, Bash, Python | ✅ Complete | ✅ Yes | Collection of 10 production-ready AI coding skills for multiple IDEs (Cursor, Copilot, Windsurf, Cline, Claude Code, Gemini). Covers Java, Python, Next.js, TDD, OWASP security, conventional commits, memory bank, anti-hallucination, REST API design, and token optimization. |
 | [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), MCP/RAG/Agents architecture guide, study guide, and CV/portfolio experience summary. |
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
 | [`corabank-api/`](../corabank-api) | 🔌 Backend APIs | Java 17, Spring Boot 3, H2, Gradle | ✅ Complete | ✅ Yes | Bank account creation challenge with referral bonus code and bug-fixing exercise. |
@@ -44,7 +45,7 @@
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)
 - **🧪 Testing & Quality:** 1 project (`mutation-testing`)
 - **📐 Observability:** 1 library (`loggingx-spring-boot-starter`)
-- **📚 Study Guides & Architecture:** 8 modules (`agentic-token-optimization`, `ai-engineer`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
+- **📚 Study Guides & Architecture:** 9 modules (`agentic-token-optimization`, `ai-coding-skills`, `ai-engineer`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
 
 ---
 

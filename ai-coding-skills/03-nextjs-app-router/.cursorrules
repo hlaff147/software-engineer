@@ -1,0 +1,26 @@
+---
+description: Enforces Next.js 14/15 App Router patterns with React Server Components. Activate when writing Next.js or React code in an App Router project.
+globs: ["**/*.tsx", "**/*.ts", "**/next.config.*", "app/**/*"]
+alwaysApply: false
+---
+<🎯 Title>
+Next.js App Router & React Server Components Instructions
+
+## Rules
+- Default ALL components to React Server Components — add `'use client'` ONLY at interactive leaf nodes (event listeners, hooks like useState/useEffect).
+- NEVER put `'use client'` at the top of layout.tsx or page.tsx unless absolutely necessary.
+- ALWAYS protect Server Actions with Zod schema validation + authentication checks before DB operations.
+- ALWAYS use `route.ts` handlers with standard Web Request/Response APIs (not legacy `req.query`).
+- ALWAYS use Metadata API (`generateMetadata`, `metadata` export) for SEO — NEVER use `<Head>` component.
+- ALWAYS use strict caching: use `revalidateTag()` / `revalidatePath()` for on-demand revalidation.
+- ALWAYS optimize images: use `next/image` with explicit width/height or `fill` prop.
+- PREFER parallel routes (`@slot`) and intercepting routes (`(.)`, `(..)`) for modal patterns.
+- ALWAYS use loading UI: `loading.tsx` for Suspense boundaries, `error.tsx` for error boundaries.
+- NEVER use `useRouter()` from `next/router` — use `next/navigation` in App Router.
+- NEVER use `getServerSideProps` or `getStaticProps` — these are Pages Router patterns.
+- PREFER `fetch()` with `next: { revalidate: N }` or `cache: 'no-store'` for data fetching.
+- ALWAYS collocate components: keep related components in the same route segment folder.
+
+## Verification
+- Run `npm run build` to catch RSC violations.
+- Run `npm run lint` to ensure standard compliance.

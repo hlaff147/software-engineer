@@ -1,0 +1,34 @@
+---
+name: rest-api-contract-first
+description: >-
+  Enforces consistent RESTful API design with RFC 7807 error handling, standard pagination, and versioning. Activate when designing, implementing, or reviewing REST API endpoints.
+---
+<🎯 REST API Contract-First>
+Enforce consistent RESTful API design patterns and RFC standards.
+
+## Rules
+- ALWAYS use Plural nouns for collections (`/api/v1/orders`).
+- NEVER use verbs in URLs (`/api/v1/getOrders` ❌).
+- ALWAYS use appropriate HTTP Methods:
+  - `GET` — Read (idempotent, no body)
+  - `POST` — Create (returns 201 + Location header)
+  - `PUT` — Full replacement (idempotent)
+  - `PATCH` — Partial update
+  - `DELETE` — Remove (idempotent, returns 204 No Content)
+- ALWAYS use precise Status Codes. NEVER return 200 for everything.
+  - `200` OK, `201` Created, `204` No Content
+  - `400` Bad Request, `401` Unauthorized, `403` Forbidden, `404` Not Found, `409` Conflict, `422` Unprocessable Entity
+  - `500` Internal Server Error (NEVER expose stack traces)
+- ALWAYS return errors in RFC 7807 Problem Details format.
+- ALWAYS use a standardized envelope for Pagination (`items`, `page`, `pageSize`, `totalCount`, `totalPages`).
+- ALWAYS use URL path versioning (`/api/v1/`, `/api/v2/`).
+- ALWAYS use Query parameters for filtering (`?status=active&sort=-createdAt`).
+- PREFER including `_links` (HATEOAS) for discoverability when appropriate.
+- ALWAYS specify `Content-Type: application/json` and support the `Accept` header.
+- NEVER return different response structures for the same endpoint based on conditions.
+- NEVER use `200 OK` with an error message in the body.
+
+## Verification
+- OpenAPI spec validates
+- Response schema tests pass
+- Consistent status codes observed across endpoints

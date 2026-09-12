@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": "ord_12345",
+      "status": "shipped",
+      "totalAmount": 150.00,
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": "ord_12346",
+      "status": "processing",
+      "totalAmount": 75.50,
+      "createdAt": "2023-10-02T14:30:00Z"
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "totalCount": 142,
+  "totalPages": 8,
+  "_links": {
+    "self": {
+      "href": "/api/v1/orders?page=1&pageSize=20"
+    },
+    "next": {
+      "href": "/api/v1/orders?page=2&pageSize=20"
+    },
+    "last": {
+      "href": "/api/v1/orders?page=8&pageSize=20"
+    }
+  }
+}
