@@ -1,0 +1,60 @@
+---
+description: Enforces modern Java 21+ and Micronaut 4+ standards, AOT compilation, reflection-free DI, Micronaut Data JPA, and GraalVM native image readiness.
+globs: ["**/*.java", "**/application*.yml", "**/build.gradle*", "**/pom.xml"]
+alwaysApply: false
+---
+
+# Java & Micronaut 4+ Standards (Cursor Rules)
+
+## 🚫 Negative Constraints (NEVER DO)
+- NEVER import Spring Framework packages (`org.springframework.*`, `@Service`, `@Autowired`, `@Component`, `@RestController`).
+- NEVER use field injection (`@Inject private Service s;`). Always use constructor injection with `final` fields.
+- NEVER use legacy `javax.*` packages. Use `jakarta.*` exclusively (`jakarta.inject.*`, `jakarta.persistence.*`, `jakarta.validation.*`).
+- NEVER block the Netty event loop. Always offload blocking I/O using `@ExecuteOn(TaskExecutors.BLOCKING)` or Java 21+ Virtual Threads (`thread-selection: AUTO`).
+- NEVER rely on runtime reflection or runtime proxy generation (CGLIB). Everything must be resolvable at compile-time for GraalVM Native Image compatibility.
+- NEVER return `null` from service or repository methods. Return `Optional<T>` or immutable collections (`List.of()`, `Set.of()`).
+
+## 🧩 Dependency Injection & Architecture
+- Annotate singletons with `jakarta.inject.Singleton`.
+- Provide explicit constructors for dependency injection:
+  ```java
+  @Singleton
+  public class FleetService {
+      private final AssetRepository assetRepository;
+
+      public FleetService(AssetRepository assetRepository) {
+          this.assetRepository = assetRepository;
+      }
+  }
+  ```
+- For third-party beans, create a `@Factory` class with `@Singleton` producer methods.
+
+## 🌐 HTTP Controllers & DTOs
+- Use `@Controller("/api/...")` from `io.micronaut.http.annotation.Controller`.
+- Return `HttpResponse<T>` with explicit HTTP status codes (`HttpResponse.ok()`, `HttpResponse.created()`, `HttpResponse.notFound()`).
+- Use Java Records for request and response DTOs.
+- For POJO DTOs, always add `@Introspected` or `@Serdeable` to generate compile-time serialization metadata without reflection.
+- Validate inputs using `jakarta.validation.Valid` and standard constraint annotations (`@NotNull`, `@Size`, `@NotBlank`).
+
+## 🗄️ Micronaut Data JPA
+- Extend `JpaRepository<Entity, ID>` or `CrudRepository<Entity, ID>` with `@Repository`.
+- Rely on compile-time query derivation methods validated during `javac` compilation.
+- Prevent N+1 queries using declarative `@Join(value = "relation", type = Join.Type.FETCH)` annotations.
+- Use Java Text Blocks (`"""`) for JPQL `@Query` projections with constructor expressions:
+  ```java
+  @Query("""
+      SELECT new com.example.dto.SummaryDTO(e.id, e.name, o.title)
+      FROM Entity e LEFT JOIN e.owner o WHERE e.status = :status
+  """)
+  List<SummaryDTO> findSummaries(Status status);
+  ```
+- Apply `jakarta.transaction.Transactional` on state modifications, `@Transactional(readOnly = true)` on read operations.
+
+## 🧪 Testing with @MicronautTest
+- Annotate test classes with `@MicronautTest` using JUnit 5.
+- Inject dependencies via constructor injection, test method arguments, or `@Inject` on test fields.
+- Use AssertJ (`assertThat(...)`) for assertions.
+
+## 🔄 Self-Correction Verification
+- Run `./gradlew compileJava` or `mvn compile` to verify Micronaut annotation processors pass.
+- Run `./gradlew test` or `mvn test` to verify unit and integration tests.

@@ -1,8 +1,9 @@
-# 🧠 AI Coding Skills — 10 Production-Ready Skills for AI-Powered IDEs
+# 🧠 AI Coding Skills — 11 Production-Ready Skills for AI-Powered IDEs
 
-> **A curated collection of 10 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
+> **A curated collection of 11 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
 
 ## 📖 What Are AI Coding Skills?
+
 
 AI Coding Skills (also called "rules", "instructions", or "custom instructions") are structured instruction files that **teach AI coding agents how to behave** within your project. They transform a generic AI assistant into a **specialized pair programmer** that enforces your team's coding standards, catches anti-patterns, and follows your architectural decisions.
 
@@ -30,7 +31,7 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 
 ---
 
-## 🎯 The 10 Skills
+## 🎯 The 11 Skills
 
 | # | Skill | Category | Problem It Solves | IDE Formats |
 |---|-------|----------|-------------------|-------------|
@@ -44,6 +45,7 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 | 8 | [**Anti-Hallucination Verifier**](./08-anti-hallucination-verifier/) | 🟣 Meta-Agent | Agents editing blind, hallucinating APIs, broken builds | 4 formats |
 | 9 | [**REST API Contract-First**](./09-rest-api-contract-first/) | 🔵 Architecture | Inconsistent URLs, non-standard errors, ad-hoc pagination | 4 formats |
 | 10 | [**Token Router Optimizer**](./10-token-router-optimizer/) | 🟣 Meta-Agent | 90% token waste reading large files | 4 formats |
+| 11 | [**Java Micronaut 4+ Standards**](./11-java-micronaut-standards/) | 🟢 Language | Spring habits in Micronaut, field injection, N+1 queries, reflection breaking GraalVM | 4 formats |
 
 ---
 
@@ -264,5 +266,6 @@ ai-coding-skills/
 ├── 07-memory-bank-continuity/             # Multi-session context memory
 ├── 08-anti-hallucination-verifier/        # Read-before-write guardrail
 ├── 09-rest-api-contract-first/            # REST API design standards
-└── 10-token-router-optimizer/             # Token consumption optimization
+├── 10-token-router-optimizer/             # Token consumption optimization
+└── 11-java-micronaut-standards/           # Java 21+ & Micronaut 4 AOT
 ```

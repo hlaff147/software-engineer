@@ -36,7 +36,7 @@
 | Guide | Description | Topics |
 |-------|-------------|--------|
 | [⚡ Agentic Token Optimization](./agentic-token-optimization) | Model Routing, Pre-Tool Hooks & delegação de I/O (redução de 90% em tokens) | Model Routing, Token Optimization, PreToolUse Hooks, Bulk Reader, Code Writer |
-| [🧠 AI Coding Skills](./ai-coding-skills) | 10 production-ready AI coding skills for Cursor, Copilot, Windsurf, Cline, Claude Code & Gemini | Multi-IDE Portability, Cursor Rules, SKILL.md, OWASP, TDD, Memory Bank, Anti-Hallucination |
+| [🧠 AI Coding Skills](./ai-coding-skills) | 11 production-ready AI coding skills for Cursor, Copilot, Windsurf, Cline, Claude Code & Gemini | Multi-IDE Portability, Cursor Rules, SKILL.md, Micronaut, Spring Boot, OWASP, TDD, Memory Bank |
 | [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
 | [🧩 Java Collectors & Gatherers](./java-collectors-gatherers) | Custom Collectors, Gatherers (Java 24+) & functional Streams | Collector API, Gatherer API, groupingBy, collectingAndThen, sealed interfaces |
@@ -977,7 +977,7 @@ software-engineer/
 │   │   ├── 📂 examples/                 # Playground (433-line service & run_demo.sh)
 │   │   ├── 📂 agent/                    # Cursor agent skills (bulk-reader, code-writer)
 │   │   └── 📂 scripts/                  # Legacy compatibility scripts
-│   ├── 📂 ai-coding-skills/             # 10 AI Coding Skills for Multi-IDE (Cursor, Copilot, etc.)
+│   ├── 📂 ai-coding-skills/             # 11 AI Coding Skills for Multi-IDE (Cursor, Copilot, etc.)
 │   │   ├── 📖 README.md                 # Main showcase & installation guide
 │   │   ├── 📖 PORTABILITY.md            # IDE portability & format conversion guide
 │   │   ├── 📂 01-java-spring-boot-standards/   # Java 21+ & Spring Boot 3 guardrails
@@ -989,7 +989,8 @@ software-engineer/
 │   │   ├── 📂 07-memory-bank-continuity/       # Multi-session context memory
 │   │   ├── 📂 08-anti-hallucination-verifier/  # Read-before-write guardrail
 │   │   ├── 📂 09-rest-api-contract-first/      # REST API design standards
-│   │   └── 📂 10-token-router-optimizer/       # Token consumption optimization
+│   │   ├── 📂 10-token-router-optimizer/       # Token consumption optimization
+│   │   └── 📂 11-java-micronaut-standards/     # Java 21+ & Micronaut 4 AOT guardrails
 │   ├── 📂 ai-engineer/                  # AI agent patterns, study guide & CV portfolio
 │   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
 │   │   ├── 📖 AI_ENGINEER_CV_EXPERIENCE.md
