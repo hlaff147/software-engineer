@@ -1,54 +1,43 @@
-# 🚢 Cursor Deploy Commit Guardrail & Trigger
+# 🚢 Cursor Deploy Commit Guardrail
 
-> **Intercepts standard git commits to prompt for UAT deploy (`#deployuat #auto`), and provides an automated empty trigger commit ("commit no content") workflow (`ci: #deployuat #auto` + push).**
+> **Intercepts git commit actions by the Cursor agent, enforcing an interactive prompt that asks the user if the commit should trigger a deploy and appending `#deployuat #auto` when confirmed.**
 
 ---
 
-## 🎯 The Problems This Solves
+## 🎯 The Problem
 
-1. **Unintended or Missing Deploys on Standard Commits**:
-   - Committing without `#deployuat #auto` causes CI/CD pipelines to skip UAT deployment.
-   - Committing with deploy tags on every intermediate edit causes redundant builds and cloud resource waste.
-   - The Cursor agent often commits automatically without asking developer intent.
-
-2. **Manual Overhead for No-Content Deploy Triggers**:
-   - Often, developers need to re-run or trigger a deployment pipeline on an existing branch without changing any source code.
-   - Typing `git commit --allow-empty -m "ci: #deployuat #auto" && git push origin <branch>` manually is tedious and error-prone (e.g. typos in `#deployuat`).
+In modern CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins), automated deployment to testing environments (e.g. UAT / Staging) is often governed by **commit message tags**:
+- Committing without `#deployuat #auto` results in **no deployment**, requiring manual triggers or redundant commits.
+- Conversely, committing with tags on every micro-commit causes **unnecessary pipeline runs, cloud costs, and queue congestions**.
+- AI coding agents like Cursor Composer frequently commit changes automatically without consulting the developer about deployment intent.
 
 ---
 
 ## ✅ The Solution
 
-This skill provides two distinct operational modes:
-
-### Mode 1: Interactive Standard Commit Guardrail
-Whenever code is modified and ready to commit:
-1. The agent **stops** and prompts:
+This skill establishes a strict **Pre-Commit Interception Barrier**:
+1. Whenever the agent is ready to commit, it **MUST pause** and ask the user:
    > 🚢 **Confirmação de Deploy:**
    > Deseja acionar o deploy (UAT) com este commit? (**Sim / Não**)
-2. **If "Sim"**: Formats commit message with `#deployuat #auto` footer.
-3. **If "Não"**: Formats standard commit message without deploy tags.
-
-### Mode 2: Empty Deploy Trigger ("Commit No Content")
-Whenever you ask to trigger a deploy without changes (e.g. *"commit no content"*, *"dispara deploy"*, *"deploy uat"*, *"commit vazio"*):
-1. The agent automatically executes:
-   ```bash
-   BRANCH=$(git branch --show-current)
-   git commit --allow-empty -m "ci: #deployuat #auto"
-   git push origin "$BRANCH"
+2. If the user answers **"Sim"** (or "yes", "s", "deploy"), the agent appends the mandatory tags:
    ```
-2. The agent reports the created commit hash and branch, confirming the trigger!
+   #deployuat #auto
+   ```
+3. If the user answers **"Não"** (or "no", "n"), the agent commits normally without any deployment tags.
 
 ---
 
-## 💬 Interactive Cursor Chat Simulations
+## 💬 Interactive Cursor Chat Simulation
 
-### Scenario 1: Standard Commit with Deploy Confirmation
+### Scenario A: With Deployment (User says Yes)
+
 ```text
-User: "Terminei as alterações no controller. Pode commitar."
+User: "Implementei o endpoint de login. Pode commitar."
 
 Cursor Agent:
-"🚢 Confirmação de Deploy:
+"Todas as alterações foram testadas e o build está verde.
+
+🚢 Confirmação de Deploy:
 Deseja acionar o deploy (UAT) com este commit? (Sim / Não)"
 
 User: "Sim"
@@ -57,68 +46,84 @@ Cursor Agent:
 "Commitando com tags de deploy:
 
 $ git commit -m "$(cat << 'EOF'
-feat(controller): add health status check endpoint
+feat(auth): add OAuth2 authentication endpoint
+
+Implement JWT validation middleware with refresh token rotation.
 
 #deployuat #auto
 EOF
 )"
-[main a1b2c3d] feat(controller): add health status check endpoint
-✅ Commit realizado com tags de deploy UAT!"
+
+[main 4f8a12b] feat(auth): add OAuth2 authentication endpoint
+ 2 files changed, 45 insertions(+)
+
+✅ Commit realizado e pipeline UAT disparada com sucesso!"
 ```
 
 ---
 
-### Scenario 2: Instant "Commit No Content" Trigger
+### Scenario B: Without Deployment (User says No)
+
 ```text
-User: "Cria um commit no content de deploy e dá push"
+User: "Refatorei o nome da variável no serviço. Pode commitar."
 
 Cursor Agent:
-"Criando commit vazio e disparando pipeline UAT:
+"🚢 Confirmação de Deploy:
+Deseja acionar o deploy (UAT) com este commit? (Sim / Não)"
 
-$ git commit --allow-empty -m "ci: #deployuat #auto"
-[main 8f9e0d1] ci: #deployuat #auto
+User: "Não, só refatoração local."
 
-$ git push origin main
-To github.com:org/repo.git
-   a1b2c3d..8f9e0d1  main -> main
+Cursor Agent:
+"Commitando sem tags de deploy:
 
-🚢 Commit no-content criado com sucesso!
-- Mensagem: ci: #deployuat #auto
-- Hash: 8f9e0d1
-🚀 Push realizado na branch 'main'. Pipeline de deploy UAT acionada!"
+$ git commit -m "refactor(service): rename internal cache variable"
+[main 7c3d91a] refactor(service): rename internal cache variable
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+✅ Commit realizado localmente sem disparar pipeline de UAT."
 ```
 
 ---
 
-## 📐 Exact Tag Specification
+## 📐 Anatomy of the Skill
 
-| Use Case | Format |
-|---|---|
-| **Standard Commit with Deploy** | `<Conventional Message>\n\n#deployuat #auto` |
-| **No-Content Trigger Commit** | `ci: #deployuat #auto` (via `git commit --allow-empty`) |
+```
+12-cursor-deploy-commit-guardrail/
+├── SKILL.md                  # Gemini / Antigravity format (.agents/skills/)
+├── .cursorrules              # Cursor format (alwaysApply: true)
+├── copilot-instructions.md   # GitHub Copilot format
+├── scripts/
+│   └── check-deploy-tags.sh  # Bash script to test commit message tags
+└── README.md                 # This didactic guide
+```
 
 ---
 
-## 🔧 How to Install in Cursor
+## 🔧 How to Install
 
+### In Cursor
+Place in `.cursor/rules/`:
 ```bash
 mkdir -p .cursor/rules
 cp ai-coding-skills/12-cursor-deploy-commit-guardrail/.cursorrules .cursor/rules/deploy-commit-guardrail.mdc
 ```
 
+### In GitHub Copilot
+```bash
+cat ai-coding-skills/12-cursor-deploy-commit-guardrail/copilot-instructions.md >> .github/copilot-instructions.md
+```
+
 ---
 
-## 🧪 Included Helper Scripts
+## 🧪 Testing the Deployment Validator Script
 
-1. **[`scripts/trigger-deploy.sh`](./scripts/trigger-deploy.sh)**:
-   Executes the empty commit and push automatically:
-   ```bash
-   ./ai-coding-skills/12-cursor-deploy-commit-guardrail/scripts/trigger-deploy.sh
-   ```
-   Supports dry-run testing:
-   ```bash
-   ./ai-coding-skills/12-cursor-deploy-commit-guardrail/scripts/trigger-deploy.sh --dry-run
-   ```
+The included script [`scripts/check-deploy-tags.sh`](./scripts/check-deploy-tags.sh) allows you to verify message parsing:
 
-2. **[`scripts/check-deploy-tags.sh`](./scripts/check-deploy-tags.sh)**:
-   Validates if a commit message file contains deployment tags.
+```bash
+# Test message with deploy tags:
+echo -e "feat(api): update logic\n\n#deployuat #auto" > /tmp/msg.txt
+./ai-coding-skills/12-cursor-deploy-commit-guardrail/scripts/check-deploy-tags.sh /tmp/msg.txt
+# Output:
+# 🚢 Deploy tags detected: #deployuat #auto
+# ✅ CI/CD will trigger automated UAT deployment.
+```

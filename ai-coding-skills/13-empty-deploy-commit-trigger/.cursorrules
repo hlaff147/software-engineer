@@ -1,0 +1,28 @@
+---
+description: Automates creating and pushing an empty git commit with message 'ci: #deployuat #auto' to trigger CI/CD UAT deployments on demand.
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# Empty Deploy Commit Trigger (.cursorrules)
+
+## ⚡ Trigger Rule: Instant "Commit No Content" Deploy
+Whenever the user asks to trigger a deployment without code changes (e.g. *"commit no content"*, *"dispara deploy"*, *"commit vazio"*, *"trigger deploy"*, *"ci: #deployuat #auto"*):
+
+1. **IMMEDIATELY EXECUTE**:
+   ```bash
+   BRANCH=$(git branch --show-current)
+   git commit --allow-empty -m "ci: #deployuat #auto"
+   git push origin "$BRANCH"
+   ```
+
+2. **CONFIRM TO USER**:
+   Output a clear summary:
+   - Branch name
+   - Commit hash
+   - Confirmation that the remote push was executed and UAT pipeline triggered.
+
+## 🚫 Negative Constraints
+- NEVER alter the message: it MUST be strictly `"ci: #deployuat #auto"`.
+- NEVER leave out the `git push`: the entire purpose of this trigger is to notify remote CI/CD.
+- NEVER modify or stage local files during this operation.

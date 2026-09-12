@@ -1,6 +1,6 @@
-# 🧠 AI Coding Skills — 12 Production-Ready Skills for AI-Powered IDEs
+# 🧠 AI Coding Skills — 13 Production-Ready Skills for AI-Powered IDEs
 
-> **A curated collection of 12 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
+> **A curated collection of 13 high-impact AI coding skills, each implemented in multiple IDE formats (Cursor, GitHub Copilot, Windsurf, Cline, Claude Code, Gemini/Antigravity).**
 
 ## 📖 What Are AI Coding Skills?
 
@@ -30,7 +30,7 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 
 ---
 
-## 🎯 The 12 Skills
+## 🎯 The 13 Skills
 
 | # | Skill | Category | Problem It Solves | IDE Formats |
 |---|-------|----------|-------------------|-------------|
@@ -45,7 +45,8 @@ AI Coding Skills (also called "rules", "instructions", or "custom instructions")
 | 9 | [**REST API Contract-First**](./09-rest-api-contract-first/) | 🔵 Architecture | Inconsistent URLs, non-standard errors, ad-hoc pagination | 4 formats |
 | 10 | [**Token Router Optimizer**](./10-token-router-optimizer/) | 🟣 Meta-Agent | 90% token waste reading large files | 4 formats |
 | 11 | [**Java Micronaut 4+ Standards**](./11-java-micronaut-standards/) | 🟢 Language | Spring habits in Micronaut, field injection, N+1 queries, reflection breaking GraalVM | 4 formats |
-| 12 | [**Cursor Deploy Commit Guardrail**](./12-cursor-deploy-commit-guardrail/) | 🟡 Workflow | Inadvertent or missing CI/CD deploys from Cursor commits; enforces `#deployuat #auto` prompt | 4 formats |
+| 12 | [**Cursor Deploy Commit Guardrail**](./12-cursor-deploy-commit-guardrail/) | 🟡 Workflow | Inadvertent/missing CI/CD deploys on standard commits; enforces `#deployuat #auto` prompt | 4 formats |
+| 13 | [**Empty Deploy Commit Trigger**](./13-empty-deploy-commit-trigger/) | 🟡 Workflow | Manual overhead creating empty deploy commits; automates `ci: #deployuat #auto` + push | 4 formats |
 
 ---
 
@@ -268,5 +269,6 @@ ai-coding-skills/
 ├── 09-rest-api-contract-first/            # REST API design standards
 ├── 10-token-router-optimizer/             # Token consumption optimization
 ├── 11-java-micronaut-standards/           # Java 21+ & Micronaut 4 AOT
-└── 12-cursor-deploy-commit-guardrail/     # Interactive deploy commit guardrail
+├── 12-cursor-deploy-commit-guardrail/     # Interactive deploy commit guardrail
+└── 13-empty-deploy-commit-trigger/        # Empty trigger commit (ci: #deployuat #auto)
 ```
