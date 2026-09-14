@@ -27,7 +27,7 @@
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
 | **🧪 Testing & Quality** | 1 project | Mutation Testing, AST, mutmut, Hypothesis |
 | **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
-| **📚 Study Guides & Architecture** | 9 modules | AI Patterns, Token Optimization & Routing, AI Coding Skills (Multi-IDE), Java Core, Collectors/Gatherers, System Design, Floating Point, Java 21/25, SDE-2 Prep |
+| **📚 Study Guides & Architecture** | 10 modules | AI Patterns, Token Optimization & Routing, Change Data Capture (CDC), AI Coding Skills (Multi-IDE), Java Core, Collectors/Gatherers, System Design, Floating Point, Java 21/25, SDE-2 Prep |
 
 ---
 
@@ -38,6 +38,7 @@
 | [⚡ Agentic Token Optimization](./agentic-token-optimization) | Model Routing, Pre-Tool Hooks & delegação de I/O (redução de 90% em tokens) | Model Routing, Token Optimization, PreToolUse Hooks, Bulk Reader, Code Writer |
 | [🧠 AI Coding Skills](./ai-coding-skills) | 13 production-ready AI coding skills for Cursor, Copilot, Windsurf, Cline, Claude Code & Gemini | Multi-IDE Portability, Cursor Rules, Deploy Guardrail, Empty Deploy Trigger, Micronaut, Spring Boot |
 | [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
+| [🔄 Change Data Capture (CDC)](./change-data-capture) | Guia aprofundado de CDC, transaction logs (WAL/binlog), outbox pattern & pipeline serverless na AWS | CDC Fundamentals, Transaction Logs, Dual-Write, DynamoDB Streams, EventBridge, SQS, Lambda |
 | [☕ Java Developer Guide](./java-developer) | Backend interview preparation & JVM internals | Java Core, Spring Boot, Microservices, Under the Hood |
 | [🧩 Java Collectors & Gatherers](./java-collectors-gatherers) | Custom Collectors, Gatherers (Java 24+) & functional Streams | Collector API, Gatherer API, groupingBy, collectingAndThen, sealed interfaces |
 | [💼 Interview Study & System Design](./study_interview_system_design) | Quick reference & comprehensive SDE-2 interview prep | Idempotência vs Deduplicação, Mastercard SDE-2, SOLID, CAP/ACID, LeetCode |
@@ -669,6 +670,55 @@ public class GoodProducer {
 
 ---
 
+### [Change Data Capture (CDC) Architecture & Serverless Pipeline](./change-data-capture)
+
+Guia aprofundado de **Change Data Capture (CDC)** e implementação de referência serverless na AWS (*DynamoDB Streams → EventBridge Pipes → SQS & DLQ → Lambda*), eliminando o *Dual-Write Anti-Pattern*.
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Serverless CDC Pipeline**
+```
+DynamoDB Table (OLTP)
+        │
+        ▼ (NEW_AND_OLD_IMAGES)
+DynamoDB Streams (24h Buffer)
+        │
+        ▼ (Event Filtering)
+EventBridge Pipes
+        │
+        ▼ (Custom Event Bus)
+EventBridge Rules ──► SQS DLQ (Poison Pills)
+        │                     ▲
+        ▼ (Buffer/Throttle)   │ (3 retries)
+Amazon SQS Queue ─────────────┘
+        │
+        ▼ (ReportBatchItemFailures)
+AWS Lambda (Consumer) ──► Redis / Downstream
+```
+
+</td>
+<td width="50%">
+
+**⚡ Key Concepts & Features**
+| Feature | Implementation |
+|---|---|
+| **Eliminação de Dual-Write** | Leitura não-intrusiva do log de transações |
+| **DynamoDB Streams** | Imagens antes/depois (`NEW_AND_OLD_IMAGES`) |
+| **EventBridge Pipes** | Conexão nativa e filtragem na origem |
+| **Backpressure & DLQ** | Fila SQS amortecedora e isolamento de poison pills |
+| **Idempotência & Deltas** | Cálculo campo a campo e deduplicação lógica |
+| **Partial Batch Failures** | Retentativa seletiva via `batchItemFailures` |
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `AWS SAM` `DynamoDB Streams` `EventBridge Pipes` `Amazon SQS & DLQ` `AWS Lambda` `Python 3.11+`
+
+---
+
 ## 🗄️ Database Projects
 
 ### [MongoDB ObjectId Timestamp Proof](./mongodb-objectid-proof)
@@ -888,6 +938,9 @@ public class PaymentService {
 | **Model Routing** | agentic-token-optimization | Decouple high-level reasoning from heavy I/O and boilerplate code generation |
 | **Pre-Tool Interception Hook** | agentic-token-optimization | Deterministic enforcement to block expensive tool calls via threshold |
 | **Ephemeral Worker Delegation** | agentic-token-optimization | Stateless one-shot worker execution with direct disk write |
+| **Change Data Capture (CDC)** | change-data-capture | Non-intrusive transaction log interception for near real-time replication |
+| **Transactional Outbox** | change-data-capture | Atomic domain event publishing avoiding dual-write anti-pattern |
+| **EventBridge Pipes & Filtering** | change-data-capture | Native managed stream ingestion with source-level event filtering |
 
 ### System Design Concepts
 
@@ -896,26 +949,27 @@ public class PaymentService {
 │                        CONCEPTS COVERED                                  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  🔄 Event-Driven Architecture          │  🏗️ Hexagonal Architecture    │
+│  🔄 Event-Driven & CDC Architecture    │  🏗️ Hexagonal Architecture    │
 │  ├─ Kafka consumer groups              │  ├─ Ports & Adapters          │
-│  ├─ Message acknowledgment             │  ├─ Domain isolation          │
-│  └─ Independent offset tracking        │  └─ Testable design           │
-│                                         │                                │
-│  🔌 API Versioning                      │  🤖 AI Agent Architectures    │
-│  ├─ URL-based versioning               │  ├─ Multi-agent systems       │
-│  ├─ Strategy pattern routing           │  ├─ Tool use patterns         │
-│  └─ Backward compatibility             │  ├─ Self-correcting loops     │
-│                                         │  └─ Model routing & I/O hooks │
-│  💾 Connection Management               │                                │
-│  ├─ Singleton vs per-request           │  🔒 Security Analysis         │
-│  ├─ Memory leak prevention             │  ├─ Dependency scanning       │
-│  └─ Resource pooling                   │  ├─ CVE detection             │
-│                                         │  └─ Auto-remediation          │
-│  💰 Digital Wallets                     │                                │
-│  ├─ Ledger-based auditing              │  📐 Observability              │
-│  ├─ Multi-currency support             │  ├─ Structured JSON logging   │
-│  └─ Immutable transaction history      │  ├─ End-to-end correlation    │
-│                                         │  └─ PII redaction             │
+│  ├─ Change Data Capture (CDC)          │  ├─ Domain isolation          │
+│  ├─ DynamoDB Streams & WAL log         │  └─ Testable design           │
+│  ├─ EventBridge Pipes & SQS DLQ        │                                │
+│  └─ Dual-Write elimination             │  🤖 AI Agent Architectures    │
+│                                         │  ├─ Multi-agent systems       │
+│  🔌 API Versioning                      │  ├─ Tool use patterns         │
+│  ├─ URL-based versioning               │  ├─ Self-correcting loops     │
+│  ├─ Strategy pattern routing           │  └─ Model routing & I/O hooks │
+│  └─ Backward compatibility             │                                │
+│                                         │  🔒 Security Analysis         │
+│  💾 Connection Management               │  ├─ Dependency scanning       │
+│  ├─ Singleton vs per-request           │  ├─ CVE detection             │
+│  ├─ Memory leak prevention             │  └─ Auto-remediation          │
+│  └─ Resource pooling                   │                                │
+│                                         │  📐 Observability              │
+│  💰 Digital Wallets                     │  ├─ Structured JSON logging   │
+│  ├─ Ledger-based auditing              │  ├─ End-to-end correlation    │
+│  ├─ Multi-currency support             │  └─ PII redaction             │
+│  └─ Immutable transaction history      │                                │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -933,13 +987,13 @@ public class PaymentService {
 │                   │                                                      │
 │  AI/ML            │  LangGraph, LangChain, Groq, Llama 3.3 70B          │
 │                   │                                                      │
-│  Backend          │  Micronaut 4, Spring Boot 3, FastAPI                 │
+│  Backend          │  Micronaut 4, Spring Boot 3, FastAPI, AWS Lambda     │
 │                   │                                                      │
 │  Persistence/ORM  │  Micronaut Data JPA, Hibernate 6/7, JPA 3.2          │
 │                   │                                                      │
-│  Message Brokers  │  Apache Kafka, Azure Service Bus                     │
+│  Message Brokers  │  Apache Kafka, Azure Service Bus, EventBridge, SQS   │
 │                   │                                                      │
-│  Databases        │  MongoDB, H2, PostgreSQL                             │
+│  Databases        │  DynamoDB Streams, MongoDB, H2, PostgreSQL           │
 │                   │                                                      │
 │  Security         │  OWASP Dependency-Check, NVD, Mend.io, Incognia     │
 │                   │                                                      │
@@ -947,7 +1001,7 @@ public class PaymentService {
 │                   │                                                      │
 │  Testing          │  pytest, mutmut (mutation testing), Hypothesis, JUnit, k6  │
 │                   │                                                      │
-│  DevOps           │  Docker, Docker Compose, Makefile                   │
+│  DevOps           │  AWS SAM, Docker, Docker Compose, Makefile           │
 │                   │                                                      │
 │  Analysis         │  Jupyter Notebooks, pandas                          │
 │                   │                                                      │
@@ -997,6 +1051,13 @@ software-engineer/
 │   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
 │   │   ├── 📖 AI_ENGINEER_CV_EXPERIENCE.md
 │   │   └── 📖 MCP_RAG_AGENTS_ARCHITECTURE.md
+│   ├── 📂 change-data-capture/          # Change Data Capture (CDC) & AWS Serverless Pipeline
+│   │   ├── 📖 README.md                 # Master CDC architecture guide (pt-BR)
+│   │   └── 📂 examples/
+│   │       └── 📂 aws-serverless-cdc/   # Reference architecture: DynamoDB Streams -> Pipes -> SQS -> Lambda
+│   │           ├── 📖 README.md
+│   │           ├── 📄 template.yaml     # SAM / CloudFormation topology
+│   │           └── 📂 src/              # order_processor.py & cdc_payload.json
 │   ├── 📂 java-developer/               # Java interview prep & JVM under-the-hood
 │   │   └── 📖 JAVA_SPRING_UNDER_THE_HOOD.md
 │   ├── 📂 java-collectors-gatherers/     # Custom Collectors, Gatherers (Java 24+) & Streams

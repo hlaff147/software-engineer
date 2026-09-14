@@ -1,7 +1,7 @@
 # 🧠 Repository Memory Bank
 
 > **Source of Truth for Repository Structure, Modules, and Documentation.**
-> Auto-maintained by AI coding agents. Last synchronized: 2026-09-10.
+> Auto-maintained by AI coding agents. Last synchronized: 2026-09-14.
 
 ---
 
@@ -13,6 +13,7 @@
 | [`ai-coding-skills/`](../ai-coding-skills) | 📚 Study Guide / AI Skills | Markdown, YAML, Bash, Python | ✅ Complete | ✅ Yes | Collection of 13 production-ready AI coding skills for multiple IDEs (Cursor, Copilot, Windsurf, Cline, Claude Code, Gemini). Covers Java Spring Boot, Java Micronaut 4+, Python, Next.js, TDD, OWASP security, conventional commits, memory bank, anti-hallucination, REST API design, token optimization, Cursor deploy commit guardrail, and empty deploy commit trigger. |
 | [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), MCP/RAG/Agents architecture guide, study guide, and CV/portfolio experience summary. |
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
+| [`change-data-capture/`](../change-data-capture) | 📚 Study Guide / Architecture | Markdown (pt-BR), AWS SAM, Python 3, DynamoDB Streams, EventBridge, SQS | ✅ Production-grade | ✅ Yes | Guia aprofundado de Change Data Capture (CDC), transaction logs (WAL, binlog), padrões de resiliência e implementação de referência serverless na AWS com DynamoDB Streams, EventBridge Pipes, SQS (DLQ) e Lambda. |
 | [`corabank-api/`](../corabank-api) | 🔌 Backend APIs | Java 17, Spring Boot 3, H2, Gradle | ✅ Complete | ✅ Yes | Bank account creation challenge with referral bonus code and bug-fixing exercise. |
 | [`floating-point-precision/`](../floating-point-precision) | 📚 Study Guide | Python 3, JS/Node.js, Java | ✅ Complete | ✅ Yes | Theoretical and empirical analysis of IEEE 754 floating point drift and mitigation across languages. |
 | [`hedge_fund_bot/`](../hedge_fund_bot) | 🤖 AI & Machine Learning | Python 3.11+, LangGraph, Groq, Llama 3.3 | ✅ Active | ✅ Yes | Autonomous multi-agent stock market analysis system with PEV self-correction retry loop. |
@@ -45,7 +46,7 @@
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)
 - **🧪 Testing & Quality:** 1 project (`mutation-testing`)
 - **📐 Observability:** 1 library (`loggingx-spring-boot-starter`)
-- **📚 Study Guides & Architecture:** 9 modules (`agentic-token-optimization`, `ai-coding-skills`, `ai-engineer`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
+- **📚 Study Guides & Architecture:** 10 modules (`agentic-token-optimization`, `ai-coding-skills`, `ai-engineer`, `change-data-capture`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
 
 ---
 

@@ -1,0 +1,195 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS Serverless CDC Reference Architecture:
+  DynamoDB Streams -> EventBridge Pipes -> EventBridge Bus -> SQS & DLQ -> AWS Lambda
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.11
+    Tracing: Active
+    Environment:
+      Variables:
+        POWERTOOLS_SERVICE_NAME: cdc-order-processor
+        LOG_LEVEL: INFO
+
+Resources:
+  # ---------------------------------------------------------------------------
+  # 1. Source Database: DynamoDB Table with CDC Stream
+  # ---------------------------------------------------------------------------
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cdc-orders
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: orderId
+          AttributeType: S
+        - AttributeName: customerId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: orderId
+          KeyType: HASH
+        - AttributeName: customerId
+          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  # ---------------------------------------------------------------------------
+  # 2. Central Event Routing: EventBridge Custom Bus
+  # ---------------------------------------------------------------------------
+  CommerceEventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: commerce-cdc-event-bus
+
+  # ---------------------------------------------------------------------------
+  # 3. Buffer & Reliability: SQS Queue & Dead Letter Queue (DLQ)
+  # ---------------------------------------------------------------------------
+  OrderEventsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: cdc-order-events-dlq
+      MessageRetentionPeriod: 1209600 # 14 dias
+
+  OrderEventsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: cdc-order-events-queue
+      VisibilityTimeout: 180
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt OrderEventsDLQ.Arn
+        maxReceiveCount: 3
+
+  OrderEventsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref OrderEventsQueue
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt OrderEventsQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !GetAtt OrderEventsRule.Arn
+
+  # ---------------------------------------------------------------------------
+  # 4. Routing Rule: EventBridge Bus -> SQS
+  # ---------------------------------------------------------------------------
+  OrderEventsRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: route-orders-cdc-to-sqs
+      EventBusName: !Ref CommerceEventBus
+      EventPattern:
+        source:
+          - cdc.dynamodb.orders
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt OrderEventsQueue.Arn
+          Id: TargetSqsOrdersQueue
+
+  # ---------------------------------------------------------------------------
+  # 5. Native CDC Connector: EventBridge Pipes (DynamoDB Stream -> EventBus)
+  # ---------------------------------------------------------------------------
+  EventBridgePipeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: cdc-eventbridge-pipe-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: pipes.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: DynamoDBStreamReadPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DescribeStream
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:ListStreams
+                Resource: !GetAtt OrdersTable.StreamArn
+        - PolicyName: EventBridgePutEventsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - events:PutEvents
+                Resource: !GetAtt CommerceEventBus.Arn
+
+  DynamoDBToEventBridgePipe:
+    Type: AWS::Pipes::Pipe
+    Properties:
+      Name: cdc-dynamodb-to-eventbridge-pipe
+      RoleArn: !GetAtt EventBridgePipeRole.Arn
+      Source: !GetAtt OrdersTable.StreamArn
+      SourceParameters:
+        DynamoDBStreamParameters:
+          StartingPosition: LATEST
+          BatchSize: 10
+          MaximumRetryAttempts: 3
+        FilterCriteria:
+          Filters:
+            # Filtro CDC: propaga apenas eventos do tipo MODIFY e INSERT
+            - Pattern: '{"eventName": ["INSERT", "MODIFY"]}'
+      Target: !GetAtt CommerceEventBus.Arn
+      TargetParameters:
+        EventBridgeEventBusParameters:
+          DetailType: OrderMutationEvent
+          Source: cdc.dynamodb.orders
+
+  # ---------------------------------------------------------------------------
+  # 6. Consumer: AWS Lambda with Partial Batch Failure Reporting
+  # ---------------------------------------------------------------------------
+  OrderProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: cdc-order-processor
+      CodeUri: src/
+      Handler: order_processor.lambda_handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - SQSPollerPolicy:
+            QueueName: !GetAtt OrderEventsQueue.QueueName
+      Events:
+        SQSTrigger:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt OrderEventsQueue.Arn
+            BatchSize: 10
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+
+Outputs:
+  OrdersTableName:
+    Description: Nome da tabela DynamoDB com CDC habilitado
+    Value: !Ref OrdersTable
+
+  OrdersStreamArn:
+    Description: ARN do DynamoDB Stream
+    Value: !GetAtt OrdersTable.StreamArn
+
+  CommerceEventBusName:
+    Description: Nome do barramento EventBridge
+    Value: !Ref CommerceEventBus
+
+  OrderEventsQueueUrl:
+    Description: URL da fila SQS de consumo
+    Value: !Ref OrderEventsQueue
+
+  OrderEventsDLQUrl:
+    Description: URL da Dead Letter Queue (DLQ)
+    Value: !Ref OrderEventsDLQ

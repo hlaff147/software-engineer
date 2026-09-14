@@ -1,0 +1,52 @@
+{
+  "Records": [
+    {
+      "messageId": "sqs-msg-1001",
+      "receiptHandle": "AQEBwJnKyrHigUMZj6r...",
+      "body": "{\"version\":\"0\",\"id\":\"eb-event-9901\",\"detail-type\":\"OrderMutationEvent\",\"source\":\"cdc.dynamodb.orders\",\"account\":\"123456789012\",\"time\":\"2026-03-14T12:00:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"eventID\":\"7a8b9c0d1e2f3a4b\",\"eventName\":\"INSERT\",\"eventVersion\":\"1.1\",\"eventSource\":\"aws:dynamodb\",\"awsRegion\":\"us-east-1\",\"dynamodb\":{\"ApproximateCreationDateTime\":1773489600,\"Keys\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"}},\"NewImage\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"},\"status\":{\"S\":\"PENDING_PAYMENT\"},\"totalAmount\":{\"N\":\"199.90\"},\"itemsCount\":{\"N\":\"2\"},\"createdAt\":{\"S\":\"2026-03-14T12:00:00Z\"},\"updatedAt\":{\"S\":\"2026-03-14T12:00:00Z\"}},\"SequenceNumber\":\"100000000000000000001\",\"SizeBytes\":180,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\"}}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1773489601000",
+        "SenderId": "AIDAIT2UOQQY3AEXAMPLE",
+        "ApproximateFirstReceiveTimestamp": "1773489601050"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "098f6bcd4621d373cade4e832627b4f6",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:cdc-order-events-queue",
+      "awsRegion": "us-east-1"
+    },
+    {
+      "messageId": "sqs-msg-1002",
+      "receiptHandle": "AQEBxJnKyrHigUMZj6r...",
+      "body": "{\"version\":\"0\",\"id\":\"eb-event-9902\",\"detail-type\":\"OrderMutationEvent\",\"source\":\"cdc.dynamodb.orders\",\"account\":\"123456789012\",\"time\":\"2026-03-14T12:05:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"eventID\":\"8b9c0d1e2f3a4b5c\",\"eventName\":\"MODIFY\",\"eventVersion\":\"1.1\",\"eventSource\":\"aws:dynamodb\",\"awsRegion\":\"us-east-1\",\"dynamodb\":{\"ApproximateCreationDateTime\":1773489900,\"Keys\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"}},\"OldImage\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"},\"status\":{\"S\":\"PENDING_PAYMENT\"},\"totalAmount\":{\"N\":\"199.90\"},\"itemsCount\":{\"N\":\"2\"},\"createdAt\":{\"S\":\"2026-03-14T12:00:00Z\"},\"updatedAt\":{\"S\":\"2026-03-14T12:00:00Z\"}},\"NewImage\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"},\"status\":{\"S\":\"PAYMENT_CONFIRMED\"},\"totalAmount\":{\"N\":\"199.90\"},\"itemsCount\":{\"N\":\"2\"},\"createdAt\":{\"S\":\"2026-03-14T12:00:00Z\"},\"updatedAt\":{\"S\":\"2026-03-14T12:05:00Z\"}},\"SequenceNumber\":\"100000000000000000002\",\"SizeBytes\":312,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\"}}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1773489901000",
+        "SenderId": "AIDAIT2UOQQY3AEXAMPLE",
+        "ApproximateFirstReceiveTimestamp": "1773489901050"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "ad0234829205b9033196ba818f7a872b",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:cdc-order-events-queue",
+      "awsRegion": "us-east-1"
+    },
+    {
+      "messageId": "sqs-msg-1003",
+      "receiptHandle": "AQEByJnKyrHigUMZj6r...",
+      "body": "{\"version\":\"0\",\"id\":\"eb-event-9903\",\"detail-type\":\"OrderMutationEvent\",\"source\":\"cdc.dynamodb.orders\",\"account\":\"123456789012\",\"time\":\"2026-03-14T12:15:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"eventID\":\"9c0d1e2f3a4b5c6d\",\"eventName\":\"REMOVE\",\"eventVersion\":\"1.1\",\"eventSource\":\"aws:dynamodb\",\"awsRegion\":\"us-east-1\",\"dynamodb\":{\"ApproximateCreationDateTime\":1773490500,\"Keys\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"}},\"OldImage\":{\"orderId\":{\"S\":\"ord-10001\"},\"customerId\":{\"S\":\"cust-880\"},\"status\":{\"S\":\"CANCELED\"},\"totalAmount\":{\"N\":\"199.90\"},\"itemsCount\":{\"N\":\"2\"},\"createdAt\":{\"S\":\"2026-03-14T12:00:00Z\"},\"updatedAt\":{\"S\":\"2026-03-14T12:14:00Z\"}},\"SequenceNumber\":\"100000000000000000003\",\"SizeBytes\":210,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\"}}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1773490501000",
+        "SenderId": "AIDAIT2UOQQY3AEXAMPLE",
+        "ApproximateFirstReceiveTimestamp": "1773490501050"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "8b1a9953c4611296a827abf8c47804d7",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:cdc-order-events-queue",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}
