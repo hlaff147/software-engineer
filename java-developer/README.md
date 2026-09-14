@@ -11,3 +11,8 @@ A comprehensive guide covering Java, Spring Boot, Microservices, and related tec
 5. [Others (Kafka, Kubernetes, Docker, SQL)](./05-others.md)
 6. [☕ Java & Spring Under the Hood (Perguntas Aprofundadas)](./JAVA_SPRING_UNDER_THE_HOOD.md)
 
+## 💻 Coding Challenges
+
+| Challenge | Tópicos | Solução |
+|:---|:---|:---|
+| [Count Strings](./count-strings/) | Teoria dos Autômatos, NFA → DFA, Exponenciação de Matrizes | [Solution.java](./count-strings/Solution.java) |
