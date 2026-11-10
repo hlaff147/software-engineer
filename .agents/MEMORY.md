@@ -1,7 +1,7 @@
 # 🧠 Repository Memory Bank
 
 > **Source of Truth for Repository Structure, Modules, and Documentation.**
-> Auto-maintained by AI coding agents. Last synchronized: 2026-09-14.
+> Auto-maintained by AI coding agents. Last synchronized: 2026-11-09.
 
 ---
 
@@ -11,6 +11,7 @@
 |:---|:---|:---|:---|:---:|:---|
 | [`agentic-token-optimization/`](../agentic-token-optimization) | 📚 Study Guide / AI Architecture | Python 3, Standalone Package, CLI, Cursor Skills | ✅ Production-ready | ✅ Yes | Roteamento de modelos e otimização de tokens para agentes autônomos. Estrutura autônoma com pacote Python modular (`src/`), CLI unificada (`bin/`), Pre-Tool Hooks, testes unitários e skills para Cursor. |
 | [`ai-coding-skills/`](../ai-coding-skills) | 📚 Study Guide / AI Skills | Markdown, YAML, Bash, Python | ✅ Complete | ✅ Yes | Collection of 13 production-ready AI coding skills for multiple IDEs (Cursor, Copilot, Windsurf, Cline, Claude Code, Gemini). Covers Java Spring Boot, Java Micronaut 4+, Python, Next.js, TDD, OWASP security, conventional commits, memory bank, anti-hallucination, REST API design, token optimization, Cursor deploy commit guardrail, and empty deploy commit trigger. |
+| [`ai-cost-optimization/`](../ai-cost-optimization) | 📚 Study Guide / AI FinOps | Markdown (pt-BR), Python 3.11+, unittest | ✅ Complete | ✅ Yes | Estudo aprofundado e simulador executável das 6 principais estratégias de otimização de custos em sistemas de IA: Prompt Caching (KV Cache), Model Routing, Batch API, Semantic Cache, Trim the Context e Smaller Models (Destilação & Quantização 4-bit). |
 | [`ai-engineer/`](../ai-engineer) | 📚 Study Guide | Theory, Markdown | ✅ Active | ✅ Yes | AI agent patterns (17 patterns), MCP/RAG/Agents architecture guide, study guide, and CV/portfolio experience summary. |
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
 | [`change-data-capture/`](../change-data-capture) | 📚 Study Guide / Architecture | Markdown (pt-BR), AWS SAM, Python 3, DynamoDB Streams, EventBridge, SQS | ✅ Production-grade | ✅ Yes | Guia aprofundado de Change Data Capture (CDC), transaction logs (WAL, binlog), padrões de resiliência e implementação de referência serverless na AWS com DynamoDB Streams, EventBridge Pipes, SQS (DLQ) e Lambda. |
@@ -46,7 +47,7 @@
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)
 - **🧪 Testing & Quality:** 1 project (`mutation-testing`)
 - **📐 Observability:** 1 library (`loggingx-spring-boot-starter`)
-- **📚 Study Guides & Architecture:** 10 modules (`agentic-token-optimization`, `ai-coding-skills`, `ai-engineer`, `change-data-capture`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
+- **📚 Study Guides & Architecture:** 11 modules (`agentic-token-optimization`, `ai-coding-skills`, `ai-cost-optimization`, `ai-engineer`, `change-data-capture`, `java-developer`, `java-collectors-gatherers`, `study_interview_system_design`, `system-design`, `floating-point-precision`, `java25-lts-features`)
 
 ---
 

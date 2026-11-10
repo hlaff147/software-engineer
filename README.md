@@ -27,7 +27,7 @@
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
 | **🧪 Testing & Quality** | 1 project | Mutation Testing, AST, mutmut, Hypothesis |
 | **📐 Observability** | 1 library | Spring Boot Starter, AOP, Logback, Kafka, MongoDB |
-| **📚 Study Guides & Architecture** | 10 modules | AI Patterns, Token Optimization & Routing, Change Data Capture (CDC), AI Coding Skills (Multi-IDE), Java Core, Collectors/Gatherers, System Design, Floating Point, Java 21/25, SDE-2 Prep |
+| **📚 Study Guides & Architecture** | 11 modules | AI Cost Optimization (6 Strategies), AI Patterns, Token Optimization & Routing, Change Data Capture (CDC), AI Coding Skills (Multi-IDE), Java Core, Collectors/Gatherers, System Design, Floating Point, Java 21/25, SDE-2 Prep |
 
 ---
 
@@ -35,6 +35,7 @@
 
 | Guide | Description | Topics |
 |-------|-------------|--------|
+| [💰 AI Cost Optimization (Top 6 Strategies)](./ai-cost-optimization) | Guia em pt-BR e simulador executável das 6 estratégias para reduzir custos de IA em até 90% | Prompt Caching (KV Cache), Model Routing, Batch API, Semantic Cache, Trim the Context, Distillation & 4-bit Quantization |
 | [⚡ Agentic Token Optimization](./agentic-token-optimization) | Model Routing, Pre-Tool Hooks & delegação de I/O (redução de 90% em tokens) | Model Routing, Token Optimization, PreToolUse Hooks, Bulk Reader, Code Writer |
 | [🧠 AI Coding Skills](./ai-coding-skills) | 13 production-ready AI coding skills for Cursor, Copilot, Windsurf, Cline, Claude Code & Gemini | Multi-IDE Portability, Cursor Rules, Deploy Guardrail, Empty Deploy Trigger, Micronaut, Spring Boot |
 | [🤖 AI Engineer Hub](./ai-engineer) | Comprehensive AI agent patterns, MCP/RAG/Agents guide & CV portfolio | 17 patterns, MCP protocol, RAG pipelines, Autonomous Agents |
@@ -237,6 +238,57 @@ Arquitetura de **roteamento de modelos (*Model Routing*)** e interceptação det
 </table>
 
 **Tech Stack:** `Python 3.9+` `Standalone Package` `Unified CLI` `Pre-Tool Hooks` `Cursor Skills` `Make` `unittest`
+
+---
+
+### [Top 6 Cost Optimization Strategies in AI Systems](./ai-cost-optimization)
+
+Estudo arquitetural aprofundado em **pt-BR** e simulador executável de **FinOps para sistemas de IA**, combinando as 6 principais técnicas de mercado em um pipeline unificado de defesa em profundidade (*AI Cost Gateway*).
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Pipeline Unificado (6 Camadas)**
+```
+[ Nova Requisição / Job de IA ]
+        │
+        ├─► (Job Offline) ──► [3] Batch API (50% Off)
+        │
+        ▼ (Online)
+┌─────────────────────────────────────────┐
+│ [4] Semantic Cache (Cosine Sim >= 0.92) │ ──► Hit ($0)
+└───────────────────┬─────────────────────┘
+        │ Miss
+        ▼
+┌─────────────────────────────────────────┐
+│ [5] Trim Context + [1] Prompt KV Cache  │ (75% Off Prefix)
+└───────────────────┬─────────────────────┘
+        │
+        ▼
+┌─────────────────────────────────────────┐
+│ [2] Model Router ──► [6] 8B INT4 / Pro  │ (Até 95% Off)
+└─────────────────────────────────────────┘
+```
+
+</td>
+<td width="50%">
+
+**⚡ As 6 Estratégias Dominadas**
+| Estratégia | Eficácia em Produção |
+|------------|----------------------|
+| **1. Prompt Caching** | Reutiliza KV Cache de prefixos estáticos (50%–90% off) |
+| **2. Model Routing** | Envia queries simples a modelos Flash e difíceis ao Frontier |
+| **3. Batch API** | Processa lotes assíncronos ($\le 24\text{h}$) com 50% de desconto |
+| **4. Semantic Cache** | Reutiliza respostas via embeddings e similaridade de cosseno |
+| **5. Trim the Context** | Janela deslizante, sumarização e poda de outputs de tools |
+| **6. Smaller Models** | Destilação (`70B → 8B`) + Quantização 4-bit (~99% acurácia) |
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Markdown (pt-BR)` `Python 3.11+` `AI FinOps` `KV Cache` `Semantic Caching` `Knowledge Distillation & INT4` `unittest`
 
 ---
 
@@ -941,6 +993,8 @@ public class PaymentService {
 | **Change Data Capture (CDC)** | change-data-capture | Non-intrusive transaction log interception for near real-time replication |
 | **Transactional Outbox** | change-data-capture | Atomic domain event publishing avoiding dual-write anti-pattern |
 | **EventBridge Pipes & Filtering** | change-data-capture | Native managed stream ingestion with source-level event filtering |
+| **Prompt & Semantic Caching** | ai-cost-optimization | Prefix KV Cache reuse and vector similarity caching to eliminate redundant LLM calls |
+| **Context Trimming & Distillation** | ai-cost-optimization | Rolling history summarization, tool output pruning, and 70B-to-8B 4-bit model compression |
 
 ### System Design Concepts
 
@@ -1047,6 +1101,11 @@ software-engineer/
 │   │   ├── 📂 11-java-micronaut-standards/     # Java 21+ & Micronaut 4 AOT guardrails
 │   │   ├── 📂 12-cursor-deploy-commit-guardrail/ # Interactive deploy commit guardrail
 │   │   └── 📂 13-empty-deploy-commit-trigger/  # Empty trigger commit (ci: #deployuat #auto)
+│   ├── 📂 ai-cost-optimization/         # Top 6 Cost Optimization Strategies in AI Systems (pt-BR)
+│   │   ├── 📖 README.md                 # Architectural deep-dive & production ROI matrix
+│   │   ├── 📂 assets/                   # Reference visual diagrams
+│   │   ├── 📂 examples/                 # Executable 6-layer AI Cost Gateway simulator
+│   │   └── 📂 tests/                    # Automated unit test suite (unittest)
 │   ├── 📂 ai-engineer/                  # AI agent patterns, study guide & CV portfolio
 │   │   ├── 📖 AI_ENGINEER_STUDY_GUIDE.md
 │   │   ├── 📖 AI_ENGINEER_CV_EXPERIENCE.md
