@@ -7,6 +7,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from shared.constants import DomainConstants
+
 __all__ = [
     "AddOrderItemCommand",
     "CancelOrderCommand",
@@ -20,7 +22,9 @@ __all__ = [
 
 class CreateOrderCommand(BaseModel):
     customer_id: str = Field(..., min_length=1, max_length=64, examples=["cust-1001"])
-    currency: str = Field(default="USD", min_length=3, max_length=3, examples=["USD"])
+    currency: str = Field(
+        default=DomainConstants.DEFAULT_CURRENCY, min_length=3, max_length=3, examples=["USD"]
+    )
 
 
 class AddOrderItemCommand(BaseModel):
@@ -28,7 +32,7 @@ class AddOrderItemCommand(BaseModel):
     sku: str = Field(..., min_length=3, max_length=64, examples=["TECH-LAPTOP-42"])
     product_name: str = Field(..., min_length=1, max_length=255, examples=["UltraPro Laptop"])
     unit_price: Decimal = Field(..., gt=0, examples=[Decimal("2499.00")])
-    quantity: int = Field(..., ge=1, le=10, examples=[1])
+    quantity: int = Field(..., ge=1, le=DomainConstants.MAX_QUANTITY_PER_LINE_ITEM, examples=[1])
     expected_version: int | None = Field(
         default=None,
         description="Optional expected aggregate version for optimistic concurrency control",
@@ -36,7 +40,7 @@ class AddOrderItemCommand(BaseModel):
 
 
 class UpdateItemQuantityCommand(BaseModel):
-    quantity: int = Field(..., ge=1, le=10, examples=[3])
+    quantity: int = Field(..., ge=1, le=DomainConstants.MAX_QUANTITY_PER_LINE_ITEM, examples=[3])
     expected_version: int | None = Field(
         default=None,
         description="Optional expected aggregate version for optimistic concurrency control",

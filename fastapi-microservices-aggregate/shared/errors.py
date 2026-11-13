@@ -9,6 +9,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from shared.constants import ErrorTitles, ErrorTypes, MediaTypes
+
 __all__ = ["ProblemDetails", "ProblemDetailsException", "register_problem_handlers"]
 
 
@@ -16,7 +18,7 @@ class ProblemDetails(BaseModel):
     """RFC 7807 Problem Details response model."""
 
     type: str = Field(
-        default="about:blank",
+        default=ErrorTypes.ABOUT_BLANK,
         description="A URI reference that identifies the problem type.",
     )
     title: str = Field(
@@ -49,7 +51,7 @@ class ProblemDetailsException(Exception):
         status: int,
         title: str,
         detail: str,
-        type_uri: str = "about:blank",
+        type_uri: str = ErrorTypes.ABOUT_BLANK,
         invalid_params: list[dict[str, Any]] | None = None,
     ) -> None:
         super().__init__(detail)
@@ -78,7 +80,7 @@ def register_problem_handlers(app: FastAPI) -> None:
         return JSONResponse(
             status_code=exc.status,
             content=problem.model_dump(exclude_none=True),
-            media_type="application/problem+json",
+            media_type=MediaTypes.APPLICATION_PROBLEM_JSON,
         )
 
     @app.exception_handler(HTTPException)
@@ -97,8 +99,8 @@ def register_problem_handlers(app: FastAPI) -> None:
         }
         detail_msg = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
         problem = ProblemDetails(
-            type=f"https://httpstatuses.com/{exc.status_code}",
-            title=titles.get(exc.status_code, "HTTP Error"),
+            type=f"{ErrorTypes.HTTP_STATUS_BASE}/{exc.status_code}",
+            title=titles.get(exc.status_code, ErrorTitles.HTTP_ERROR),
             status=exc.status_code,
             detail=detail_msg,
             instance=request.url.path,
@@ -107,7 +109,7 @@ def register_problem_handlers(app: FastAPI) -> None:
             status_code=exc.status_code,
             content=problem.model_dump(exclude_none=True),
             headers=exc.headers,
-            media_type="application/problem+json",
+            media_type=MediaTypes.APPLICATION_PROBLEM_JSON,
         )
 
     @app.exception_handler(RequestValidationError)
@@ -123,8 +125,8 @@ def register_problem_handlers(app: FastAPI) -> None:
             for err in exc.errors()
         ]
         problem = ProblemDetails(
-            type="https://httpstatuses.com/422",
-            title="Validation Error",
+            type=ErrorTypes.VALIDATION_ERROR,
+            title=ErrorTitles.VALIDATION_ERROR,
             status=422,
             detail="The request body or parameters failed validation.",
             instance=request.url.path,
@@ -133,5 +135,5 @@ def register_problem_handlers(app: FastAPI) -> None:
         return JSONResponse(
             status_code=422,
             content=problem.model_dump(exclude_none=True),
-            media_type="application/problem+json",
+            media_type=MediaTypes.APPLICATION_PROBLEM_JSON,
         )

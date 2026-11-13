@@ -14,6 +14,7 @@ from services.product_service.config import get_settings
 from services.product_service.models import ProductModel
 from services.product_service.schemas import ProductCreate, ProductResponse
 from services.product_service.seed import seed_products
+from shared.constants import ApiEndpoints, ErrorTitles, ErrorTypes, HttpHeaders
 from shared.db import DatabaseManager
 from shared.errors import ProblemDetailsException, register_problem_handlers
 from shared.health import create_health_router
@@ -52,7 +53,7 @@ app.include_router(create_health_router(settings.service_name, db_manager))
 
 
 @app.get(
-    "/api/v1/products",
+    ApiEndpoints.PRODUCTS,
     response_model=PaginatedResponse[ProductResponse],
     summary="List products with pagination",
 )
@@ -78,7 +79,7 @@ async def list_products(
 
 
 @app.get(
-    "/api/v1/products/{product_id}",
+    f"{ApiEndpoints.PRODUCTS}/{{product_id}}",
     response_model=ProductResponse,
     summary="Get product by ID with optional didactic delay/failure simulation",
 )
@@ -88,22 +89,22 @@ async def get_product(
     simulate_failure: Annotated[bool, Query(description="Injected 500 error")] = False,
     session: AsyncSession = Depends(db_manager.get_session),
 ) -> ProductResponse:
-    await apply_simulation(delay_ms, simulate_failure, service_name="product-service")
+    await apply_simulation(delay_ms, simulate_failure, service_name=settings.service_name)
 
     result = await session.execute(select(ProductModel).where(ProductModel.id == product_id))
     product = result.scalar_one_or_none()
     if product is None:
         raise ProblemDetailsException(
             status=status.HTTP_404_NOT_FOUND,
-            title="Product Not Found",
+            title=ErrorTitles.PRODUCT_NOT_FOUND,
             detail=f"Product with ID {product_id} does not exist in the catalog.",
-            type_uri="https://api.example.com/errors/product-not-found",
+            type_uri=ErrorTypes.PRODUCT_NOT_FOUND,
         )
     return ProductResponse.model_validate(product)
 
 
 @app.post(
-    "/api/v1/products",
+    ApiEndpoints.PRODUCTS,
     response_model=ProductResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new catalog product",
@@ -118,9 +119,9 @@ async def create_product(
     if existing.scalar_one_or_none() is not None:
         raise ProblemDetailsException(
             status=status.HTTP_409_CONFLICT,
-            title="Product SKU Conflict",
+            title=ErrorTitles.SKU_CONFLICT,
             detail=f"A product with SKU '{payload.sku}' already exists.",
-            type_uri="https://api.example.com/errors/sku-conflict",
+            type_uri=ErrorTypes.SKU_CONFLICT,
         )
 
     product = ProductModel(
@@ -135,5 +136,5 @@ async def create_product(
     await session.commit()
     await session.refresh(product)
 
-    response.headers["Location"] = f"/api/v1/products/{product.id}"
+    response.headers[HttpHeaders.LOCATION] = f"{ApiEndpoints.PRODUCTS}/{product.id}"
     return ProductResponse.model_validate(product)

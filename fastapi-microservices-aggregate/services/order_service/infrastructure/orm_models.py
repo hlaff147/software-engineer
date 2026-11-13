@@ -10,6 +10,7 @@ from typing import Any
 from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from shared.constants import DomainConstants, TableNames
 from shared.db import Base
 
 __all__ = ["OrderItemModel", "OrderModel", "OrderOutboxEventModel"]
@@ -18,11 +19,13 @@ __all__ = ["OrderItemModel", "OrderModel", "OrderOutboxEventModel"]
 class OrderModel(Base):
     """Database table representing the Order Aggregate Root."""
 
-    __tablename__ = "orders"
+    __tablename__ = TableNames.ORDERS
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     customer_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
-    currency: Mapped[str] = mapped_column(String(3), nullable=False, default="USD")
+    currency: Mapped[str] = mapped_column(
+        String(3), nullable=False, default=DomainConstants.DEFAULT_CURRENCY
+    )
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="DRAFT")
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(
@@ -48,12 +51,12 @@ class OrderModel(Base):
 class OrderItemModel(Base):
     """Database table representing internal OrderLineItem entity within the Order aggregate."""
 
-    __tablename__ = "order_items"
+    __tablename__ = TableNames.ORDER_ITEMS
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     order_id: Mapped[str] = mapped_column(
         String(64),
-        ForeignKey("orders.id", ondelete="CASCADE"),
+        ForeignKey(f"{TableNames.ORDERS}.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -69,7 +72,7 @@ class OrderItemModel(Base):
 class OrderOutboxEventModel(Base):
     """Transactional Outbox table storing domain events committed atomically with the Aggregate."""
 
-    __tablename__ = "order_outbox_events"
+    __tablename__ = TableNames.ORDER_OUTBOX_EVENTS
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     order_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)

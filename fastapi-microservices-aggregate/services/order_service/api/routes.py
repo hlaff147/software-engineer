@@ -18,6 +18,7 @@ from services.order_service.application.dtos import (
 )
 from services.order_service.application.order_service import OrderApplicationService
 from services.order_service.infrastructure.repository import SqlAlchemyOrderRepository
+from shared.constants import ApiEndpoints, HttpHeaders
 from shared.pagination import PaginatedResponse
 
 __all__ = ["get_db_session", "get_order_app_service", "router"]
@@ -36,7 +37,7 @@ async def get_order_app_service(
     return OrderApplicationService(repo)
 
 
-router = APIRouter(prefix="/api/v1/orders", tags=["Orders"])
+router = APIRouter(prefix=ApiEndpoints.ORDERS, tags=["Orders"])
 
 
 @router.post(
@@ -51,7 +52,7 @@ async def create_order(
     app_svc: OrderApplicationService = Depends(get_order_app_service),
 ) -> OrderResponse:
     order = await app_svc.create_order(payload)
-    response.headers["Location"] = f"/api/v1/orders/{order.id}"
+    response.headers[HttpHeaders.LOCATION] = f"{ApiEndpoints.ORDERS}/{order.id}"
     return order
 
 

@@ -4,13 +4,15 @@ from __future__ import annotations
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from shared.constants import ServiceNames
+
 __all__ = ["Settings", "get_settings"]
 
 
 class Settings(BaseSettings):
     """Inventory service environment settings."""
 
-    service_name: str = "inventory-service"
+    service_name: str = ServiceNames.INVENTORY_SERVICE.value
     port: int = 8002
     database_url: str = "postgresql+asyncpg://app_user:app_password@postgres:5432/inventory_db"
     debug: bool = False

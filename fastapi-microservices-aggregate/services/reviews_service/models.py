@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from shared.constants import TableNames
 from shared.db import Base
 
 __all__ = ["ReviewModel"]
@@ -15,7 +16,7 @@ __all__ = ["ReviewModel"]
 class ReviewModel(Base):
     """Database entity representing a customer review for a product."""
 
-    __tablename__ = "reviews"
+    __tablename__ = TableNames.REVIEWS
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     product_id: Mapped[int] = mapped_column(Integer, index=True, nullable=False)

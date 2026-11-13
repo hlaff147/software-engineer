@@ -18,6 +18,7 @@ from services.reviews_service.schemas import (
     ReviewItem,
 )
 from services.reviews_service.seed import seed_reviews
+from shared.constants import ApiEndpoints, HttpHeaders
 from shared.db import DatabaseManager
 from shared.errors import register_problem_handlers
 from shared.health import create_health_router
@@ -55,7 +56,7 @@ app.include_router(create_health_router(settings.service_name, db_manager))
 
 
 @app.get(
-    "/api/v1/reviews/{product_id}",
+    f"{ApiEndpoints.REVIEWS}/{{product_id}}",
     response_model=ProductReviewsResponse,
     summary="Get aggregated reviews for a product with optional didactic delay/failure simulation",
 )
@@ -65,7 +66,7 @@ async def get_reviews(
     simulate_failure: Annotated[bool, Query(description="Injected 500 error")] = False,
     session: AsyncSession = Depends(db_manager.get_session),
 ) -> ProductReviewsResponse:
-    await apply_simulation(delay_ms, simulate_failure, service_name="reviews-service")
+    await apply_simulation(delay_ms, simulate_failure, service_name=settings.service_name)
 
     # Fetch reviews
     stmt = (
@@ -97,7 +98,7 @@ async def get_reviews(
 
 
 @app.post(
-    "/api/v1/reviews/{product_id}",
+    f"{ApiEndpoints.REVIEWS}/{{product_id}}",
     response_model=ReviewItem,
     status_code=status.HTTP_201_CREATED,
     summary="Submit a review for a product",
@@ -118,5 +119,5 @@ async def create_review(
     await session.commit()
     await session.refresh(review)
 
-    response.headers["Location"] = f"/api/v1/reviews/{product_id}"
+    response.headers[HttpHeaders.LOCATION] = f"{ApiEndpoints.REVIEWS}/{product_id}"
     return ReviewItem.model_validate(review)

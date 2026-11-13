@@ -6,6 +6,8 @@ import re
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
 
+from shared.constants import DomainConstants
+
 __all__ = ["CustomerId", "Money", "OrderId", "ProductId", "Quantity", "Sku"]
 
 _SKU_REGEX = re.compile(r"^[A-Z0-9\-_]{3,64}$")
@@ -16,7 +18,7 @@ class Money:
     """Immutable monetary value object enforcing two-decimal exact arithmetic."""
 
     amount: Decimal
-    currency: str = "USD"
+    currency: str = DomainConstants.DEFAULT_CURRENCY
 
     def __post_init__(self) -> None:
         if not isinstance(self.amount, Decimal):
@@ -83,10 +85,14 @@ class Quantity:
     def __post_init__(self) -> None:
         if not isinstance(self.value, int):
             raise ValueError("Quantity must be an integer.")
-        if self.value < 1:
-            raise ValueError("Quantity must be at least 1.")
-        if self.value > 10:
-            raise ValueError("Maximum allowed quantity per order line item is 10 units.")
+        if self.value < DomainConstants.MIN_QUANTITY_PER_LINE_ITEM:
+            raise ValueError(
+                f"Quantity must be at least {DomainConstants.MIN_QUANTITY_PER_LINE_ITEM}."
+            )
+        if self.value > DomainConstants.MAX_QUANTITY_PER_LINE_ITEM:
+            raise ValueError(
+                f"Maximum allowed quantity per order line item is {DomainConstants.MAX_QUANTITY_PER_LINE_ITEM} units."
+            )
 
     def __str__(self) -> str:
         return str(self.value)

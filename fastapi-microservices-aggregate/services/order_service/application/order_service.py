@@ -31,6 +31,7 @@ from services.order_service.domain.value_objects import (
     Sku,
 )
 from services.order_service.infrastructure.repository import SqlAlchemyOrderRepository
+from shared.constants import ErrorTitles, ErrorTypes
 from shared.errors import ProblemDetailsException
 
 __all__ = ["OrderApplicationService"]
@@ -77,23 +78,23 @@ class OrderApplicationService:
         except (ValueError, DomainInvariantViolation) as err:
             raise ProblemDetailsException(
                 status=422,
-                title="Domain Invariant Violation",
+                title=ErrorTitles.DOMAIN_INVARIANT_VIOLATION,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/domain-invariant-violation",
+                type_uri=ErrorTypes.DOMAIN_INVARIANT_VIOLATION,
             ) from err
         except InvalidOrderStateError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Invalid Order State",
+                title=ErrorTitles.INVALID_ORDER_STATE,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/invalid-order-state",
+                type_uri=ErrorTypes.INVALID_ORDER_STATE,
             ) from err
         except OptimisticConcurrencyError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             ) from err
 
     async def update_item_quantity(
@@ -112,30 +113,30 @@ class OrderApplicationService:
         except LineItemNotFoundError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_404_NOT_FOUND,
-                title="Line Item Not Found",
+                title=ErrorTitles.ITEM_NOT_FOUND,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/item-not-found",
+                type_uri=ErrorTypes.ITEM_NOT_FOUND,
             ) from err
         except (ValueError, DomainInvariantViolation) as err:
             raise ProblemDetailsException(
                 status=422,
-                title="Domain Invariant Violation",
+                title=ErrorTitles.DOMAIN_INVARIANT_VIOLATION,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/domain-invariant-violation",
+                type_uri=ErrorTypes.DOMAIN_INVARIANT_VIOLATION,
             ) from err
         except InvalidOrderStateError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Invalid Order State",
+                title=ErrorTitles.INVALID_ORDER_STATE,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/invalid-order-state",
+                type_uri=ErrorTypes.INVALID_ORDER_STATE,
             ) from err
         except OptimisticConcurrencyError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             ) from err
 
     async def remove_item(
@@ -154,23 +155,23 @@ class OrderApplicationService:
         except LineItemNotFoundError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_404_NOT_FOUND,
-                title="Line Item Not Found",
+                title=ErrorTitles.ITEM_NOT_FOUND,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/item-not-found",
+                type_uri=ErrorTypes.ITEM_NOT_FOUND,
             ) from err
         except InvalidOrderStateError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Invalid Order State",
+                title=ErrorTitles.INVALID_ORDER_STATE,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/invalid-order-state",
+                type_uri=ErrorTypes.INVALID_ORDER_STATE,
             ) from err
         except OptimisticConcurrencyError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             ) from err
 
     async def confirm_order(
@@ -188,23 +189,23 @@ class OrderApplicationService:
         except DomainInvariantViolation as err:
             raise ProblemDetailsException(
                 status=422,
-                title="Domain Invariant Violation",
+                title=ErrorTitles.DOMAIN_INVARIANT_VIOLATION,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/domain-invariant-violation",
+                type_uri=ErrorTypes.DOMAIN_INVARIANT_VIOLATION,
             ) from err
         except InvalidOrderStateError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Invalid Order State",
+                title=ErrorTitles.INVALID_ORDER_STATE,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/invalid-order-state",
+                type_uri=ErrorTypes.INVALID_ORDER_STATE,
             ) from err
         except OptimisticConcurrencyError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             ) from err
 
     async def cancel_order(
@@ -222,16 +223,16 @@ class OrderApplicationService:
         except InvalidOrderStateError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Invalid Order State",
+                title=ErrorTitles.INVALID_ORDER_STATE,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/invalid-order-state",
+                type_uri=ErrorTypes.INVALID_ORDER_STATE,
             ) from err
         except OptimisticConcurrencyError as err:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=str(err),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             ) from err
 
     async def list_events(self, order_id_str: str) -> list[OutboxEventResponse]:
@@ -244,9 +245,9 @@ class OrderApplicationService:
         if order is None:
             raise ProblemDetailsException(
                 status=status.HTTP_404_NOT_FOUND,
-                title="Order Not Found",
+                title=ErrorTitles.ORDER_NOT_FOUND,
                 detail=f"Order '{order_id_str}' does not exist.",
-                type_uri="https://api.example.com/errors/order-not-found",
+                type_uri=ErrorTypes.ORDER_NOT_FOUND,
             )
         return order
 
@@ -254,12 +255,12 @@ class OrderApplicationService:
         if expected_version is not None and order.version != expected_version:
             raise ProblemDetailsException(
                 status=status.HTTP_409_CONFLICT,
-                title="Optimistic Concurrency Conflict",
+                title=ErrorTitles.CONCURRENCY_CONFLICT,
                 detail=(
                     f"Order aggregate version mismatch. Current version is {order.version}, "
                     f"but expected version was {expected_version}."
                 ),
-                type_uri="https://api.example.com/errors/concurrency-conflict",
+                type_uri=ErrorTypes.CONCURRENCY_CONFLICT,
             )
 
     def _to_response(self, order: Order) -> OrderResponse:

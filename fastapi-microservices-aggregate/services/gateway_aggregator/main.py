@@ -15,6 +15,7 @@ from services.gateway_aggregator.aggregator import (
 from services.gateway_aggregator.clients import DownstreamClientRegistry
 from services.gateway_aggregator.config import get_settings
 from services.gateway_aggregator.schemas import OrderPageResponse, ProductPageResponse
+from shared.constants import ApiEndpoints
 from shared.errors import register_problem_handlers
 from shared.health import create_health_router
 from shared.logging import configure_logging
@@ -57,7 +58,7 @@ def get_registry() -> DownstreamClientRegistry:
 
 
 @app.get(
-    "/api/v1/pages/products/{product_id}",
+    f"{ApiEndpoints.PAGES_PRODUCTS}/{{product_id}}",
     response_model=ProductPageResponse,
     summary="Get aggregated product details page with parallel fan-out and fallbacks",
 )
@@ -105,7 +106,7 @@ async def get_product_page(
 
 
 @app.get(
-    "/api/v1/pages/orders/{order_id}",
+    f"{ApiEndpoints.PAGES_ORDERS}/{{order_id}}",
     response_model=OrderPageResponse,
     summary="Get enriched order page combining DDD Order Aggregate with catalog and stock",
 )

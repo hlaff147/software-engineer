@@ -10,6 +10,7 @@ from services.inventory_service.main import app as inventory_app
 from services.order_service.main import app as order_app
 from services.product_service.main import app as product_app
 from services.reviews_service.main import app as reviews_app
+from shared.constants import ApiEndpoints
 
 ALL_SERVICES = [
     ("gateway-aggregator", gateway_app),
@@ -36,12 +37,12 @@ async def test_health_and_ready_endpoints(service_name: str, app: object) -> Non
         transport=ASGITransport(app=app),  # type: ignore[arg-type]
         base_url="http://testserver",
     ) as client:
-        health_resp = await client.get("/health")
+        health_resp = await client.get(ApiEndpoints.HEALTH)
         assert health_resp.status_code == 200
         health_data = health_resp.json()
         assert health_data["status"] == "UP"
 
-        ready_resp = await client.get("/ready")
+        ready_resp = await client.get(ApiEndpoints.READY)
         assert ready_resp.status_code == 200
         ready_data = ready_resp.json()
         assert ready_data["status"] == "READY"

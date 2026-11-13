@@ -20,6 +20,7 @@ from services.gateway_aggregator.schemas import (
     ReviewSnippet,
     ReviewsSection,
 )
+from shared.constants import ApiEndpoints, ErrorTitles, ErrorTypes, ServiceNames
 from shared.errors import ProblemDetailsException
 
 __all__ = ["OrderPageAggregator", "ProductPageAggregator"]
@@ -48,7 +49,9 @@ class ProductPageAggregator:
         async def fetch_product() -> tuple[httpx.Response | None, float, Exception | None]:
             client = self.registry.get_client("product")
             params = {"delay_ms": product_delay_ms, "simulate_failure": str(fail_product).lower()}
-            return await timed_get(client, f"/api/v1/products/{product_id}", params, timeout_s)
+            return await timed_get(
+                client, f"{ApiEndpoints.PRODUCTS}/{product_id}", params, timeout_s
+            )
 
         async def fetch_inventory() -> tuple[httpx.Response | None, float, Exception | None]:
             client = self.registry.get_client("inventory")
@@ -56,12 +59,14 @@ class ProductPageAggregator:
                 "delay_ms": inventory_delay_ms,
                 "simulate_failure": str(fail_inventory).lower(),
             }
-            return await timed_get(client, f"/api/v1/stock/{product_id}", params, timeout_s)
+            return await timed_get(client, f"{ApiEndpoints.STOCK}/{product_id}", params, timeout_s)
 
         async def fetch_reviews() -> tuple[httpx.Response | None, float, Exception | None]:
             client = self.registry.get_client("reviews")
             params = {"delay_ms": reviews_delay_ms, "simulate_failure": str(fail_reviews).lower()}
-            return await timed_get(client, f"/api/v1/reviews/{product_id}", params, timeout_s)
+            return await timed_get(
+                client, f"{ApiEndpoints.REVIEWS}/{product_id}", params, timeout_s
+            )
 
         wall_start = time.perf_counter()
 
@@ -87,15 +92,15 @@ class ProductPageAggregator:
             if isinstance(prod_err, httpx.TimeoutException):
                 raise ProblemDetailsException(
                     status=status.HTTP_504_GATEWAY_TIMEOUT,
-                    title="Product Service Timeout",
+                    title=ErrorTitles.PRODUCT_TIMEOUT,
                     detail=f"Product Service timed out after {timeout_ms}ms.",
-                    type_uri="https://api.example.com/errors/gateway-timeout",
+                    type_uri=ErrorTypes.GATEWAY_TIMEOUT,
                 )
             raise ProblemDetailsException(
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
-                title="Product Service Unavailable",
+                title=ErrorTitles.PRODUCT_UNAVAILABLE,
                 detail=f"Failed to communicate with Product Service: {prod_err}",
-                type_uri="https://api.example.com/errors/service-unavailable",
+                type_uri=ErrorTypes.SERVICE_UNAVAILABLE,
             )
 
         if prod_resp is None or prod_resp.status_code != 200:
@@ -103,15 +108,15 @@ class ProductPageAggregator:
             if status_code == 404:
                 raise ProblemDetailsException(
                     status=status.HTTP_404_NOT_FOUND,
-                    title="Product Not Found",
+                    title=ErrorTitles.PRODUCT_NOT_FOUND,
                     detail=f"Product with ID {product_id} not found downstream.",
-                    type_uri="https://api.example.com/errors/product-not-found",
+                    type_uri=ErrorTypes.PRODUCT_NOT_FOUND,
                 )
             raise ProblemDetailsException(
                 status=status.HTTP_502_BAD_GATEWAY,
-                title="Product Service Error",
+                title=ErrorTitles.PRODUCT_ERROR,
                 detail=f"Product Service returned HTTP status {status_code}.",
-                type_uri="https://api.example.com/errors/bad-gateway",
+                type_uri=ErrorTypes.BAD_GATEWAY,
             )
 
         product_data = prod_resp.json()
@@ -129,7 +134,7 @@ class ProductPageAggregator:
 
         # 2. Inventory is NON-CRITICAL: Apply graceful degradation fallback
         if inv_err is not None or inv_resp is None or inv_resp.status_code != 200:
-            degraded_services.append("inventory-service")
+            degraded_services.append(ServiceNames.INVENTORY_SERVICE.value)
             inventory_section = InventorySection(
                 available_quantity=0,
                 reserved_quantity=0,
@@ -149,7 +154,7 @@ class ProductPageAggregator:
 
         # 3. Reviews is NON-CRITICAL: Apply graceful degradation fallback
         if rev_err is not None or rev_resp is None or rev_resp.status_code != 200:
-            degraded_services.append("reviews-service")
+            degraded_services.append(ServiceNames.REVIEWS_SERVICE.value)
             reviews_section = ReviewsSection(
                 average_rating=0.0,
                 total_reviews=0,
@@ -212,19 +217,21 @@ class OrderPageAggregator:
 
         # 1. Fetch Order Aggregate Root from Order Service
         order_resp, order_ms, order_err = await timed_get(
-            order_client, f"/api/v1/orders/{order_id}"
+            order_client, f"{ApiEndpoints.ORDERS}/{order_id}"
         )
         if order_err is not None or order_resp is None or order_resp.status_code != 200:
             if order_resp is not None and order_resp.status_code == 404:
                 raise ProblemDetailsException(
                     status=status.HTTP_404_NOT_FOUND,
-                    title="Order Not Found",
+                    title=ErrorTitles.ORDER_NOT_FOUND,
                     detail=f"Order '{order_id}' was not found.",
+                    type_uri=ErrorTypes.ORDER_NOT_FOUND,
                 )
             raise ProblemDetailsException(
                 status=status.HTTP_502_BAD_GATEWAY,
-                title="Order Service Error",
+                title=ErrorTitles.PRODUCT_ERROR,
                 detail="Failed to retrieve order aggregate root.",
+                type_uri=ErrorTypes.BAD_GATEWAY,
             )
 
         order_data = order_resp.json()
@@ -233,8 +240,8 @@ class OrderPageAggregator:
         # 2. Concurrently enrich each line item with Product and Inventory
         async def enrich_item(item: dict[str, Any]) -> tuple[OrderLineItemView, float]:
             p_id = item["product_id"]
-            p_resp, p_ms, _ = await timed_get(product_client, f"/api/v1/products/{p_id}")
-            i_resp, i_ms, _ = await timed_get(inventory_client, f"/api/v1/stock/{p_id}")
+            p_resp, p_ms, _ = await timed_get(product_client, f"{ApiEndpoints.PRODUCTS}/{p_id}")
+            i_resp, i_ms, _ = await timed_get(inventory_client, f"{ApiEndpoints.STOCK}/{p_id}")
 
             available = None
             inv_status = "unavailable"

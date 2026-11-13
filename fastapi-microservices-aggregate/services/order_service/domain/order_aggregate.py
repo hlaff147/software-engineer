@@ -34,6 +34,7 @@ from services.order_service.domain.value_objects import (
     Quantity,
     Sku,
 )
+from shared.constants import DomainConstants
 
 __all__ = ["Order", "OrderLineItem", "OrderStatus"]
 
@@ -64,12 +65,12 @@ class OrderLineItem:
 class Order:
     """Aggregate Root: Sole entry point for all state mutations and domain invariant checks."""
 
-    MAX_ORDER_TOTAL: ClassVar[Decimal] = Decimal("50000.00")
-    MAX_ITEMS_PER_ORDER: ClassVar[int] = 50
+    MAX_ORDER_TOTAL: ClassVar[Decimal] = DomainConstants.MAX_ORDER_TOTAL
+    MAX_ITEMS_PER_ORDER: ClassVar[int] = DomainConstants.MAX_DISTINCT_ITEMS_PER_ORDER
 
     order_id: OrderId
     customer_id: CustomerId
-    currency: str = "USD"
+    currency: str = DomainConstants.DEFAULT_CURRENCY
     status: OrderStatus = OrderStatus.DRAFT
     version: int = 1
     _loaded_version: int = 1
@@ -81,7 +82,7 @@ class Order:
         cls,
         order_id: OrderId,
         customer_id: CustomerId,
-        currency: str = "USD",
+        currency: str = DomainConstants.DEFAULT_CURRENCY,
     ) -> Order:
         """Factory method to instantiate a new Order Aggregate Root."""
         order = cls(

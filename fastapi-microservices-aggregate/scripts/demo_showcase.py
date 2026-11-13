@@ -16,8 +16,10 @@ from typing import Any
 
 import httpx
 
-GATEWAY_URL = "http://localhost:8000"
-ORDER_URL = "http://localhost:8004"
+from shared.constants import ApiEndpoints, ServiceUrls
+
+GATEWAY_URL = ServiceUrls.GATEWAY_AGGREGATOR
+ORDER_URL = ServiceUrls.ORDER_SERVICE.replace("order-service:8004", "localhost:8004")
 
 
 def print_header(title: str) -> None:
@@ -42,7 +44,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
     print_step("1.1", "Executing in SEQUENTIAL mode (?mode=sequential)...")
     t0 = time.perf_counter()
     seq_resp = await client.get(
-        f"{GATEWAY_URL}/api/v1/pages/products/42",
+        f"{GATEWAY_URL}{ApiEndpoints.PAGES_PRODUCTS}/42",
         params={
             "mode": "sequential",
             "product_delay_ms": 80,
@@ -61,7 +63,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
     print_step("1.2", "Executing in PARALLEL mode (?mode=parallel via asyncio.gather)...")
     t1 = time.perf_counter()
     par_resp = await client.get(
-        f"{GATEWAY_URL}/api/v1/pages/products/42",
+        f"{GATEWAY_URL}{ApiEndpoints.PAGES_PRODUCTS}/42",
         params={
             "mode": "parallel",
             "product_delay_ms": 80,
@@ -79,7 +81,9 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_header("SCENARIO 2: Gateway Aggregator Resilience & Graceful Fallbacks")
     print_step("2.1", "Simulating Reviews Service outage (?fail_reviews=true)...")
-    fallback_resp = await client.get(f"{GATEWAY_URL}/api/v1/pages/products/42?fail_reviews=true")
+    fallback_resp = await client.get(
+        f"{GATEWAY_URL}{ApiEndpoints.PAGES_PRODUCTS}/42?fail_reviews=true"
+    )
     fallback_data = fallback_resp.json()
     print(f"   Status Code: {fallback_resp.status_code}")
     print(f"   Composition Status: {fallback_data['composition_status']}")
@@ -87,14 +91,15 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
     print(f"   Reviews Fallback:   {fallback_data['reviews']}")
 
     print_step("2.2", "Simulating Critical Product Service outage (?fail_product=true)...")
-    crit_resp = await client.get(f"{GATEWAY_URL}/api/v1/pages/products/42?fail_product=true")
+    crit_resp = await client.get(f"{GATEWAY_URL}{ApiEndpoints.PAGES_PRODUCTS}/42?fail_product=true")
     print(f"   Status Code: {crit_resp.status_code} (Fail-Fast Problem Details)")
     print(f"   RFC 7807 Error Body: {crit_resp.text}")
 
     print_header("SCENARIO 3: DDD Order Aggregate Root & Domain Invariants")
     print_step("3.1", "Creating new Order Aggregate Root in DRAFT status...")
     new_ord_resp = await client.post(
-        f"{ORDER_URL}/api/v1/orders", json={"customer_id": "cust-demo-99", "currency": "USD"}
+        f"{ORDER_URL}{ApiEndpoints.ORDERS}",
+        json={"customer_id": "cust-demo-99", "currency": "USD"},
     )
     order = new_ord_resp.json()
     order_id = order["id"]
@@ -104,7 +109,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_step("3.2", "Adding valid line item (UltraPro Laptop x 2)...")
     add_resp = await client.post(
-        f"{ORDER_URL}/api/v1/orders/{order_id}/items",
+        f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/items",
         json={
             "product_id": 42,
             "sku": "TECH-LAPTOP-42",
@@ -118,7 +123,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_step("3.3", "Testing Invariant: Attempting to add 15 keyboards (limit is 10)...")
     invalid_qty = await client.post(
-        f"{ORDER_URL}/api/v1/orders/{order_id}/items",
+        f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/items",
         json={
             "product_id": 43,
             "sku": "ACC-KEYBOARD-43",
@@ -133,7 +138,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_step("3.4", "Testing Invariant: Exceeding $50,000 maximum order cap...")
     cap_viol = await client.post(
-        f"{ORDER_URL}/api/v1/orders/{order_id}/items",
+        f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/items",
         json={
             "product_id": 99,
             "sku": "TECH-CLUSTER",
@@ -147,7 +152,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
     )
 
     print_step("3.5", "Confirming the Order Aggregate...")
-    confirm_resp = await client.post(f"{ORDER_URL}/api/v1/orders/{order_id}/confirm")
+    confirm_resp = await client.post(f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/confirm")
     confirmed_order = confirm_resp.json()
     print(
         f"   Order Confirmed! Status: {confirmed_order['status']}, Version: {confirmed_order['version']}"
@@ -155,7 +160,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_step("3.6", "Verifying Aggregate Immutability after confirmation...")
     mutate_post_confirm = await client.post(
-        f"{ORDER_URL}/api/v1/orders/{order_id}/items",
+        f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/items",
         json={
             "product_id": 43,
             "sku": "ACC-KEYBOARD-43",
@@ -169,7 +174,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
     )
 
     print_step("3.7", "Inspecting Transactional Outbox Events emitted by the Aggregate Root...")
-    events_resp = await client.get(f"{ORDER_URL}/api/v1/orders/{order_id}/events")
+    events_resp = await client.get(f"{ORDER_URL}{ApiEndpoints.ORDERS}/{order_id}/events")
     events = events_resp.json()
     print(f"   Emitted Events ({len(events)}):")
     for ev in events:
@@ -177,7 +182,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 
     print_header("SCENARIO 4: Gateway Aggregation of Enriched Order Page")
     print_step("4.1", "Fetching unified Order Page via Gateway Aggregator...")
-    order_page_resp = await client.get(f"{GATEWAY_URL}/api/v1/pages/orders/{order_id}")
+    order_page_resp = await client.get(f"{GATEWAY_URL}{ApiEndpoints.PAGES_ORDERS}/{order_id}")
     order_page = order_page_resp.json()
     print(f"   Order Page Total: ${order_page['total_amount']} {order_page['currency']}")
     print("   Enriched Items:")
@@ -192,7 +197,7 @@ async def run_live_demo(client: httpx.AsyncClient) -> None:
 async def main() -> None:
     async with httpx.AsyncClient(timeout=5.0) as client:
         try:
-            health = await client.get(f"{GATEWAY_URL}/health")
+            health = await client.get(f"{GATEWAY_URL}{ApiEndpoints.HEALTH}")
             if health.status_code != 200:
                 raise httpx.ConnectError("Gateway not ready")
             await run_live_demo(client)

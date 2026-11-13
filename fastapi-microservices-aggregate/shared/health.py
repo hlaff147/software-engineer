@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
+from shared.constants import ApiEndpoints
+
 if TYPE_CHECKING:
     from shared.db import DatabaseManager
 
@@ -20,11 +22,11 @@ def create_health_router(
     """Creates a router exposing /health and /ready endpoints."""
     router = APIRouter(tags=["Health"])
 
-    @router.get("/health", summary="Liveness probe")
+    @router.get(ApiEndpoints.HEALTH, summary="Liveness probe")
     async def liveness() -> dict[str, str]:
         return {"status": "UP", "service": service_name}
 
-    @router.get("/ready", summary="Readiness probe")
+    @router.get(ApiEndpoints.READY, summary="Readiness probe")
     async def readiness() -> JSONResponse:
         db_healthy = True
         if db_manager is not None:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
+from shared.constants import ErrorTitles, ErrorTypes
 from shared.errors import ProblemDetailsException
 
 __all__ = ["apply_simulation"]
@@ -21,7 +22,7 @@ async def apply_simulation(
     if simulate_failure:
         raise ProblemDetailsException(
             status=500,
-            title="Simulated Service Failure",
+            title=ErrorTitles.SIMULATED_FAILURE,
             detail=f"{service_name} injected an intentional transient failure for didactic demonstration.",
-            type_uri="https://api.example.com/errors/simulated-failure",
+            type_uri=ErrorTypes.SIMULATED_FAILURE,
         )

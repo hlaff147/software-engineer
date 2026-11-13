@@ -14,6 +14,7 @@ from services.inventory_service.config import get_settings
 from services.inventory_service.models import StockItemModel
 from services.inventory_service.schemas import StockResponse, StockUpdate
 from services.inventory_service.seed import seed_inventory
+from shared.constants import ApiEndpoints, ErrorTitles, ErrorTypes
 from shared.db import DatabaseManager
 from shared.errors import ProblemDetailsException, register_problem_handlers
 from shared.health import create_health_router
@@ -51,7 +52,7 @@ app.include_router(create_health_router(settings.service_name, db_manager))
 
 
 @app.get(
-    "/api/v1/stock/{product_id}",
+    f"{ApiEndpoints.STOCK}/{{product_id}}",
     response_model=StockResponse,
     summary="Get stock details for a product with optional didactic delay/failure simulation",
 )
@@ -61,7 +62,7 @@ async def get_stock(
     simulate_failure: Annotated[bool, Query(description="Injected 500 error")] = False,
     session: AsyncSession = Depends(db_manager.get_session),
 ) -> StockResponse:
-    await apply_simulation(delay_ms, simulate_failure, service_name="inventory-service")
+    await apply_simulation(delay_ms, simulate_failure, service_name=settings.service_name)
 
     result = await session.execute(
         select(StockItemModel).where(StockItemModel.product_id == product_id)
@@ -70,15 +71,15 @@ async def get_stock(
     if stock is None:
         raise ProblemDetailsException(
             status=status.HTTP_404_NOT_FOUND,
-            title="Stock Record Not Found",
+            title=ErrorTitles.STOCK_NOT_FOUND,
             detail=f"Stock record for product ID {product_id} does not exist.",
-            type_uri="https://api.example.com/errors/stock-not-found",
+            type_uri=ErrorTypes.STOCK_NOT_FOUND,
         )
     return StockResponse.model_validate(stock)
 
 
 @app.put(
-    "/api/v1/stock/{product_id}",
+    f"{ApiEndpoints.STOCK}/{{product_id}}",
     response_model=StockResponse,
     summary="Update stock levels for a product",
 )
@@ -94,9 +95,9 @@ async def update_stock(
     if stock is None:
         raise ProblemDetailsException(
             status=status.HTTP_404_NOT_FOUND,
-            title="Stock Record Not Found",
+            title=ErrorTitles.STOCK_NOT_FOUND,
             detail=f"Stock record for product ID {product_id} does not exist.",
-            type_uri="https://api.example.com/errors/stock-not-found",
+            type_uri=ErrorTypes.STOCK_NOT_FOUND,
         )
 
     if payload.available_quantity is not None:

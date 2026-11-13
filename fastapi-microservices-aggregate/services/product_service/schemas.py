@@ -6,6 +6,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from shared.constants import DomainConstants
+
 __all__ = ["ProductCreate", "ProductResponse", "ProductUpdate"]
 
 
@@ -16,7 +18,7 @@ class ProductCreate(BaseModel):
     )
     description: str = Field(default="", max_length=1000)
     price: Decimal = Field(..., gt=0, examples=[Decimal("1999.99")])
-    currency: str = Field(default="USD", min_length=3, max_length=3)
+    currency: str = Field(default=DomainConstants.DEFAULT_CURRENCY, min_length=3, max_length=3)
     category: str = Field(default="electronics", max_length=100)
 
     model_config = ConfigDict(from_attributes=True)
