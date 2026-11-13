@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Any, Literal
+from typing import Literal
 
 import httpx
 from fastapi import status
@@ -20,6 +20,10 @@ from services.gateway_aggregator.schemas import (
     ReviewSnippet,
     ReviewsSection,
 )
+from services.inventory_service.schemas import StockResponse
+from services.order_service.application.dtos import OrderLineItemResponse, OrderResponse
+from services.product_service.schemas import ProductResponse
+from services.reviews_service.schemas import ProductReviewsResponse
 from shared.constants import ApiEndpoints, ErrorTitles, ErrorTypes, ServiceNames
 from shared.errors import ProblemDetailsException
 
@@ -119,15 +123,15 @@ class ProductPageAggregator:
                 type_uri=ErrorTypes.BAD_GATEWAY,
             )
 
-        product_data = prod_resp.json()
+        product_dto = ProductResponse.model_validate(prod_resp.json())
         product_section = ProductSection(
-            id=product_data["id"],
-            sku=product_data["sku"],
-            name=product_data["name"],
-            description=product_data["description"],
-            price=product_data["price"],
-            currency=product_data["currency"],
-            category=product_data["category"],
+            id=product_dto.id,
+            sku=product_dto.sku,
+            name=product_dto.name,
+            description=product_dto.description,
+            price=product_dto.price,
+            currency=product_dto.currency,
+            category=product_dto.category,
         )
 
         degraded_services: list[str] = []
@@ -143,12 +147,12 @@ class ProductPageAggregator:
                 is_fallback=True,
             )
         else:
-            inv_data = inv_resp.json()
+            stock_dto = StockResponse.model_validate(inv_resp.json())
             inventory_section = InventorySection(
-                available_quantity=inv_data["available_quantity"],
-                reserved_quantity=inv_data["reserved_quantity"],
-                in_stock=inv_data["in_stock"],
-                warehouse_code=inv_data["warehouse_code"],
+                available_quantity=stock_dto.available_quantity,
+                reserved_quantity=stock_dto.reserved_quantity,
+                in_stock=stock_dto.in_stock,
+                warehouse_code=stock_dto.warehouse_code,
                 is_fallback=False,
             )
 
@@ -162,19 +166,19 @@ class ProductPageAggregator:
                 is_fallback=True,
             )
         else:
-            rev_data = rev_resp.json()
+            reviews_dto = ProductReviewsResponse.model_validate(rev_resp.json())
             snippets = [
                 ReviewSnippet(
-                    id=r["id"],
-                    author=r["author"],
-                    rating=r["rating"],
-                    comment=r["comment"],
+                    id=r.id,
+                    author=r.author,
+                    rating=r.rating,
+                    comment=r.comment,
                 )
-                for r in rev_data.get("reviews", [])[:3]
+                for r in reviews_dto.reviews[:3]
             ]
             reviews_section = ReviewsSection(
-                average_rating=rev_data["average_rating"],
-                total_reviews=rev_data["total_reviews"],
+                average_rating=reviews_dto.average_rating,
+                total_reviews=reviews_dto.total_reviews,
                 recent_reviews=snippets,
                 is_fallback=False,
             )
@@ -234,38 +238,39 @@ class OrderPageAggregator:
                 type_uri=ErrorTypes.BAD_GATEWAY,
             )
 
-        order_data = order_resp.json()
-        items_data: list[dict[str, Any]] = order_data.get("items", [])
+        order_dto = OrderResponse.model_validate(order_resp.json())
 
         # 2. Concurrently enrich each line item with Product and Inventory
-        async def enrich_item(item: dict[str, Any]) -> tuple[OrderLineItemView, float]:
-            p_id = item["product_id"]
+        async def enrich_item(item: OrderLineItemResponse) -> tuple[OrderLineItemView, float]:
+            p_id = item.product_id
             p_resp, p_ms, _ = await timed_get(product_client, f"{ApiEndpoints.PRODUCTS}/{p_id}")
             i_resp, i_ms, _ = await timed_get(inventory_client, f"{ApiEndpoints.STOCK}/{p_id}")
 
             available = None
             inv_status = "unavailable"
             if i_resp is not None and i_resp.status_code == 200:
-                available = i_resp.json().get("available_quantity", 0)
-                inv_status = "in_stock" if available >= item["quantity"] else "low_stock"
+                stock_dto = StockResponse.model_validate(i_resp.json())
+                available = stock_dto.available_quantity
+                inv_status = "in_stock" if available >= item.quantity else "low_stock"
 
-            p_name = item.get("product_name")
+            p_name = item.product_name
             if p_resp is not None and p_resp.status_code == 200:
-                p_name = p_resp.json().get("name", p_name)
+                product_cat_dto = ProductResponse.model_validate(p_resp.json())
+                p_name = product_cat_dto.name
 
             view = OrderLineItemView(
-                sku=item["sku"],
+                sku=item.sku,
                 product_id=p_id,
-                product_name=p_name or "Unknown Item",
-                quantity=item["quantity"],
-                unit_price=item["unit_price"],
-                subtotal=item["subtotal"],
+                product_name=p_name,
+                quantity=item.quantity,
+                unit_price=item.unit_price,
+                subtotal=item.subtotal,
                 inventory_available=available,
                 inventory_status=inv_status,
             )
             return view, p_ms + i_ms
 
-        enriched_tasks = [enrich_item(item) for item in items_data]
+        enriched_tasks = [enrich_item(item) for item in order_dto.items]
         enriched_results = await asyncio.gather(*enriched_tasks) if enriched_tasks else []
 
         views = [res[0] for res in enriched_results]
@@ -285,12 +290,12 @@ class OrderPageAggregator:
         )
 
         return OrderPageResponse(
-            order_id=order_data["id"],
-            customer_id=order_data["customer_id"],
-            status=order_data["status"],
-            version=order_data["version"],
-            total_amount=order_data["total_amount"],
-            currency=order_data["currency"],
+            order_id=order_dto.id,
+            customer_id=order_dto.customer_id,
+            status=order_dto.status,
+            version=order_dto.version,
+            total_amount=order_dto.total_amount,
+            currency=order_dto.currency,
             items=views,
             telemetry=telemetry,
         )

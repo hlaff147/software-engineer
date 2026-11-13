@@ -188,3 +188,93 @@ curl -s -X POST "http://localhost:8004/api/v1/orders/$ORDER_ID/items" \
   -H "Content-Type: application/json" \
   -d '{"product_id":43,"sku":"ACC-KEYBOARD-43","product_name":"Keyboard","unit_price":189.50,"quantity":1}' | python3 -m json.tool
 ```
+
+---
+
+## ☕ 6. Padrões de DTO: Java (Jackson) vs. Python Moderno (Pydantic v2)
+
+Desenvolvedores que migram de **Java com Spring Boot** para **Python com FastAPI** frequentemente estranham trechos de código que manipulam respostas HTTP como dicionários soltos (`dict`):
+
+```python
+# ❌ Anti-padrão frágil (dicionário solto):
+order = resp.json()
+assert order["status"] == "DRAFT"
+assert order["items"][0]["sku"] == "TECH-LAPTOP-42"
+```
+
+### Por que dicionários soltos são ruins em produção?
+1. **Sem Type-Safety**: Um erro de digitação (`order["stauts"]`) só explode em tempo de execução (`KeyError`).
+2. **Sem Suporte da IDE**: A IDE não tem como oferecer autocomplete para chaves dentro de colchetes de strings.
+3. **Sem Garantia de Contrato**: Se o microsserviço downstream alterar um campo ou retornar `null`, o consumidor só falha quando tentar usar o campo mais adiante.
+4. **Sem Coerção de Tipos**: Valores numéricos de alta precisão vêm como strings (`"2499.00"`), forçando conversões manuais espalhadas pelo código.
+
+---
+
+### A Equivalência com Jackson DTOs do Java
+
+No Java com Spring RestTemplate ou WebClient, você nunca consome uma API como `Map<String, Object>`. Em vez disso, o Jackson desserializa o JSON diretamente para uma classe DTO tipada:
+
+```java
+// Java / Spring Boot (Jackson):
+OrderResponse order = restTemplate.getForObject("/api/v1/orders/" + id, OrderResponse.class);
+assertEquals("DRAFT", order.getStatus());
+assertEquals(new BigDecimal("2499.00"), order.getTotalAmount());
+```
+
+No **Python Moderno (Pydantic v2)**, o padrão exato equivalente é o uso de `.model_validate()` e `.model_dump(mode="json")`:
+
+```python
+# Python Moderno (FastAPI + Pydantic v2):
+# 1. Desserialização Tipada (Type-safe Response DTO):
+order = OrderResponse.model_validate(resp.json())
+
+# Agora temos notação de ponto nativa, autocomplete na IDE e tipos estritos:
+assert order.status == "DRAFT"
+assert order.version == 1
+assert order.total_amount == Decimal("2499.00")
+assert order.items[0].sku == "TECH-LAPTOP-42"
+```
+
+### Criação de Payloads (Commands / DTOs de Envio)
+
+De forma simétrica, o envio de dados via `POST` ou `PUT` não deve usar dicionários livres:
+
+```java
+// Java: instanciando o Command DTO
+var command = new AddOrderItemCommand(42, "TECH-LAPTOP-42", "Laptop", new BigDecimal("2499.00"), 2);
+restTemplate.postForObject("/orders/" + id + "/items", command, OrderResponse.class);
+```
+
+```python
+# Python: instanciando o Command Pydantic tipado
+payload = AddOrderItemCommand(
+    product_id=42,
+    sku="TECH-LAPTOP-42",
+    product_name="Laptop",
+    unit_price=Decimal("2499.00"),
+    quantity=2,
+)
+
+# .model_dump(mode="json") serializa Decimal, UUID e datas para tipos primitivos JSON
+add_resp = await client.post(
+    f"/api/v1/orders/{order.id}/items",
+    json=payload.model_dump(mode="json"),
+)
+updated_order = OrderResponse.model_validate(add_resp.json())
+```
+
+---
+
+### Tabela Comparativa de Equivalências
+
+| Operação | Java (Spring Boot + Jackson) | Python Moderno (FastAPI + Pydantic v2) |
+|:---|:---|:---|
+| **Definição de DTO** | `public record OrderDTO(String id, BigDecimal total) {}` | `class OrderDTO(BaseModel): id: str; total: Decimal` |
+| **Desserialização JSON** | `objectMapper.readValue(jsonStr, OrderDTO.class)` | `OrderDTO.model_validate(data)` ou `OrderDTO.model_validate_json(jsonStr)` |
+| **Serialização para JSON** | `objectMapper.writeValueAsString(dto)` | `dto.model_dump_json()` ou `dto.model_dump(mode="json")` |
+| **Acesso a Atributos** | `dto.getId()`, `dto.total()` (notação de ponto) | `dto.id`, `dto.total` (notação de ponto) |
+| **Falha de Contrato** | `MismatchedInputException` na leitura | `pydantic.ValidationError` imediato no `model_validate` |
+| **Integração com HTTP Client**| `restTemplate.getForObject(url, OrderDTO.class)` | `OrderDTO.model_validate((await client.get(url)).json())` |
+
+---
+

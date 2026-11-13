@@ -11,6 +11,7 @@ from services.order_service.main import app as order_app
 from services.product_service.main import app as product_app
 from services.reviews_service.main import app as reviews_app
 from shared.constants import ApiEndpoints
+from shared.health import HealthResponse, ReadyResponse
 
 ALL_SERVICES = [
     ("gateway-aggregator", gateway_app),
@@ -39,10 +40,12 @@ async def test_health_and_ready_endpoints(service_name: str, app: object) -> Non
     ) as client:
         health_resp = await client.get(ApiEndpoints.HEALTH)
         assert health_resp.status_code == 200
-        health_data = health_resp.json()
-        assert health_data["status"] == "UP"
+        health = HealthResponse.model_validate(health_resp.json())
+        assert health.status == "UP"
+        assert health.service == service_name
 
         ready_resp = await client.get(ApiEndpoints.READY)
         assert ready_resp.status_code == 200
-        ready_data = ready_resp.json()
-        assert ready_data["status"] == "READY"
+        ready = ReadyResponse.model_validate(ready_resp.json())
+        assert ready.status == "READY"
+        assert ready.service == service_name
