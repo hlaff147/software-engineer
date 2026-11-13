@@ -16,6 +16,7 @@
 | [`api-versioning/`](../api-versioning) | 🔌 Backend APIs | Java 17, Spring Boot 3, Maven | ✅ Production-ready | ✅ Yes | URL-based API versioning using Strategy + Factory pattern with Spring dynamic injection. |
 | [`change-data-capture/`](../change-data-capture) | 📚 Study Guide / Architecture | Markdown (pt-BR), AWS SAM, Python 3, DynamoDB Streams, EventBridge, SQS | ✅ Production-grade | ✅ Yes | Guia aprofundado de Change Data Capture (CDC), transaction logs (WAL, binlog), padrões de resiliência e implementação de referência serverless na AWS com DynamoDB Streams, EventBridge Pipes, SQS (DLQ) e Lambda. |
 | [`corabank-api/`](../corabank-api) | 🔌 Backend APIs | Java 17, Spring Boot 3, H2, Gradle | ✅ Complete | ✅ Yes | Bank account creation challenge with referral bonus code and bug-fixing exercise. |
+| [`fastapi-microservices-aggregate/`](../fastapi-microservices-aggregate) | 🔌 Backend APIs | Python 3.11+, FastAPI, SQLAlchemy, PostgreSQL 16, Docker Compose | ✅ Production-grade | ✅ Yes | Didactic microservices laboratory contrasting Gateway Aggregation (parallel fan-out, timeouts, graceful degradation) and DDD Order Aggregate (transactional consistency, invariants, optimistic locking, transactional outbox). |
 | [`floating-point-precision/`](../floating-point-precision) | 📚 Study Guide | Python 3, JS/Node.js, Java | ✅ Complete | ✅ Yes | Theoretical and empirical analysis of IEEE 754 floating point drift and mitigation across languages. |
 | [`hedge_fund_bot/`](../hedge_fund_bot) | 🤖 AI & Machine Learning | Python 3.11+, LangGraph, Groq, Llama 3.3 | ✅ Active | ✅ Yes | Autonomous multi-agent stock market analysis system with PEV self-correction retry loop. |
 | [`incognia-api-java/`](../incognia-api-java) | 🔒 Security & Client SDKs | Java 8+, OkHttp, Gradle, JUnit 5 | ✅ Production-grade | ✅ Yes | Client SDK library for Incognia location identity and fraud risk assessment APIs. |
@@ -41,7 +42,7 @@
 ## 🏷️ Category Summary & Project Counts
 
 - **🤖 AI & Machine Learning:** 3 projects (`hedge_fund_bot`, `vuln-analyzer-agent`, `spec-driven-development-agentic`)
-- **🔌 Backend APIs:** 6 projects (`api-versioning`, `wallet-api`, `corabank-api`, `userApi`, `incognia-api-java`, `micronaut-jpa-masterclass`)
+- **🔌 Backend APIs:** 7 projects (`api-versioning`, `wallet-api`, `corabank-api`, `userApi`, `incognia-api-java`, `micronaut-jpa-masterclass`, `fastapi-microservices-aggregate`)
 - **🏦 Open Finance:** 3 microservices (`open-finance-common`, `open-finance-consent`, `open-finance-payment`)
 - **📨 Event Streaming:** 2 projects (`kafka-consumer-groups`, `servicebus-poc`)
 - **🗄️ Database:** 1 project (`mongodb-objectid-proof`)

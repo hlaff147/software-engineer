@@ -1,0 +1,161 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aggregate-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - aggregate-net
+
+  product-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregate-product-service
+    restart: unless-stopped
+    command: ["uvicorn", "services.product_service.main:app", "--host", "0.0.0.0", "--port", "8001"]
+    ports:
+      - "8001:8001"
+    environment:
+      PRODUCT_PORT: 8001
+      PRODUCT_DATABASE_URL: postgresql+asyncpg://app_user:app_password@postgres:5432/products_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aggregate-net
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregate-inventory-service
+    restart: unless-stopped
+    command: ["uvicorn", "services.inventory_service.main:app", "--host", "0.0.0.0", "--port", "8002"]
+    ports:
+      - "8002:8002"
+    environment:
+      INVENTORY_PORT: 8002
+      INVENTORY_DATABASE_URL: postgresql+asyncpg://app_user:app_password@postgres:5432/inventory_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aggregate-net
+
+  reviews-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregate-reviews-service
+    restart: unless-stopped
+    command: ["uvicorn", "services.reviews_service.main:app", "--host", "0.0.0.0", "--port", "8003"]
+    ports:
+      - "8003:8003"
+    environment:
+      REVIEWS_PORT: 8003
+      REVIEWS_DATABASE_URL: postgresql+asyncpg://app_user:app_password@postgres:5432/reviews_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8003/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aggregate-net
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregate-order-service
+    restart: unless-stopped
+    command: ["uvicorn", "services.order_service.main:app", "--host", "0.0.0.0", "--port", "8004"]
+    ports:
+      - "8004:8004"
+    environment:
+      ORDER_PORT: 8004
+      ORDER_DATABASE_URL: postgresql+asyncpg://app_user:app_password@postgres:5432/orders_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8004/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aggregate-net
+
+  gateway-aggregator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aggregate-gateway
+    restart: unless-stopped
+    command: ["uvicorn", "services.gateway_aggregator.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      GATEWAY_PORT: 8000
+      GATEWAY_PRODUCT_SERVICE_URL: http://product-service:8001
+      GATEWAY_INVENTORY_SERVICE_URL: http://inventory-service:8002
+      GATEWAY_REVIEWS_SERVICE_URL: http://reviews-service:8003
+      GATEWAY_ORDER_SERVICE_URL: http://order-service:8004
+      GATEWAY_DEFAULT_TIMEOUT_MS: 1000
+    depends_on:
+      product-service:
+        condition: service_healthy
+      inventory-service:
+        condition: service_healthy
+      reviews-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aggregate-net
+
+networks:
+  aggregate-net:
+    driver: bridge
+
+volumes:
+  pg_data:
+    driver: local

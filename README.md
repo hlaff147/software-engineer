@@ -21,7 +21,7 @@
 | Category | Projects | Key Technologies |
 |----------|----------|------------------|
 | **🤖 AI/ML & Agents** | 3 projects | LangGraph, LangChain, Groq, Llama 3.3, Pydantic v2, Hypothesis |
-| **🔌 Backend APIs** | 6 projects | Micronaut Data JPA, Spring Boot, Kotlin, Hexagonal Architecture, Strategy Pattern, Incognia SDK |
+| **🔌 Backend APIs** | 7 projects | FastAPI, Micronaut Data JPA, Spring Boot, Kotlin, DDD Aggregates, Gateway Aggregation, Hexagonal |
 | **🏦 Open Finance** | 3 microservices | Spring Boot, Feign Client, MongoDB, Microservices |
 | **📨 Event Streaming** | 2 projects | Kafka, Azure Service Bus |
 | **🗄️ Database** | 1 project | MongoDB ObjectId internals |
@@ -365,6 +365,69 @@ v1.setMileage(150000L); // Dirty Checking auto-updates on commit!
 - 🔒 **Dual Locking Strategies** — Optimistic `@Version` with exponential retry & Pessimistic `FOR UPDATE` for financial transactions
 - 🚀 **High-Throughput Batching** — JDBC batch operations combined with periodic `flush()` and `clear()` to prevent heap exhaustion
 - 📚 **In-Depth Study Guides** — 6 pillar guides + [JPA Behind the Scenes Architecture Guide](./micronaut-jpa-masterclass/docs/jpa-behind-the-scenes.md)
+
+---
+
+### [FastAPI Microservices: Gateway Aggregation vs. DDD Aggregate](./fastapi-microservices-aggregate)
+
+Didactic microservices laboratory resolving the classic architectural ambiguity between **Gateway Aggregation** (scatter-gather network composition) and **DDD Aggregate Root** (transactional consistency boundary).
+
+<table>
+<tr>
+<td width="50%">
+
+**🏗️ Dual-Aggregate Architecture**
+```
+Client
+  │ (1. GET /api/v1/pages/products/42)
+  ▼
+gateway-aggregator (:8000)
+  ├─► product-service (:8001)   [Critical: fail-fast]
+  ├─► inventory-service (:8002) [Non-critical: fallback]
+  └─► reviews-service (:8003)   [Non-critical: fallback]
+       (asyncio.gather ──► Latency ≈ slowest call)
+
+Client
+  │ (2. POST /api/v1/orders)
+  ▼
+order-service (:8004)
+  └─► Order (Aggregate Root)
+       ├── OrderLineItem Entities (Encapsulated)
+       ├── Money / Sku / Quantity (Value Objects)
+       ├── Optimistic Locking (WHERE version = :ver)
+       └── Transactional Outbox (order_outbox_events)
+```
+
+</td>
+<td width="50%">
+
+**⚡ Key Highlights & Invariants**
+| Feature | Implementation |
+|:---|:---|
+| **Scatter-Gather Fan-out** | `asyncio.gather` reduces latency by >50% vs sequential |
+| **Resilience & Fallbacks** | Degraded mode with fallback data on non-critical outages |
+| **DDD Aggregate Root** | Encapsulated consistency: order cap ($50k) & max item qty (10) |
+| **Optimistic Concurrency** | Integer `version` column protects against concurrent race conditions |
+| **Transactional Outbox** | Atomic domain events committed in same ACID transaction |
+| **Database-per-Service** | 4 isolated PostgreSQL databases initialized on container boot |
+
+**💡 Empiric Latency Law:**
+$$\text{Latency} \approx \max(T_{\text{prod}}, T_{\text{inv}}, T_{\text{rev}}) \ll \sum T_i$$
+
+</td>
+</tr>
+</table>
+
+**Tech Stack:** `Python 3.11+` `FastAPI` `SQLAlchemy 2.0 (Async)` `PostgreSQL 16` `Docker Compose` `RFC 7807` `pytest`
+
+**Features:**
+- 🌐 **Gateway Aggregator Pattern** — Single entrypoint fanning out concurrent asynchronous calls with telemetry (`latency_saved_ms`)
+- 🛡️ **Graceful Degradation** — Reviews/Inventory outages trigger fallback responses with `composition_status = "degraded"`
+- 🧱 **Domain-Driven Design (DDD)** — Pure domain layer with `Order` Aggregate Root, `OrderLineItem` entity, and immutable Value Objects
+- 🔒 **Optimistic Locking** — Atomic `UPDATE ... WHERE version = :version` detecting concurrent mutations with HTTP 409 Conflict
+- 📦 **Transactional Outbox** — Domain events (`OrderCreated`, `OrderItemAdded`, `OrderConfirmed`) persisted in the same ACID transaction
+- 🐳 **Full Docker Compose Stack** — Orchestrates PostgreSQL 16 Alpine + 5 FastAPI microservices with healthchecks and Makefile automation
+- 📚 **Dual-Language Docs** — English technical specification + Brazilian Portuguese deep dive ([GUIDE_PT_BR.md](./fastapi-microservices-aggregate/GUIDE_PT_BR.md))
 
 ---
 
@@ -995,6 +1058,8 @@ public class PaymentService {
 | **EventBridge Pipes & Filtering** | change-data-capture | Native managed stream ingestion with source-level event filtering |
 | **Prompt & Semantic Caching** | ai-cost-optimization | Prefix KV Cache reuse and vector similarity caching to eliminate redundant LLM calls |
 | **Context Trimming & Distillation** | ai-cost-optimization | Rolling history summarization, tool output pruning, and 70B-to-8B 4-bit model compression |
+| **Gateway Aggregation (Scatter-Gather)** | fastapi-microservices-aggregate | Concurrent async fan-out with latency ≈ slowest call, timeouts and graceful fallbacks |
+| **DDD Aggregate Root & Invariants** | fastapi-microservices-aggregate | Consistency boundary, encapsulated value objects, optimistic locking and transactional outbox |
 
 ### System Design Concepts
 
@@ -1145,6 +1210,7 @@ software-engineer/
 │   └── 📂 spec-driven-development-agentic/ # Spec-driven development with agents
 │
 ├── 🔌 API & Backend
+│   ├── 📂 fastapi-microservices-aggregate/ # Gateway Aggregation + DDD Order Aggregate
 │   ├── 📂 micronaut-jpa-masterclass/    # Java 25 & Micronaut Data JPA 6-pillar masterclass
 │   ├── 📂 api-versioning/               # Strategy + Factory pattern
 │   ├── 📂 wallet-api/                   # Digital wallet with ledger
